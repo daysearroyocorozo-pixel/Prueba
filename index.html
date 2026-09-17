@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Leo y Comprendo</title>
+<meta name="description" content="Aplicación de comprensión lectora para niños y niñas con necesidades educativas específicas." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;600;700&family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+<a class="skip-link" href="#main-content">Saltar al contenido</a>
+
+<header class="app-header">
+  <div class="brand">
+    <span class="brand-emoji" aria-hidden="true">📖</span>
+    <span class="brand-name">Leo y Comprendo</span>
+  </div>
+  <div class="header-actions">
+    <span id="star-total" class="star-total" aria-live="polite">⭐ 0</span>
+    <button id="settings-btn" class="icon-btn" aria-haspopup="dialog" aria-controls="settings-panel" title="Ajustes de accesibilidad">
+      ⚙️ <span class="btn-label">Ajustes</span>
+    </button>
+  </div>
+</header>
+
+<main id="main-content">
+
+  <!-- Pantalla de bienvenida -->
+  <section id="screen-welcome" class="screen" aria-labelledby="welcome-title">
+    <div class="card center-card">
+      <div class="big-emoji" aria-hidden="true">🦊📚</div>
+      <h1 id="welcome-title">¡Hola! Bienvenido a Leo y Comprendo</h1>
+      <p class="subtitle">Vamos a leer cuentos cortos y divertidos, juntos.</p>
+      <form id="welcome-form">
+        <label for="child-name">¿Cómo te llamas?</label>
+        <input type="text" id="child-name" name="child-name" placeholder="Escribe tu nombre" autocomplete="off" maxlength="30" />
+        <button type="submit" class="btn btn-primary btn-large">Empezar ▶️</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- Menú de cuentos -->
+  <section id="screen-menu" class="screen" hidden aria-labelledby="menu-title">
+    <div class="menu-header">
+      <h1 id="menu-title">Hola, <span id="menu-name">amigo/a</span> 👋</h1>
+      <p class="subtitle">Elige un cuento para leer</p>
+    </div>
+    <div id="story-list" class="story-grid" role="list"></div>
+  </section>
+
+  <!-- Pantalla de lectura -->
+  <section id="screen-reading" class="screen" hidden aria-labelledby="reading-title">
+    <div class="reading-topbar">
+      <button id="back-to-menu" class="btn btn-secondary">⬅️ Menú</button>
+      <h2 id="reading-title">Título del cuento</h2>
+      <div class="progress-dots" id="page-dots" aria-hidden="true"></div>
+    </div>
+
+    <div class="card reading-card">
+      <div class="page-emoji" id="page-emoji" aria-hidden="true">📖</div>
+      <p id="paragraph-text" class="paragraph-text" aria-live="polite"></p>
+      <button id="listen-btn" class="btn btn-listen" type="button">
+        🔊 Escuchar
+      </button>
+    </div>
+
+    <div class="reading-nav">
+      <button id="prev-page" class="btn btn-secondary btn-large" type="button">⬅️ Atrás</button>
+      <span id="page-indicator" class="page-indicator">Página 1 de 6</span>
+      <button id="next-page" class="btn btn-primary btn-large" type="button">Siguiente ➡️</button>
+    </div>
+  </section>
+
+  <!-- Pantalla de preguntas -->
+  <section id="screen-quiz" class="screen" hidden aria-labelledby="quiz-title">
+    <div class="reading-topbar">
+      <button id="quiz-back" class="btn btn-secondary">⬅️ Menú</button>
+      <h2 id="quiz-title">Preguntas</h2>
+      <div class="progress-dots" id="quiz-dots" aria-hidden="true"></div>
+    </div>
+
+    <div class="card quiz-card">
+      <p id="quiz-question" class="quiz-question" aria-live="polite"></p>
+      <button id="quiz-listen-btn" class="btn btn-listen" type="button">🔊 Escuchar pregunta</button>
+      <div id="quiz-options" class="quiz-options" role="list"></div>
+      <p id="quiz-feedback" class="quiz-feedback" aria-live="assertive" role="status"></p>
+      <button id="quiz-next" class="btn btn-primary btn-large" type="button" hidden>Siguiente ➡️</button>
+    </div>
+  </section>
+
+  <!-- Pantalla de resultados -->
+  <section id="screen-results" class="screen" hidden aria-labelledby="results-title">
+    <div class="card center-card">
+      <div id="results-emoji" class="big-emoji" aria-hidden="true">🏆</div>
+      <h1 id="results-title">¡Muy bien!</h1>
+      <p id="results-message" class="subtitle">Completaste el cuento.</p>
+      <div id="results-stars" class="results-stars" aria-hidden="true"></div>
+      <div class="results-actions">
+        <button id="replay-story" class="btn btn-secondary btn-large" type="button">🔁 Leer de nuevo</button>
+        <button id="results-menu" class="btn btn-primary btn-large" type="button">📚 Otro cuento</button>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- Panel de ajustes de accesibilidad -->
+<div id="settings-overlay" class="overlay" hidden></div>
+<aside id="settings-panel" class="settings-panel" role="dialog" aria-modal="true" aria-labelledby="settings-title" hidden>
+  <div class="settings-header">
+    <h2 id="settings-title">⚙️ Ajustes</h2>
+    <button id="settings-close" class="icon-btn" aria-label="Cerrar ajustes">✖️</button>
+  </div>
+
+  <div class="settings-body">
+    <fieldset class="settings-group">
+      <legend>Tamaño del texto</legend>
+      <div class="btn-row">
+        <button class="btn btn-toggle" data-font-size="small">A</button>
+        <button class="btn btn-toggle" data-font-size="medium">A</button>
+        <button class="btn btn-toggle" data-font-size="large">A</button>
+        <button class="btn btn-toggle" data-font-size="xlarge">A</button>
+      </div>
+    </fieldset>
+
+    <fieldset class="settings-group">
+      <legend>Tema de color</legend>
+      <div class="btn-row">
+        <button class="btn btn-toggle" data-theme="claro">☀️ Claro</button>
+        <button class="btn btn-toggle" data-theme="oscuro">🌙 Oscuro</button>
+        <button class="btn btn-toggle" data-theme="pastel">🌸 Pastel</button>
+        <button class="btn btn-toggle" data-theme="contraste">⬛ Alto contraste</button>
+      </div>
+    </fieldset>
+
+    <fieldset class="settings-group">
+      <legend>Tipografía y espaciado</legend>
+      <label class="switch-row">
+        <span>Fuente para lectura fácil</span>
+        <input type="checkbox" id="toggle-font" />
+      </label>
+      <label class="switch-row">
+        <span>Más espacio entre letras y líneas</span>
+        <input type="checkbox" id="toggle-spacing" />
+      </label>
+      <label class="switch-row">
+        <span>Reducir animaciones</span>
+        <input type="checkbox" id="toggle-motion" />
+      </label>
+    </fieldset>
+
+    <fieldset class="settings-group">
+      <legend>Voz al leer en voz alta</legend>
+      <label for="speech-rate">Velocidad de la voz</label>
+      <input type="range" id="speech-rate" min="0.6" max="1.2" step="0.1" value="0.85" />
+      <div class="rate-labels"><span>Lenta</span><span>Normal</span></div>
+      <button id="test-voice" class="btn btn-secondary" type="button">🔊 Probar voz</button>
+    </fieldset>
+  </div>
+</aside>
+
+<script src="js/stories.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

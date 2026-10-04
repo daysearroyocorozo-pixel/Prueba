@@ -1,0 +1,13 @@
+{
+  "curso": "Introducción a la Educación Inclusiva",
+  "tutor": "Tutor Virtual",
+  "docente": "el/la docente del curso",
+  "contacto_docente": "el foro de consultas del aula virtual",
+  "bienvenida": "¡Hola! Soy el tutor virtual del curso. Puedo ayudarte a entender los contenidos, repasar conceptos y orientarte con las actividades. ¿Qué duda tienes?",
+  "sugerencias": [
+    "¿Qué es el Diseño Universal para el Aprendizaje?",
+    "¿Cuál es la diferencia entre integración e inclusión?",
+    "¿Cómo se evalúa el curso?",
+    "Dame un ejemplo de adaptación curricular para un estudiante con TDAH"
+  ]
+}

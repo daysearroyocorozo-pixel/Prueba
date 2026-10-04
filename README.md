@@ -49,3 +49,12 @@ js/app.js           Lógica de la aplicación (navegación, voz, progreso)
 Edita `js/stories.js` y agrega un objeto siguiendo la misma estructura: título,
 nivel, emoji, lista de párrafos (cada uno con su propio emoji) y preguntas de
 opción múltiple con el índice de la respuesta correcta.
+
+---
+
+# Tutor Virtual para el aula 🎓
+
+En la carpeta [`tutor/`](tutor/) hay un tutor virtual que responde las dudas de
+los estudiantes sobre los contenidos de un curso, basándose en el material que
+el docente coloca en `tutor/curso/`. Se puede insertar en Moodle u otra aula
+virtual mediante un iframe. Instrucciones en [`tutor/README.md`](tutor/README.md).

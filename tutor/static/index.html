@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Tutor Virtual</title>
+<meta name="description" content="Tutor virtual que responde dudas sobre los contenidos del curso." />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎓</text></svg>" />
+<link rel="stylesheet" href="static/tutor.css" />
+</head>
+<body>
+<div class="app">
+  <header class="cabecera">
+    <div class="avatar" aria-hidden="true">🎓</div>
+    <div class="cabecera-texto">
+      <h1 id="nombre-tutor">Tutor Virtual</h1>
+      <p id="nombre-curso" class="curso">Cargando curso…</p>
+    </div>
+    <button id="nueva" class="btn-secundario" type="button" title="Empezar una conversación nueva">Nueva conversación</button>
+  </header>
+
+  <main id="chat" class="chat" aria-live="polite" aria-label="Conversación con el tutor"></main>
+
+  <div id="sugerencias" class="sugerencias" aria-label="Preguntas sugeridas"></div>
+
+  <form id="formulario" class="formulario">
+    <label for="pregunta" class="visualmente-oculto">Escribe tu pregunta</label>
+    <textarea id="pregunta" rows="1" maxlength="4000" placeholder="Escribe tu duda…" required></textarea>
+    <button id="enviar" class="btn-primario" type="submit">Enviar</button>
+  </form>
+  <p class="aviso">El tutor puede equivocarse. Verifica la información importante con tu docente.</p>
+</div>
+<script src="static/tutor.js"></script>
+</body>
+</html>

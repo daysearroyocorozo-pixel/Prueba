@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="Búho tutor">
+  <ellipse cx="50" cy="94" rx="24" ry="4" fill="#000" opacity=".12"/>
+  <path d="M24 34 L20 18 L36 28 Z M76 34 L80 18 L64 28 Z" fill="#2c53b8"/>
+  <ellipse cx="50" cy="60" rx="32" ry="33" fill="#3f6fe0"/>
+  <ellipse cx="21" cy="64" rx="8" ry="17" fill="#2c53b8" transform="rotate(12 21 64)"/>
+  <ellipse cx="79" cy="64" rx="8" ry="17" fill="#2c53b8" transform="rotate(-12 79 64)"/>
+  <ellipse cx="50" cy="71" rx="20" ry="19" fill="#e3ebff"/>
+  <path d="M40 66 q3 3 6 0 M54 66 q3 3 6 0 M47 74 q3 3 6 0" stroke="#b9c8f2" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <circle cx="37" cy="47" r="13" fill="#fff"/>
+  <circle cx="63" cy="47" r="13" fill="#fff"/>
+  <circle cx="39" cy="48" r="6" fill="#1d2233"/>
+  <circle cx="61" cy="48" r="6" fill="#1d2233"/>
+  <circle cx="41" cy="46" r="2" fill="#fff"/>
+  <circle cx="63" cy="46" r="2" fill="#fff"/>
+  <path d="M45 56 L55 56 L50 63 Z" fill="#f5a623"/>
+  <path d="M40 92 l3-6 l3 6 M54 92 l3-6 l3 6" stroke="#f5a623" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M34 26 h32 v6 q-16 6 -32 0 Z" fill="#1d2233"/>
+  <path d="M50 8 L84 20 L50 31 L16 20 Z" fill="#262b3d"/>
+  <path d="M50 20 L74 24 L74 36" stroke="#f5c542" stroke-width="2" fill="none"/>
+  <circle cx="74" cy="38" r="3" fill="#f5c542"/>
+</svg>

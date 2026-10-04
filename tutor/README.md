@@ -1,113 +1,245 @@
-# Tutor Virtual para el aula 🎓
+# Tutor Virtual para Moodle 🦉
 
-Chat que responde las dudas de los estudiantes **sobre los contenidos del
-curso**. Las respuestas se basan en el material que el docente coloca en la
-carpeta `curso/`, usando Claude (Anthropic) como modelo de lenguaje.
+Un búho tutor aparece en la esquina de **cada curso del aula virtual**. Cuando
+el estudiante tiene una duda, hace clic en él y le pregunta en ese momento.
+El tutor **lee solo el contenido del curso** desde Moodle (secciones, páginas,
+libros, archivos PDF/Word/PowerPoint, tareas con sus fechas…) y responde a
+partir de ese material, usando Claude (Anthropic) como modelo de lenguaje.
+
+![El tutor abierto dentro de una página de Moodle](docs/captura-moodle.png)
 
 ## Qué hace
 
-- Explica conceptos del curso en español, con ejemplos, y cita la unidad o
-  sección del material de donde sale la información.
-- Si la pregunta no está en el material, lo dice y recomienda confirmar con el
-  docente. Si no tiene relación con el curso, redirige con amabilidad.
-- **Integridad académica**: no resuelve tareas, cuestionarios ni el proyecto
-  final; guía con preguntas, explica conceptos y comenta borradores del
-  estudiante.
-- Deriva al docente las consultas administrativas (notas, prórrogas,
-  justificaciones) y a Bienestar Estudiantil los temas personales.
-- Respuestas en tiempo real (streaming), preguntas sugeridas, modo claro/oscuro
-  y diseño adaptable a móvil.
-- **Modo básico sin IA**: si no hay clave de API, busca en el material la
-  sección más relacionada con la pregunta y la muestra. Sirve para probar el
-  tutor sin costo.
+- **Lee cada curso automáticamente** con los servicios web de Moodle. No hay
+  que copiar nada a mano: cada curso tiene su propio tutor con su propio
+  material. Vuelve a leerlo cada 2 horas para incluir lo que el docente agregue.
+- **Sabe dónde está el estudiante**: si tiene abierta la página "Membrana
+  celular" y pregunta "explícame esto", el tutor sabe a qué se refiere. También
+  conoce la fecha de hoy para responder "¿cuándo entrego esta tarea?".
+- **Solo usa contenido visible**: las secciones y actividades ocultas no se
+  leen. De los cuestionarios solo lee la descripción, nunca las preguntas.
+- Explica en español, con ejemplos, y cita la sección o recurso de donde sale
+  la respuesta. Si algo no está en el material, lo dice.
+- **Integridad académica**: no resuelve tareas, cuestionarios ni exámenes;
+  guía con preguntas y explica los conceptos.
+- Deriva al docente las consultas sobre notas o prórrogas, y a Bienestar
+  Estudiantil los temas personales.
+- Funciona en computadora y celular (en el celular el chat ocupa toda la
+  pantalla).
 
-## Puesta en marcha
+Formatos que lee: páginas, etiquetas, libros, descripciones de secciones,
+tareas, cuestionarios y foros, archivos **PDF, DOCX, PPTX, ODT, ODP, HTML, TXT,
+MD y CSV**, y los enlaces (solo la dirección). No lee imágenes, videos ni PDF
+escaneados (que son imágenes sin texto).
+
+---
+
+## Instalación en 3 pasos
+
+### Paso 1: Preparar Moodle (una sola vez, como administrador)
+
+El tutor necesita un usuario de Moodle con permiso para leer los cursos.
+Las rutas de menú son de Moodle 4.x; en versiones anteriores pueden variar un
+poco (usa el buscador de *Administración del sitio*).
+
+1. **Activar los servicios web**
+   *Administración del sitio → General → Características avanzadas* → marca
+   **Habilitar servicios web** → Guardar.
+
+2. **Activar el protocolo REST**
+   *Administración del sitio → Servidor → Servicios web → Administrar
+   protocolos* → activa **REST** (el ícono del ojo).
+
+3. **Crear el usuario del tutor**
+   *Administración del sitio → Usuarios → Agregar un usuario*. Por ejemplo:
+   nombre de usuario `tutor_ia`, nombre "Tutor", apellido "Virtual".
+
+4. **Crear un rol de solo lectura y asignarlo**
+   *Administración del sitio → Usuarios → Permisos → Definir roles → Añadir un
+   nuevo rol*:
+   - Nombre: `Lector del tutor IA`. Tipo de contexto: **Sistema**.
+   - Permite estas capacidades:
+     `webservice/rest:use`, `moodle/course:view`,
+     `mod/page:view`, `mod/resource:view`, `mod/book:read`,
+     `mod/folder:view`, `mod/url:view`, `mod/label:view` (si existe),
+     `mod/assign:view`, `mod/quiz:view`, `mod/forum:viewdiscussion`.
+   - Guarda. Luego, en *Usuarios → Permisos → Asignar roles de sistema*,
+     asigna ese rol al usuario `tutor_ia`.
+
+   *(Así el tutor puede leer todos los cursos sin estar matriculado ni
+   aparecer en las listas de participantes.)*
+
+5. **Crear el servicio externo**
+   *Administración del sitio → Servidor → Servicios web → Servicios
+   externos → Agregar*:
+   - Nombre: `Tutor IA`. Marca **Habilitado** y **Solo usuarios
+     autorizados**.
+   - En *Mostrar más…* marca **Puede descargar archivos** (necesario para
+     leer los PDF y documentos).
+   - Guarda y pulsa **Funciones → Agregar funciones**. Agrega:
+     - `core_course_get_courses_by_field`
+     - `core_course_get_contents`
+     - `mod_page_get_pages_by_courses`
+     - `mod_label_get_labels_by_courses`
+     - `mod_assign_get_assignments`
+     - `mod_quiz_get_quizzes_by_courses`
+     - `mod_forum_get_forums_by_courses`
+
+     (Las cinco últimas son opcionales: sin ellas el tutor lee menos
+     detalle de páginas, tareas o foros.)
+   - Vuelve a la lista de servicios, pulsa **Usuarios autorizados** y agrega
+     a `tutor_ia`.
+
+6. **Crear el token**
+   *Administración del sitio → Servidor → Servicios web → Gestionar tokens →
+   Crear token*: usuario `tutor_ia`, servicio `Tutor IA`. Copia el token
+   (es como una contraseña: no lo compartas).
+
+### Paso 2: Instalar el servidor del tutor
+
+Necesitas un servidor con Python 3.10 o superior, accesible por **HTTPS**
+(por ejemplo `https://tutor.tu-institucion.edu.ec`). Moodle debe usar HTTPS
+también; si no, el navegador bloquea el chat.
 
 ```bash
-cd tutor
+git clone https://github.com/daysearroyocorozo-pixel/Prueba.git
+cd Prueba/tutor
 pip install -r requirements.txt
-export ANTHROPIC_API_KEY="tu-clave"   # sin esta línea arranca en modo básico
-python server.py
-# Abrir http://localhost:5000
+
+export ANTHROPIC_API_KEY="tu-clave-de-anthropic"
+export TUTOR_MOODLE_URL="https://aula.tu-institucion.edu.ec"
+export TUTOR_MOODLE_TOKEN="el-token-del-paso-1"
+
+# Comprueba que lee bien un curso (el número es el id del curso,
+# el que aparece en la dirección: course/view.php?id=25)
+python server.py --probar-curso 25
+
+# Inicia el tutor (en producción, con gunicorn)
+pip install gunicorn
+gunicorn -w 1 --threads 16 --timeout 0 -b 0.0.0.0:5000 server:app
 ```
 
-La clave se obtiene en https://console.anthropic.com. Nunca se envía al
-navegador: solo la usa el servidor.
+La clave de Anthropic se obtiene en https://console.anthropic.com. Coloca
+delante un proxy con HTTPS (Nginx, Caddy, Apache) que redirija a
+`localhost:5000`. Con Nginx agrega `proxy_buffering off;` para que las
+respuestas aparezcan mientras se escriben.
 
-## Cargar el contenido de TU curso
+### Paso 3: Mostrar el búho en todos los cursos
 
-1. Borra los archivos de ejemplo de `curso/` (`00_programa.md`,
-   `01_fundamentos.md`, …).
-2. Copia ahí el material del curso como archivos `.md` o `.txt`: programa o
-   sílabo, contenidos de cada unidad, instrucciones de tareas, rúbricas,
-   calendario, preguntas frecuentes. Si tienes PDF o Word, copia el texto en
-   un `.txt`.
-   - Usa títulos (`# Unidad 1`, `## Tema`) para que el tutor pueda citar la
-     sección.
-   - Los archivos se leen en orden alfabético; numerarlos ayuda.
-3. Edita `curso/config.json`: nombre del curso, del tutor, cómo contactar al
-   docente, mensaje de bienvenida y preguntas sugeridas.
-4. Reinicia el servidor (`python server.py`).
+*Administración del sitio → Apariencia → HTML adicional* → en el campo
+**Antes de cerrar BODY** pega esta línea (cambiando la dirección por la de tu
+servidor) y guarda:
 
-Todo el material se envía como contexto en cada consulta, con **caché de
-prompt**: tras la primera pregunta, el material se lee del caché a ~10 % del
-costo normal durante unos minutos. Un curso típico (decenas o cientos de
-páginas) cabe sin problema.
+```html
+<script src="https://tutor.tu-institucion.edu.ec/widget.js" defer></script>
+```
 
-## Integrarlo en el aula virtual (Moodle u otra)
+Listo: el búho aparece en todas las páginas de todos los cursos, para los
+usuarios que hayan iniciado sesión. No aparece en la portada ni en la página
+de acceso.
 
-Publica el servidor en una dirección accesible (por ejemplo
-`https://tutor.tu-institucion.edu.ec`) y agrégalo al curso:
+Opciones del `<script>`:
 
-- **Moodle**: *Añadir actividad o recurso → Página* (o una etiqueta / bloque
-  HTML) y pega en el editor, en modo HTML:
+| Atributo | Ejemplo | Efecto |
+|---|---|---|
+| `data-posicion` | `data-posicion="izquierda"` | Muestra el búho a la izquierda. |
+| `data-abajo` | `data-abajo="120"` | Distancia al borde inferior en píxeles (por defecto 88, para no tapar el botón "?" de Moodle). |
+| `data-saludo` | `data-saludo="¿Te ayudo?"` | Cambia el globo de saludo (`data-saludo=""` lo quita). |
 
-  ```html
-  <iframe src="https://tutor.tu-institucion.edu.ec/" width="100%" height="650"
-          style="border:0; border-radius:12px;" title="Tutor virtual del curso"></iframe>
+---
+
+## Funcionamiento diario
+
+- **Primera vez que se abre un curso**: el tutor lee su contenido en segundo
+  plano (de unos segundos a un par de minutos si hay muchos PDF). Mientras
+  tanto el chat muestra "Leyendo el contenido del curso…".
+- **Actualización**: cada 2 horas (configurable) vuelve a leer el curso la
+  próxima vez que alguien lo visita, sin hacer esperar al estudiante.
+- **Actualizar al instante** (después de subir material nuevo): define
+  `TUTOR_CLAVE_ADMIN` y ejecuta
+
+  ```bash
+  curl -X POST -H "X-Clave-Admin: TU_CLAVE" "https://tutor.tu-institucion.edu.ec/api/actualizar?curso=25"
   ```
 
-- **Otras plataformas** (Google Classroom, Canvas, Chamilo): agrega un enlace
-  o un iframe a la misma dirección.
+- El contenido leído se guarda en la carpeta `cache/`, para no volver a
+  leerlo de Moodle si el servidor se reinicia.
+- El servidor registra en consola los tokens usados por cada respuesta,
+  incluidos los leídos del caché, para controlar el costo.
 
-Para producción, ejecútalo con un servidor WSGI, por ejemplo:
+### Costo
 
-```bash
-pip install gunicorn
-gunicorn -w 1 --threads 8 -b 0.0.0.0:5000 server:app
-```
+El material del curso se envía a Claude en cada pregunta con **caché de
+prompt**: cuando varios estudiantes preguntan sobre el mismo curso con pocos
+minutos de diferencia, el material se lee del caché a ~10 % del precio
+normal. Un curso con 100 páginas de texto (~50 000 tokens) cuesta del orden de
+2 a 4 centavos de dólar por pregunta con caché y unos 25 centavos sin él. Para
+reducir el costo usa `TUTOR_EFFORT=low` o un modelo más económico
+(`TUTOR_MODEL=claude-sonnet-5-5`).
 
-## Configuración opcional (variables de entorno)
+## Configuración (variables de entorno)
 
-| Variable | Valor por defecto | Para qué sirve |
+| Variable | Por defecto | Para qué sirve |
 |---|---|---|
-| `ANTHROPIC_API_KEY` | — | Clave de la API. Sin ella se usa el modo básico. |
+| `ANTHROPIC_API_KEY` | — | Clave de la API de Anthropic. Sin ella el tutor funciona en *modo básico* (muestra fragmentos del material, sin IA). |
+| `TUTOR_MOODLE_URL` | — | Dirección de tu Moodle. |
+| `TUTOR_MOODLE_TOKEN` | — | Token del servicio web (paso 1). |
+| `TUTOR_CURSOS_PERMITIDOS` | todos | Ids de cursos separados por comas, por ejemplo `25,31,40`, para activar el tutor solo en esos cursos. |
+| `TUTOR_ACTUALIZAR_MINUTOS` | `120` | Cada cuánto se vuelve a leer un curso. |
+| `TUTOR_CLAVE_ADMIN` | — | Clave para `/api/actualizar`. |
+| `TUTOR_MAX_CARACTERES_CURSO` | `1200000` | Material máximo por curso (~300 000 tokens). Si un curso lo supera, se recorta el final y se avisa en el registro. |
 | `TUTOR_MODEL` | `claude-opus-5-5` | Modelo de Claude. |
-| `TUTOR_EFFORT` | `medium` | Profundidad de razonamiento: `low`, `medium`, `high`. `low` responde más rápido y cuesta menos. |
+| `TUTOR_EFFORT` | `medium` | Profundidad de razonamiento: `low`, `medium`, `high`. |
+| `TUTOR_LIMITE_POR_MINUTO` | `15` | Preguntas por minuto permitidas por dirección IP. |
+| `TUTOR_ORIGENES_PERMITIDOS` | — | Otros sitios (además de Moodle) donde se puede insertar el chat, separados por comas. |
 | `TUTOR_MODO` | `auto` | `ia` o `basico` para forzar un modo. |
-| `TUTOR_CURSO_DIR` | `./curso` | Carpeta con el material del curso. |
-| `TUTOR_LIMITE_POR_MINUTO` | `15` | Preguntas por minuto permitidas por cada dirección IP. |
-| `HOST` / `PORT` | `127.0.0.1` / `5000` | Dirección del servidor. |
+| `HOST` / `PORT` | `127.0.0.1` / `5000` | Dirección del servidor (`python server.py`). |
 
-El servidor registra en consola los tokens usados por cada respuesta
-(incluidos los leídos del caché) para controlar el costo.
+En `curso/config.json` puedes cambiar el nombre del tutor, el mensaje de
+bienvenida, cómo contactar al docente y las preguntas sugeridas
+(`sugerencias_moodle`).
+
+## Sin Moodle
+
+Si no configuras `TUTOR_MOODLE_URL`, el tutor usa el material de la carpeta
+`curso/` (archivos `.md` o `.txt`; trae un curso de ejemplo) y se abre en
+`http://localhost:5000`. Sirve para probarlo o para un curso fuera de Moodle.
+
+## Seguridad y privacidad
+
+- El token de Moodle y la clave de Anthropic solo están en el servidor; nunca
+  llegan al navegador.
+- El tutor solo lee contenido **visible** de los cursos (no lee secciones ni
+  actividades ocultas, calificaciones, entregas de estudiantes ni preguntas de
+  cuestionarios).
+- No se guardan conversaciones en el servidor. El historial vive en la pestaña
+  del navegador del estudiante y se borra al cerrarla o con **Nueva
+  conversación**. Las preguntas se envían a la API de Anthropic para generar la
+  respuesta: informa de ello a los estudiantes según la normativa de tu
+  institución.
+- El chat solo puede insertarse en tu Moodle (cabecera
+  `frame-ancestors`) y solo acepta preguntas enviadas desde su propia página.
+- **Limitación importante**: el tutor no verifica la sesión de Moodle del
+  estudiante. Alguien que conozca la dirección del servidor del tutor y el
+  número de un curso podría hacerle preguntas sobre el contenido visible de ese
+  curso sin estar matriculado. Si eso es un problema, limita los cursos con
+  `TUTOR_CURSOS_PERMITIDOS` o protege el servidor en la red interna. Para una
+  verificación completa del estudiante se puede agregar un pequeño plugin de
+  Moodle o una integración LTI.
 
 ## Estructura
 
 ```
 tutor/
-├── server.py          Servidor Flask: API del chat, Claude y modo básico
+├── server.py          Servidor: chat, Claude, caché de cursos, modo básico
+├── moodle.py          Lectura de cursos desde Moodle y extracción de texto
 ├── requirements.txt
-├── curso/             Material del curso (reemplazar por el propio)
-│   ├── config.json    Nombre del curso, tutor, bienvenida, sugerencias
-│   └── *.md           Programa y unidades
-└── static/            Interfaz del chat (HTML, CSS, JS)
+├── curso/             config.json + material de ejemplo (modo sin Moodle)
+├── static/
+│   ├── widget.js      El búho flotante que se inserta en Moodle
+│   ├── buho.svg       Imagen del búho
+│   ├── index.html     Ventana del chat
+│   ├── tutor.css
+│   └── tutor.js
+└── docs/              Capturas de pantalla
 ```
-
-## Privacidad
-
-- No se piden datos personales ni se guardan conversaciones en el servidor.
-  El historial vive solo en la pestaña del navegador del estudiante y se borra
-  al cerrarla o con **Nueva conversación**.
-- Las preguntas se envían a la API de Anthropic para generar la respuesta.
-  Informa de ello a los estudiantes según la normativa de tu institución.

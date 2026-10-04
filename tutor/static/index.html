@@ -5,18 +5,19 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Tutor Virtual</title>
 <meta name="description" content="Tutor virtual que responde dudas sobre los contenidos del curso." />
-<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎓</text></svg>" />
+<link rel="icon" href="static/buho.svg" />
 <link rel="stylesheet" href="static/tutor.css" />
 </head>
 <body>
 <div class="app">
   <header class="cabecera">
-    <div class="avatar" aria-hidden="true">🎓</div>
+    <img class="avatar" src="static/buho.svg" alt="" aria-hidden="true" />
     <div class="cabecera-texto">
       <h1 id="nombre-tutor">Tutor Virtual</h1>
       <p id="nombre-curso" class="curso">Cargando curso…</p>
     </div>
     <button id="nueva" class="btn-secundario" type="button" title="Empezar una conversación nueva">Nueva conversación</button>
+    <button id="cerrar" class="btn-cerrar" type="button" aria-label="Cerrar el tutor" title="Cerrar" hidden>✕</button>
   </header>
 
   <main id="chat" class="chat" aria-live="polite" aria-label="Conversación con el tutor"></main>

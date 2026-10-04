@@ -52,9 +52,11 @@ opción múltiple con el índice de la respuesta correcta.
 
 ---
 
-# Tutor Virtual para el aula 🎓
+# Tutor Virtual para Moodle 🦉
 
-En la carpeta [`tutor/`](tutor/) hay un tutor virtual que responde las dudas de
-los estudiantes sobre los contenidos de un curso, basándose en el material que
-el docente coloca en `tutor/curso/`. Se puede insertar en Moodle u otra aula
-virtual mediante un iframe. Instrucciones en [`tutor/README.md`](tutor/README.md).
+En la carpeta [`tutor/`](tutor/) hay un tutor virtual que aparece como un búho
+en la esquina de cada curso de Moodle. Lee por sí solo el contenido de cada
+curso (páginas, libros, PDF, Word, tareas…) mediante los servicios web de
+Moodle y responde en el momento las dudas de los estudiantes. Se integra
+pegando una línea en *Apariencia → HTML adicional*. Guía de instalación en
+[`tutor/README.md`](tutor/README.md).

@@ -4,7 +4,12 @@
 (function () {
   "use strict";
 
-  const CLAVE = "tutor_conversacion_v1";
+  // Parámetros que envía el muñequito de Moodle: ?curso=25&cm=310&embed=1
+  const params = new URLSearchParams(location.search);
+  const CURSO = params.get("curso") || "";
+  const CM = params.get("cm") || "";
+  const EMBEBIDO = params.get("embed") === "1";
+  const CLAVE = "tutor_conversacion_v1_" + (CURSO || "local");
   const chat = document.getElementById("chat");
   const formulario = document.getElementById("formulario");
   const pregunta = document.getElementById("pregunta");
@@ -128,7 +133,7 @@
       const res = await fetch("api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: historial })
+        body: JSON.stringify({ messages: historial, curso: CURSO, cm: CM })
       });
       if (!res.ok) {
         const datos = await res.json().catch(function () { return {}; });
@@ -200,14 +205,36 @@
     pregunta.focus();
   });
 
-  fetch("api/config")
-    .then(function (r) { return r.json(); })
-    .then(function (c) {
-      config = c;
-      document.getElementById("nombre-tutor").textContent = c.tutor;
-      document.getElementById("nombre-curso").textContent = c.curso;
-      document.title = c.tutor + " · " + c.curso;
-    })
-    .catch(function () { /* se usan los valores por defecto */ })
-    .finally(function () { pintarTodo(); pintarSugerencias(); });
+  if (EMBEBIDO) {
+    document.body.classList.add("embebido");
+    const cerrar = document.getElementById("cerrar");
+    cerrar.hidden = false;
+    cerrar.addEventListener("click", function () {
+      window.parent.postMessage({ tipo: "tutor-cerrar" }, "*");
+    });
+  }
+
+  // Mientras el tutor termina de leer el curso por primera vez, se consulta
+  // de nuevo cada pocos segundos para mostrar el nombre del curso.
+  function cargarConfig(primeraVez) {
+    const url = "api/config" + (CURSO ? "?curso=" + encodeURIComponent(CURSO) : "");
+    return fetch(url)
+      .then(function (r) { return r.json(); })
+      .then(function (c) {
+        if (c.error) throw new Error(c.error);
+        config = c;
+        document.getElementById("nombre-tutor").textContent = c.tutor;
+        document.getElementById("nombre-curso").textContent =
+          c.estado === "leyendo" ? "Leyendo el contenido del curso…" : c.curso;
+        document.title = c.tutor + (c.curso ? " · " + c.curso : "");
+        if (c.estado === "leyendo") setTimeout(function () { cargarConfig(false); }, 4000);
+      })
+      .catch(function (e) {
+        if (e.message) document.getElementById("nombre-curso").textContent = e.message;
+      })
+      .finally(function () {
+        if (primeraVez) { pintarTodo(); pintarSugerencias(); }
+      });
+  }
+  cargarConfig(true);
 })();

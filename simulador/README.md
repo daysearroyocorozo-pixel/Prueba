@@ -39,6 +39,21 @@ Funciona en **computadora, celular y gafas de realidad aumentada** (WebXR).
   - **Celulares sin WebXR (iPhone)**: modo alternativo con cámara + giroscopio.
   - Botón **↕ Escala** para alternar entre miniatura y tamaño real.
 
+## Módulos alineados con la malla de Educación Básica
+
+Desde el menú principal se accede a:
+
+- **Dictar una clase**: el aula simulada descrita arriba.
+- **Planificar y dictar**: planificación microcurricular (objetivo, modelo, actividades y minutos por fase,
+  recursos, evaluación y adaptaciones curriculares) con retroalimentación; luego se dicta la clase y el
+  reporte mide la coherencia entre lo planificado y lo ejecutado.
+- **Evaluar resultados**: media, mediana, rango, escala cualitativa (DAR, AAR, PAAR, NAAR), refuerzo
+  académico y decisiones pedagógicas, con las notas de la clase dictada o de un curso simulado.
+- **Casos profesionales**: 8 casos (familias, interculturalidad, rutas de actuación, acoso, calificaciones,
+  adaptaciones, proyectos educativos) con personajes que reaccionan y fundamento de cada decisión.
+- **Mapa curricular**: las 23 asignaturas por PAO y el módulo con el que se relaciona cada una
+  (datos en `js/curriculum.js`).
+
 ## Cómo usarlo
 
 Es HTML/CSS/JS puro, sin compilación ni dependencias externas (three.js está incluido en
@@ -62,6 +77,8 @@ simulador/
 ├── css/sim.css         Estilos responsive (celular/computadora), tema claro/oscuro
 ├── js/content.js       Banco curricular: subniveles, áreas, temas, preguntas, dudas
 ├── js/sim.js           Motor de simulación: perfiles, estados, acciones y evaluación
+├── js/curriculum.js    Malla, opciones de planificación, escala de calificaciones y casos
+├── js/modules.js       Menú, planificación, evaluación, casos y mapa curricular
 ├── js/app.js           Interfaz: aula 2D, diálogo, acciones, voz, reporte, historial
 ├── js/ar.js            Vista 3D y realidad aumentada (WebXR + modo cámara)
 └── vendor/three.module.min.js   three.js r160 (MIT)

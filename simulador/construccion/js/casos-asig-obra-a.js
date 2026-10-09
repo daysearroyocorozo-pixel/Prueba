@@ -49,7 +49,7 @@ window.CASOS_ASIG = (window.CASOS_ASIG || []).concat([
           ],
           conceptos: [
             { n: 'Explicar sus derechos laborales', claves: ['derecho', 'pago justo', 'jornal', 'seguro', 'afili', 'iess'] },
-            { n: 'Proteger al trabajador de represalias', claves: ['no te van a botar', 'sin exponerte', 'reserva', 'confidencial', 'protege', 'tranquilo', 'no te pasara nada'] },
+            { n: 'Proteger al trabajador de represalias', claves: ['no te voy a exponer', 'no te van a botar', 'sin exponerte', 'reserva', 'confidencial', 'protege', 'tranquilo', 'no te pasara nada'] },
             { n: 'Compromiso de actuar', claves: ['hablare', 'voy a hablar', 'propietario', 'me encargo', 'yo lo resuelvo', 'solucion'] }
           ],
           evitar: [ { claves: ['si no te gusta', 'hay otros', 'te botan'], fb: 'Amenazar a un trabajador vulnera su dignidad.' } ],

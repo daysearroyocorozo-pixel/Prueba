@@ -422,3 +422,5 @@ table.st th, table.st td { padding: 6px; border-bottom: 1px solid var(--border);
   .cv-props { grid-row: 4; grid-template-columns: 1fr 1fr; }
   .cv-input { flex-direction: column; }
 }
+@media (max-width: 520px) { .isty-user { font-size: 0 !important; } .isty-user button { font-size: .8rem; } }
+.asig-pao { margin: 18px 0 8px; }

@@ -486,7 +486,7 @@ window.CASOS_ASIG = (window.CASOS_ASIG || []).concat([
           conceptos: [
             { n: 'Clase K', claves: ['clase k', 'aceite', 'grasa', 'cocina', 'freidora'] },
             { n: 'Agente adecuado o sofocación', claves: ['acetato', 'extintor k', 'saponific', 'tapa', 'sofoc', 'cortar el gas'] },
-            { n: 'Peligro del agua', claves: ['no agua', 'sin agua', 'explosion', 'vapor', 'salpica', 'bola de fuego'] }
+            { n: 'Peligro del agua', claves: ['no eche agua', 'no agua', 'sin agua', 'explosion', 'vapor', 'salpica', 'bola de fuego'] }
           ],
           evitar: [ { claves: ['traiga agua', 'echele agua'], fb: 'El agua en aceite caliente provoca una bola de fuego.' } ],
           modelo: '¡No eche agua, doña Rosa! Es fuego clase K de aceite: corto el gas y uso el extintor de acetato de potasio o tapo la freidora para sofocarla.'

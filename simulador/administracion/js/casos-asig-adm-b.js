@@ -284,7 +284,7 @@ window.CASOS_ASIG = (window.CASOS_ASIG || []).concat([
           conceptos: [
             { n: 'Catastro y recaudación', claves: ['catastro', 'recaud', 'predial', 'cartera vencida', 'cobro'] },
             { n: 'Equidad tributaria', claves: ['exonera', 'vulnerab', 'equidad', 'capacidad', 'adultos mayores', 'discapacidad'] },
-            { n: 'Facilidades de pago', claves: ['facilidad', 'convenio de pago', 'cuota', 'plazo', 'descuento'] }
+            { n: 'Facilidades de pago', claves: ['convenio', 'facilidad', 'convenio de pago', 'cuota', 'plazo', 'descuento'] }
           ],
           evitar: [ { claves: ['prestamo para sueldos', 'subir todo parejo'], fb: 'Medidas sin equidad o sostenibilidad dañan las finanzas.' } ],
           modelo: 'Propongo actualizar el catastro predial, recuperar la cartera vencida con convenios de pago y mantener las exoneraciones de ley para adultos mayores y personas con discapacidad.'
@@ -475,7 +475,7 @@ window.CASOS_ASIG = (window.CASOS_ASIG || []).concat([
             { icono: '🚪', t: 'Cerrar el archivo con llave y salir', p: 0, fb: 'Obstaculiza el control.', efecto: { confianza: -15, tension: 15 } }
           ],
           conceptos: [
-            { n: 'Orden de trabajo y colaboración', claves: ['orden de trabajo', 'colabor', 'contraloria', 'control', 'auditor'] },
+            { n: 'Orden de trabajo y colaboración', claves: ['acta de entrega', 'le entrego', 'orden de trabajo', 'colabor', 'contraloria', 'control', 'auditor'] },
             { n: 'Documentación de soporte', claves: ['comprobante', 'factura', 'autoriz', 'respaldo', 'soporte', 'caja chica'] },
             { n: 'Acta y foliado', claves: ['acta', 'foliad', 'inventario', 'cronologic', 'constancia'] }
           ],
@@ -638,7 +638,7 @@ window.CASOS_ASIG = (window.CASOS_ASIG || []).concat([
           conceptos: [
             { n: 'Especificaciones técnicas sin marcas', claves: ['especificacion', 'caracteristica', 'tecnic', 'sin marca', 'funcional'] },
             { n: 'Principios de contratación', claves: ['concurrencia', 'igualdad', 'trato justo', 'transparen', 'competencia'] },
-            { n: 'No direccionar el proceso', claves: ['direccion', 'favorecer', 'un solo proveedor', 'todos los oferentes', 'imparcial'] }
+            { n: 'No direccionar el proceso', claves: ['concurrencia', 'sin marcas', 'direccion', 'favorecer', 'un solo proveedor', 'todos los oferentes', 'imparcial'] }
           ],
           evitar: [ { claves: ['marca x', 'esa marca es buena'], fb: 'Pedir marcas restringe la concurrencia.' } ],
           modelo: 'Las especificaciones se redactan por características técnicas, como alcance, batería y resistencia al agua, sin marcas, para garantizar concurrencia, igualdad y trato justo.'

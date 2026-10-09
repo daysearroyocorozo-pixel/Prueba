@@ -51,7 +51,7 @@ window.CASOS_ASIG = (window.CASOS_ASIG || []).concat([
           conceptos: [
             { n: 'Recolectar evidencia', claves: ['testig', 'entrevist', 'foto', 'evidencia', 'revis', 'registr'] },
             { n: 'Causas inmediatas y básicas', claves: ['causa', 'condicion insegura', 'acto inseguro', 'tabla suelta', 'baranda', 'analiz'] },
-            { n: 'No buscar culpables sino prevenir', claves: ['no buscar culpable', 'sin culpar', 'preven', 'que no se repita', 'mejor', 'correctiv'] }
+            { n: 'No buscar culpables sino prevenir', claves: ['no culpables', 'evitar que se repita', 'no buscar culpable', 'sin culpar', 'preven', 'que no se repita', 'mejor', 'correctiv'] }
           ],
           evitar: [ { claves: ['culpa del trabajador', 'despedir', 'fue descuido'], fb: 'Culpar sin investigar deja activo el riesgo.' } ],
           modelo: 'Voy a investigar: entrevisto a los testigos, fotografío el andamio y reviso plataforma y barandas para hallar las causas, no culpables, y evitar que se repita.'
@@ -514,7 +514,7 @@ window.CASOS_ASIG = (window.CASOS_ASIG || []).concat([
           conceptos: [
             { n: 'Prohibición de fraccionar', claves: ['fraccion', 'subdivid', 'dividir', 'partir', 'prohibid', 'evadir'] },
             { n: 'Procedimiento según monto', claves: ['procedimiento', 'monto', 'menor cuantia', 'cotizacion', 'licitacion', 'presupuesto total'] },
-            { n: 'Control y responsabilidad', claves: ['contraloria', 'control', 'auditor', 'responsabilidad', 'sancion', 'legal'] }
+            { n: 'Control y responsabilidad', claves: ['prohibido', 'contraloria', 'control', 'auditor', 'responsabilidad', 'sancion', 'legal'] }
           ],
           evitar: [ { claves: ['si nadie se da cuenta', 'partimos en dos'], fb: 'Fraccionar es una infracción grave.' } ],
           modelo: 'No podemos partir el contrato, eso es fraccionar para evadir el procedimiento y está prohibido; elegimos el procedimiento que corresponde al presupuesto total de la obra.'

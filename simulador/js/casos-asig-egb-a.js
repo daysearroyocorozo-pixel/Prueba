@@ -50,7 +50,7 @@ window.CASOS_ASIG = (window.CASOS_ASIG || []).concat([
           ],
           conceptos: [
             { n: 'Escucha activa y parafraseo', claves: ['si entiendo bien', 'lo que usted dice', 'entiendo', 'le escucho', 'escuch', 'comprendo'] },
-            { n: 'Validar la preocupación', claves: ['preocupacion', 'tiene razon', 'es valido', 'es importante', 'justo', 'gracias por decirlo'] },
+            { n: 'Validar la preocupación', claves: ['valido', 'le preocupa', 'preocupacion', 'tiene razon', 'es valido', 'es importante', 'justo', 'gracias por decirlo'] },
             { n: 'Acuerdo de comunicación', claves: ['canal', 'agenda escolar', 'cuaderno', 'aviso', 'cada viernes', 'grupo oficial', 'comunicar'] }
           ],
           evitar: [ { claves: ['es su culpa', 'usted no revisa'], fb: 'Culpabilizar a la familia rompe la comunicación asertiva.' } ],
@@ -270,7 +270,7 @@ window.CASOS_ASIG = (window.CASOS_ASIG || []).concat([
           ],
           conceptos: [
             { n: 'Escucha de ambas partes', claves: ['cada uno', 'turno', 'ambos', 'escuchar a los dos', 'que paso', 'version'] },
-            { n: 'Expresión de sentimientos', claves: ['como te sentiste', 'sentimiento', 'senti', 'empatia', 'ponerse en', 'lugar del otro'] },
+            { n: 'Expresión de sentimientos', claves: ['se sintieron', 'sintieron', 'como te sentiste', 'sentimiento', 'senti', 'empatia', 'ponerse en', 'lugar del otro'] },
             { n: 'Acuerdo de resolución', claves: ['acuerdo', 'compromiso', 'solucion', 'reparar', 'devolver', 'la proxima vez'] }
           ],
           evitar: [ { claves: ['no exageres', 'aguanta'], fb: 'Minimizar el malestar daña la autoestima.' } ],
@@ -784,7 +784,7 @@ window.CASOS_ASIG = (window.CASOS_ASIG || []).concat([
           conceptos: [
             { n: 'Evaluación digital', claves: ['portafolio', 'cuestionario en linea', 'rubrica digital', 'formulario', 'electronic', 'avances'] },
             { n: 'Conectividad limitada', claves: ['sin conexion', 'descarg', 'offline', 'senal', 'celular', 'datos moviles'] },
-            { n: 'Acceso equitativo', claves: ['brecha digital', 'todos', 'acceso', 'equidad', 'inclusion', 'derecho'] }
+            { n: 'Acceso equitativo', claves: ['nadie quede fuera', 'sin conexion', 'brecha digital', 'todos', 'acceso', 'equidad', 'inclusion', 'derecho'] }
           ],
           evitar: [ { claves: ['la tecnologia no es para', 'no sirve aqui'], fb: 'Excluye a las familias rurales.' } ],
           modelo: 'Usaremos un portafolio electrónico privado y cuestionarios en línea desde el celular, con recursos descargables para trabajar sin conexión y que nadie quede fuera.'

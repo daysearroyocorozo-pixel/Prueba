@@ -123,7 +123,7 @@ window.CASOS_ASIG = (window.CASOS_ASIG || []).concat([
           conceptos: [
             { n: 'Grupos heterogéneos con roles', claves: ['grupo', 'equipo', 'roles', 'heterogene', 'secretario', 'coordinador', 'rotativ'] },
             { n: 'Atención a ritmos y necesidades', claves: ['ritmo', 'necesidad', 'gradu', 'nivel', 'apoyo', 'diferenci', 'inclus'] },
-            { n: 'Competencias transversales', claves: ['colabora', 'pensamiento critico', 'resolver problemas', 'resolucion de problemas', 'cooper', 'ayuda mutua'] }
+            { n: 'Competencias transversales', claves: ['colabor', 'colabora', 'pensamiento critico', 'resolver problemas', 'resolucion de problemas', 'cooper', 'ayuda mutua'] }
           ],
           evitar: [ { claves: ['los lentos', 'que se queden atras'], fb: 'Etiquetar a los estudiantes vulnera el enfoque inclusivo.' } ],
           modelo: 'Formaré grupos heterogéneos de cuatro con roles rotativos. Cada grupo tendrá una tarea graduada y yo acompañaré más a quienes necesitan apoyo, para que colaboren y resuelvan problemas juntos.'
@@ -256,7 +256,7 @@ window.CASOS_ASIG = (window.CASOS_ASIG || []).concat([
           conceptos: [
             { n: 'Tipo de material', claves: ['manipulativ', 'concreto', 'tocar', 'material didactico', 'manipular'] },
             { n: 'Propósito pedagógico', claves: ['valor posicional', 'unidades', 'decenas', 'centenas', 'agrupar', 'contar'] },
-            { n: 'Importancia en el aprendizaje', claves: ['entender', 'comprender', 'aprend', 'abstracto', 'ayuda'] }
+            { n: 'Importancia en el aprendizaje', claves: ['compren', 'entender', 'comprender', 'aprend', 'abstracto', 'ayuda'] }
           ],
           evitar: [ { claves: ['no sirve', 'solo para decorar'], fb: 'El material debe tener intención pedagógica.' } ],
           modelo: 'Gracias, don Segundo. Con la balsa haré material manipulativo de unidades, decenas y centenas; al tocar y agrupar, los niños comprenden el valor posicional.'

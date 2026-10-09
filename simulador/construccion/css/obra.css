@@ -1,0 +1,14 @@
+/* Estilos del Simulador de Obra (se suman a ../css/sim.css e ../incendios/css/cior.css) */
+:root { --obra: #b45309; }
+.obra-top { background: #78350f; }
+.obra-btn, .btn-primary.obra-btn { background: var(--obra); border-color: var(--obra); color: #fff; }
+.obra-pill, .obra-step { background: var(--obra); }
+.obra-ring { background: conic-gradient(var(--obra) calc(var(--p) * 1%), var(--surface-2) 0); }
+.obra-h3 { background: #78350f !important; }
+.obra-dialog { border-left-color: var(--obra); }
+.hub-card .tags, .choice small.tags { color: var(--obra); }
+:root[data-theme="dark"] .hub-card .tags, :root[data-theme="dark"] .choice small.tags { color: #fcd34d; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .hub-card .tags { color: #fcd34d; } }
+.gauges { grid-template-columns: repeat(3, 1fr); }
+@media (max-width: 1000px) { .gauges { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 760px) { .gauges { grid-template-columns: 1fr; } }

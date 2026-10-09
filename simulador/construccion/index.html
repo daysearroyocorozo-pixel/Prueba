@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="theme-color" content="#92400e" />
+<title>Simulador de Obra</title>
+<meta name="description" content="Simulador para la carrera de Construcción: dirección de obra con cuadrilla virtual, laboratorio de materiales, oficina técnica, casos profesionales y realidad aumentada." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/sim.css" />
+<link rel="stylesheet" href="../incendios/css/cior.css" />
+<link rel="stylesheet" href="css/obra.css" />
+</head>
+<body>
+
+<header class="topbar obra-top">
+  <div class="brand">
+    <span class="brand-logo" aria-hidden="true">🏗️</span>
+    <div>
+      <div class="brand-name">Simulador de Obra</div>
+      <div class="brand-sub" id="brand-sub">Laboratorio Virtual · Carrera de Construcción</div>
+    </div>
+  </div>
+  <div class="topbar-actions">
+    <button class="icon-btn" id="btn-sound" title="Activar/desactivar voces" aria-pressed="true">🔊</button>
+    <button class="icon-btn" id="btn-theme" title="Cambiar tema claro/oscuro">🌓</button>
+  </div>
+</header>
+
+<main>
+  <!-- ================= INICIO ================= -->
+  <section id="screen-home" class="screen">
+    <div class="hero">
+      <div class="hero-text">
+        <h1>Dirige una obra con tu cuadrilla virtual</h1>
+        <p>Asume el rol de residente de obra y construye una vivienda de dos plantas en Puyo: estudios, replanteo, cimentación, estructura, mampostería, instalaciones, cubierta y entrega. Cada decisión afecta la calidad, la seguridad, el costo, el plazo y el ambiente. Practica también en el laboratorio de materiales, la oficina técnica y casos profesionales.</p>
+        <ul class="hero-feats">
+          <li>📱💻 Celular y computadora</li>
+          <li>🥽 Realidad aumentada (WebXR)</li>
+          <li>🎚️ 3 niveles de dificultad</li>
+          <li>📚 23 asignaturas de la malla</li>
+        </ul>
+        <p class="small">Otras carreras: <a href="../index.html">Educación Básica</a> · <a href="../incendios/index.html">Control de Incendios y Operaciones de Rescate</a></p>
+      </div>
+      <form id="home-form" class="card form-card">
+        <h2>Datos del estudiante</h2>
+        <label>Nombre<input id="f-name" required maxlength="40" placeholder="Ej.: Andrea Santi" autocomplete="name"></label>
+        <label>Institución / laboratorio<input id="f-inst" maxlength="60" placeholder="Laboratorio Virtual Institucional"></label>
+        <label class="check"><input type="checkbox" id="f-voice" checked> Voces de la cuadrilla y los personajes</label>
+        <button class="btn btn-primary btn-lg obra-btn" type="submit">Continuar ▶</button>
+        <button class="btn btn-ghost" type="button" id="btn-history">📋 Historial</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- ================= MENÚ ================= -->
+  <section id="screen-hub" class="screen" hidden>
+    <div class="setup-head">
+      <button class="btn btn-ghost" data-go="home">⬅ Inicio</button>
+      <h1>¿Qué deseas practicar<span id="hub-name"></span>?</h1>
+    </div>
+    <div class="hub-grid">
+      <button class="hub-card" data-hub="obra"><span class="em">🏗️</span><b>Dirigir una obra</b><small>Nueve fases de construcción de una vivienda, con imprevistos (lluvia, materiales no conformes, inspecciones, actos inseguros), presupuesto y plazo. Vista 3D y realidad aumentada.</small><span class="tags">Construcciones · Fundiciones y Muros · Instalaciones · Administración de Obras · Seguridad</span></button>
+      <button class="hub-card" data-hub="lab"><span class="em">🧪</span><b>Laboratorio de materiales y estructuras</b><small>Ensayos de hormigón y suelos, esfuerzos, momentos, volúmenes, pendientes y nivelación.</small><span class="tags">Materiales · Laboratorios 1 y 2 · Mecánica de Suelos · Topografía · Resistencia · Análisis Estructural</span></button>
+      <button class="hub-card" data-hub="ofi"><span class="em">📐</span><b>Oficina técnica</b><small>Precios unitarios, cómputos, ruta crítica, VAN, marco lógico y contratación pública.</small><span class="tags">Administración de Obras · Proyectos 1 y 2 · Contratación Pública · Gestión Inmobiliaria</span></button>
+      <button class="hub-card" data-hub="casos"><span class="em">🤝</span><b>Casos profesionales</b><small>Comisiones de proveedores, accidentes, escombros, cambios estructurales, terrenos en ladera y construcción amazónica.</small><span class="tags">Ética · Seguridad · Ecología · Urbanismo · Materiales</span></button>
+      <button class="hub-card" data-hub="mapa"><span class="em">🗺️</span><b>Mapa curricular</b><small>Las 23 asignaturas de la carrera y el módulo con el que se practica cada una.</small><span class="tags">Malla de Construcción</span></button>
+    </div>
+  </section>
+
+  <!-- ================= PREPARAR OBRA ================= -->
+  <section id="screen-setup" class="screen" hidden>
+    <div class="setup-head">
+      <button class="btn btn-ghost" data-go="hub">⬅ Menú</button>
+      <h1>Vivienda unifamiliar de dos plantas · Puyo</h1>
+    </div>
+    <div class="setup-grid">
+      <div class="card span2"><h2>📋 El proyecto</h2><p>Vivienda de 120 m² en dos plantas, estructura aporticada de hormigón armado, mampostería de bloque y cubierta para clima amazónico. Tú eres el residente de obra: decides cómo se ejecuta cada fase y respondes a los imprevistos.</p></div>
+      <div class="card span2"><h2><span class="step obra-step">1</span> Nivel</h2><div id="niv-list" class="choice-grid niv-grid"></div></div>
+      <div class="card span2"><h2><span class="step obra-step">2</span> Tu cuadrilla</h2><div id="crew-preview" class="roster-preview"></div></div>
+    </div>
+    <div class="setup-foot"><button class="btn btn-primary btn-lg obra-btn" id="btn-start">🏗️ Ir a la obra</button></div>
+  </section>
+
+  <!-- ================= OBRA ================= -->
+  <section id="screen-obra" class="screen" hidden>
+    <div class="class-bar">
+      <div class="class-info">
+        <span class="pill obra-pill">🏠 Vivienda de dos plantas</span>
+        <span id="obra-niv" class="pill pill-soft"></span>
+        <strong id="obra-fase"></strong>
+      </div>
+      <div class="class-tools">
+        <div class="clock" title="Días transcurridos">📅 Día <span id="obra-clock">0</span></div>
+        <button class="btn btn-sm" id="btn-3d">🧊 3D</button>
+        <button class="btn btn-sm btn-ar" id="btn-ar">🥽 RA</button>
+        <button class="btn btn-sm btn-danger" id="btn-end">Terminar</button>
+      </div>
+    </div>
+    <div class="class-layout">
+      <div class="stage">
+        <div class="card scene-card">
+          <svg id="scene" viewBox="0 0 600 330" role="img" aria-label="Avance de la obra"></svg>
+          <div id="view3d" class="view3d" hidden><canvas id="canvas3d"></canvas><div class="view3d-hint">Arrastra para girar · rueda/pellizco para acercar</div></div>
+          <div class="gauges" id="gauges"></div>
+        </div>
+        <div class="card"><h2 class="h-sm">👷 Cuadrilla</h2><div id="crew" class="crew-grid"></div></div>
+      </div>
+      <aside class="panel" id="panel">
+        <div class="dialog card obra-dialog" id="dialog" aria-live="polite">
+          <div class="dialog-text" id="dialog-text"></div>
+          <div class="dialog-choices" id="dialog-choices"></div>
+        </div>
+        <div class="actions card" id="free-actions">
+          <h2 class="h-sm">Indicaciones generales</h2>
+          <div class="tab-panel">
+            <button class="act" data-fa="charla">🦺 Charla de seguridad</button>
+            <button class="act" data-fa="epp">🪖 Entregar EPP completo ($300)</button>
+            <button class="act" data-fa="ensayo">🧪 Solicitar ensayos de laboratorio ($120)</button>
+            <button class="act" data-fa="diario">📒 Registrar en el diario de obra</button>
+            <button class="act" data-fa="residuos">♻️ Gestionar residuos y escombros ($150)</button>
+            <button class="act" data-fa="coordinar">🤝 Coordinar con propietario y fiscalización</button>
+            <button class="act" data-fa="cuadrilla">⏩ Cuadrilla adicional en la próxima fase (+$1.500)</button>
+          </div>
+        </div>
+        <details class="card log-card"><summary>📒 Diario de obra</summary><ol id="log" class="log"></ol></details>
+      </aside>
+    </div>
+  </section>
+
+  <section id="screen-report" class="screen" hidden><div id="report"></div></section>
+
+  <section id="screen-lab" class="screen" hidden>
+    <div class="setup-head"><button class="btn btn-ghost" data-go="hub">⬅ Menú</button><h1>Laboratorio de materiales y estructuras</h1></div>
+    <div id="lab-body"></div>
+  </section>
+
+  <section id="screen-ofi" class="screen" hidden>
+    <div class="setup-head"><button class="btn btn-ghost" data-go="hub">⬅ Menú</button><h1>Oficina técnica</h1></div>
+    <div id="ofi-body"></div>
+  </section>
+
+  <section id="screen-cases" class="screen" hidden>
+    <div class="setup-head"><button class="btn btn-ghost" data-go="hub">⬅ Menú</button><h1>Casos profesionales</h1></div>
+    <div id="cases-list"></div>
+    <div id="case-player" class="stack" hidden></div>
+  </section>
+
+  <section id="screen-mapa" class="screen" hidden>
+    <div class="setup-head"><button class="btn btn-ghost" data-go="hub">⬅ Menú</button><h1>Mapa curricular · Construcción</h1></div>
+    <p class="muted">Íconos: 🏗️ Obra · 🧪 Laboratorio · 📐 Oficina técnica · 🤝 Casos. Borde punteado = relación parcial.</p>
+    <div class="mapa"><div id="mapa-grid" class="mapa-grid"></div><div id="mapa-detail" class="card mapa-detail"></div></div>
+  </section>
+</main>
+
+<dialog id="history-dlg" class="modal">
+  <h2>📋 Historial</h2>
+  <div id="history-list"></div>
+  <div class="modal-foot"><button class="btn btn-ghost" id="history-clear">Borrar historial</button><button class="btn btn-primary" id="history-close">Cerrar</button></div>
+</dialog>
+
+<div id="xr-overlay" class="xr-overlay" hidden>
+  <div class="xr-top">
+    <span id="xr-status">Mueve el dispositivo para detectar una superficie y toca para colocar la obra.</span>
+    <div class="xr-top-btns"><button class="btn btn-sm" id="xr-scale">↕ Escala</button><button class="btn btn-sm btn-danger" id="xr-exit">✕ Salir</button></div>
+  </div>
+  <div class="xr-bottom" id="xr-bottom"></div>
+</div>
+
+<div id="toast" class="toast" role="status" hidden></div>
+
+<script src="js/obra-data.js"></script>
+<script src="js/obra-app.js"></script>
+<script type="module" src="js/obra-3d.js"></script>
+</body>
+</html>

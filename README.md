@@ -49,3 +49,15 @@ js/app.js           Lógica de la aplicación (navegación, voz, progreso)
 Edita `js/stories.js` y agrega un objeto siguiendo la misma estructura: título,
 nivel, emoji, lista de párrafos (cada uno con su propio emoji) y preguntas de
 opción múltiple con el índice de la respuesta correcta.
+
+---
+
+# Aula Simulada EGB 🏫 (simulador docente)
+
+En la carpeta [`simulador/`](simulador/) se encuentra un **simulador de clases** para la
+carrera de Educación Básica: el usuario asume el rol de docente y dicta clases por subniveles
+(Preparatoria, Elemental, Media, Superior) de Matemática, Ciencias Naturales, Ciencias Sociales
+y Lengua y Comunicación a estudiantes virtuales que responden según su perfil. Funciona en
+computadora, celular y gafas de realidad aumentada (WebXR). Ver [`simulador/README.md`](simulador/README.md).
+
+Abrir en `http://localhost:8080/simulador/` después de iniciar el servidor local.

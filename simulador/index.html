@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="theme-color" content="#1e3a5f" />
+<title>Aula Simulada EGB</title>
+<meta name="description" content="Simulador de clases para la formación docente en Educación Básica: estudiantes virtuales, niveles, áreas y realidad aumentada." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/sim.css" />
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-logo" aria-hidden="true">🏫</span>
+    <div>
+      <div class="brand-name">Aula Simulada EGB</div>
+      <div class="brand-sub" id="brand-sub">Laboratorio Virtual · Carrera de Educación Básica</div>
+    </div>
+  </div>
+  <div class="topbar-actions">
+    <button class="icon-btn" id="btn-sound" title="Activar/desactivar voz de los estudiantes" aria-pressed="true">🔊</button>
+    <button class="icon-btn" id="btn-theme" title="Cambiar tema claro/oscuro">🌓</button>
+  </div>
+</header>
+
+<main>
+  <!-- ================= INICIO ================= -->
+  <section id="screen-home" class="screen">
+    <div class="hero">
+      <div class="hero-text">
+        <h1>Practica tu rol docente con estudiantes virtuales</h1>
+        <p>Imparte una clase completa —anticipación, construcción y consolidación—, haz preguntas, resuelve ejercicios en la pizarra, atiende dudas y gestiona el aula. Cada estudiante responde según su perfil de aprendizaje. Al final recibirás una evaluación de tu desempeño.</p>
+        <ul class="hero-feats">
+          <li>📱💻 Celular y computadora</li>
+          <li>🥽 Realidad aumentada (WebXR)</li>
+          <li>🎚️ 4 subniveles de EGB</li>
+          <li>📚 4 áreas del currículo</li>
+        </ul>
+      </div>
+      <form id="home-form" class="card form-card">
+        <h2>Datos del docente en formación</h2>
+        <label>Nombre<input id="f-name" required maxlength="40" placeholder="Ej.: María Pérez" autocomplete="name"></label>
+        <label>Institución / laboratorio<input id="f-inst" maxlength="60" placeholder="Laboratorio Virtual Institucional"></label>
+        <div class="row2">
+          <label>Duración de la clase
+            <select id="f-dur"><option value="30">30 min</option><option value="40" selected>40 min</option><option value="45">45 min</option><option value="60">60 min</option></select>
+          </label>
+          <label>Estudiantes
+            <select id="f-num"><option>6</option><option selected>8</option><option>10</option></select>
+          </label>
+        </div>
+        <label class="check"><input type="checkbox" id="f-ind" checked> Mostrar indicadores de atención y comprensión (modo guiado)</label>
+        <label class="check"><input type="checkbox" id="f-voice" checked> Estudiantes con voz (síntesis de voz)</label>
+        <button class="btn btn-primary btn-lg" type="submit">Continuar ▶</button>
+        <button class="btn btn-ghost" type="button" id="btn-history">📋 Historial de clases</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- ================= CONFIGURACIÓN ================= -->
+  <section id="screen-setup" class="screen" hidden>
+    <div class="setup-head">
+      <button class="btn btn-ghost" data-go="home">⬅ Volver</button>
+      <h1>Prepara tu clase</h1>
+    </div>
+    <div class="setup-grid">
+      <div class="card">
+        <h2><span class="step">1</span> Subnivel</h2>
+        <div id="level-list" class="choice-grid"></div>
+      </div>
+      <div class="card">
+        <h2><span class="step">2</span> Área</h2>
+        <div id="area-list" class="choice-grid"></div>
+      </div>
+      <div class="card span2">
+        <h2><span class="step">3</span> Tema de la clase</h2>
+        <div id="topic-list" class="topic-list"><p class="muted">Selecciona un subnivel y un área.</p></div>
+      </div>
+      <div class="card span2">
+        <h2><span class="step">4</span> Conoce a tus estudiantes</h2>
+        <p class="muted">Cada estudiante tiene un perfil distinto. Observa sus reacciones durante la clase.</p>
+        <div id="roster-preview" class="roster-preview"></div>
+      </div>
+    </div>
+    <div class="setup-foot">
+      <button class="btn btn-primary btn-lg" id="btn-start" disabled>🔔 Iniciar clase</button>
+    </div>
+  </section>
+
+  <!-- ================= AULA ================= -->
+  <section id="screen-class" class="screen" hidden>
+    <div class="class-bar">
+      <div class="class-info">
+        <span id="cls-area" class="pill"></span>
+        <span id="cls-level" class="pill pill-soft"></span>
+        <strong id="cls-topic"></strong>
+      </div>
+      <div class="phases" id="phases">
+        <span data-f="anticipacion">1 · Anticipación</span>
+        <span data-f="construccion">2 · Construcción</span>
+        <span data-f="consolidacion">3 · Consolidación</span>
+      </div>
+      <div class="class-tools">
+        <div class="clock" title="Tiempo de clase"><span id="clock">0</span>/<span id="clock-max">40</span> min</div>
+        <button class="btn btn-sm" id="btn-3d" title="Ver el aula en 3D">🧊 3D</button>
+        <button class="btn btn-sm btn-ar" id="btn-ar" title="Entrar en realidad aumentada">🥽 RA</button>
+        <button class="btn btn-sm" id="btn-mic" title="Dar órdenes por voz" hidden>🎤</button>
+        <button class="btn btn-sm btn-danger" id="btn-end">Terminar clase</button>
+      </div>
+    </div>
+
+    <div class="class-layout">
+      <div class="stage">
+        <div class="board" id="board">
+          <div class="board-title" id="board-title">¡Bienvenidos!</div>
+          <div class="board-body" id="board-body"></div>
+        </div>
+        <div id="room" class="room"></div>
+        <div id="view3d" class="view3d" hidden>
+          <canvas id="canvas3d"></canvas>
+          <div class="view3d-hint">Arrastra para girar · rueda/pellizco para acercar · toca un estudiante para seleccionarlo</div>
+        </div>
+      </div>
+
+      <aside class="panel" id="panel">
+        <div class="dialog card" id="dialog" aria-live="polite">
+          <div class="dialog-text" id="dialog-text">Selecciona una acción para comenzar tu clase. Te sugerimos iniciar con la <b>anticipación</b>.</div>
+          <div class="dialog-choices" id="dialog-choices"></div>
+        </div>
+
+        <div class="actions card">
+          <div class="tabs" role="tablist">
+            <button role="tab" class="tab active" data-tab="anticipacion">Inicio</button>
+            <button role="tab" class="tab" data-tab="construccion">Desarrollo</button>
+            <button role="tab" class="tab" data-tab="consolidacion">Cierre</button>
+            <button role="tab" class="tab" data-tab="gestion">Aula</button>
+          </div>
+          <div class="tab-panels">
+            <div class="tab-panel" data-panel="anticipacion">
+              <button class="act" data-act="saludar">👋 Saludar y motivar</button>
+              <button class="act" data-act="objetivo">🎯 Presentar el objetivo</button>
+              <button class="act" data-act="previo">💡 Activar conocimientos previos</button>
+            </div>
+            <div class="tab-panel" data-panel="construccion" hidden>
+              <button class="act" data-act="explicar">🧑‍🏫 Explicar contenido <small id="exp-count"></small></button>
+              <button class="act" data-act="preguntar">❓ Hacer una pregunta</button>
+              <button class="act" data-act="ejercicio">✏️ Resolver ejercicio en la pizarra</button>
+              <button class="act" data-act="grupal">👥 Trabajo colaborativo</button>
+            </div>
+            <div class="tab-panel" data-panel="consolidacion" hidden>
+              <button class="act" data-act="quiz">📊 Evaluación rápida (todos responden)</button>
+              <button class="act" data-act="resumen">📝 Resumir lo aprendido</button>
+              <button class="act" data-act="tarea">🏠 Asignar tarea</button>
+            </div>
+            <div class="tab-panel" data-panel="gestion" hidden>
+              <p class="muted small">Primero toca a un estudiante para seleccionarlo.</p>
+              <button class="act" data-act="atencion">☝️ Llamar la atención al seleccionado</button>
+              <button class="act" data-act="apoyar">🤝 Acercarse y apoyar al seleccionado</button>
+              <button class="act" data-act="preguntarA">🙋 Preguntar al seleccionado</button>
+              <button class="act" data-act="silencio">🤫 Pedir silencio</button>
+              <button class="act" data-act="pausa">🤸 Pausa activa</button>
+            </div>
+          </div>
+        </div>
+
+        <details class="card log-card">
+          <summary>📜 Registro de la clase</summary>
+          <ol id="log" class="log"></ol>
+        </details>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ================= REPORTE ================= -->
+  <section id="screen-report" class="screen" hidden>
+    <div id="report"></div>
+  </section>
+</main>
+
+<!-- Historial -->
+<dialog id="history-dlg" class="modal">
+  <h2>📋 Historial de clases</h2>
+  <div id="history-list"></div>
+  <div class="modal-foot">
+    <button class="btn btn-ghost" id="history-clear">Borrar historial</button>
+    <button class="btn btn-primary" id="history-close">Cerrar</button>
+  </div>
+</dialog>
+
+<!-- Ficha del estudiante -->
+<dialog id="student-dlg" class="modal">
+  <div id="student-info"></div>
+  <div class="modal-foot"><button class="btn btn-primary" id="student-close">Cerrar</button></div>
+</dialog>
+
+<!-- HUD para realidad aumentada / cámara -->
+<div id="xr-overlay" class="xr-overlay" hidden>
+  <div class="xr-top">
+    <span id="xr-status">Mueve el dispositivo para detectar una superficie y toca para colocar el aula.</span>
+    <div class="xr-top-btns">
+      <button class="btn btn-sm" id="xr-scale">↕ Escala</button>
+      <button class="btn btn-sm btn-danger" id="xr-exit">✕ Salir</button>
+    </div>
+  </div>
+  <div class="xr-bottom" id="xr-bottom"></div>
+</div>
+<video id="cam-video" class="cam-video" playsinline muted hidden></video>
+
+<div id="toast" class="toast" role="status" hidden></div>
+
+<script src="js/content.js"></script>
+<script src="js/sim.js"></script>
+<script src="js/app.js"></script>
+<script type="module" src="js/ar.js"></script>
+</body>
+</html>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Laboratorio Virtual ISTY</title>
+<meta name="description" content="Laboratorio Virtual del Instituto Superior Tecnológico CIC-Yasuní: simuladores por carrera con personajes virtuales, niveles, voz, 3D, realidad aumentada y gafas VR Box." />
+<meta name="theme-color" content="#1B4D22" />
+<link rel="icon" type="image/png" href="img/favicon.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="portal.css" />
+</head>
+<body>
+<a class="skip" href="#contenido">Saltar al contenido</a>
+
+<header class="top">
+  <div class="shell top-in">
+    <a class="brand" href="#inicio" aria-label="Laboratorio Virtual ISTY, ir al inicio">
+      <img src="img/logo-isty.jpg" alt="Logo del Instituto Superior Tecnológico CIC-Yasuní" width="48" height="48" />
+      <span><b>Laboratorio Virtual ISTY</b><small>Instituto Superior Tecnológico CIC-Yasuní</small></span>
+    </a>
+    <nav class="nav" id="nav" aria-label="Menú principal">
+      <a href="#inicio">Inicio</a><a href="#carreras">Carreras</a><a href="#como-usar">Cómo usar</a><a href="#dispositivos">Dispositivos</a><a href="#acerca">Acerca de</a>
+    </nav>
+    <div class="top-btns">
+      <button class="icon" id="theme" type="button" aria-label="Cambiar entre modo claro y oscuro">🌓</button>
+      <button class="icon menu-btn" id="menu" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="nav">☰</button>
+    </div>
+  </div>
+</header>
+
+<main id="contenido">
+  <!-- ============ PORTADA ============ -->
+  <div id="vista-inicio">
+    <section class="hero" id="inicio">
+      <div class="shell hero-in">
+        <div class="hero-text reveal">
+          <span class="badge">🌿 Conocimiento que se convierte en experiencia</span>
+          <h1>Simuladores para <em>aprender haciendo</em></h1>
+          <p>Practica tu profesión con personajes virtuales y desafíos reales. Aprende por niveles, interactúa con voz y explora en 3D, realidad aumentada y gafas VR Box.</p>
+          <div class="hero-cta"><a class="btn btn-gold" href="#carreras">Explorar carreras →</a><span class="small">🛡️ Sin registro · A tu ritmo</span></div>
+        </div>
+        <div class="hero-logo reveal">
+          <img src="img/logo-isty.jpg" alt="Logo ISTY: tucán sobre las letras ISTY, Instituto Superior Tecnológico CIC-Yasuní, Educación para el mañana" width="260" height="260" />
+          <p class="lema">“Educación para el mañana”</p>
+          <p class="lugar">PUYO · PASTAZA · ECUADOR</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="stats" aria-label="Datos del laboratorio">
+      <div class="shell stats-in">
+        <div><span>🎓</span><b>4</b><small>Carreras</small></div>
+        <div><span>🧩</span><b>20</b><small>Módulos de práctica</small></div>
+        <div><span>📶</span><b>3</b><small>Niveles de aprendizaje</small></div>
+        <div><span>📚</span><b>91</b><small>Asignaturas relacionadas</small></div>
+      </div>
+    </section>
+
+    <section class="section" id="carreras">
+      <div class="shell">
+        <div class="head-row">
+          <div>
+            <p class="eyebrow">📖 Tu próxima experiencia</p>
+            <h2>Elige tu carrera. Comienza a practicar.</h2>
+            <p class="muted">Un espacio para poner en práctica lo que aprendes, a tu ritmo y sin límites.</p>
+          </div>
+          <label class="search"><span aria-hidden="true">🔍</span><input id="buscar" type="search" placeholder="Buscar carrera o módulo…" aria-label="Buscar carrera o módulo" /></label>
+        </div>
+        <div class="careers" id="lista-carreras"></div>
+        <p class="empty" id="sin-resultados" hidden>No encontramos coincidencias. Prueba con otra palabra.</p>
+      </div>
+    </section>
+
+    <section class="section alt" id="como-usar">
+      <div class="shell">
+        <p class="eyebrow">🧭 Paso a paso</p>
+        <h2>Cómo usar los simuladores</h2>
+        <ol class="steps">
+          <li class="reveal"><span>1</span><h3>🎓 Elige tu carrera</h3><p>Entra a tu carrera y escoge el módulo que quieres practicar.</p></li>
+          <li class="reveal"><span>2</span><h3>✍️ Escribe tu nombre</h3><p>Pulsa Continuar y elige el nivel: Básico, Intermedio o Avanzado.</p></li>
+          <li class="reveal"><span>3</span><h3>🗣️ Toma decisiones</h3><p>Interactúa con los personajes virtuales, que responden con voz.</p></li>
+          <li class="reveal"><span>4</span><h3>📊 Revisa tu evaluación</h3><p>Recibe una rúbrica de 100 puntos con recomendaciones; puedes imprimirla o guardarla en PDF como evidencia.</p></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="section" id="dispositivos">
+      <div class="shell">
+        <p class="eyebrow">📱 Donde estés</p>
+        <h2>Dispositivos</h2>
+        <div class="devices">
+          <article class="reveal"><span>💻</span><h3>Computadora</h3><p>Usa los simuladores en pantalla con ratón y teclado, y explora la escena con el botón <b>🧊 3D</b>.</p></article>
+          <article class="reveal"><span>📱</span><h3>Celular</h3><p>Funciona en pantalla táctil, en vertical u horizontal, con vista 3D.</p></article>
+          <article class="reveal"><span>🥽</span><h3>Realidad aumentada</h3><p>Botón <b>🥽 RA</b>: la escena aparece sobre la cámara (Android con ARCore y gafas de RA con WebXR).</p></article>
+          <article class="reveal"><span>🕶️</span><h3>Gafas VR Box</h3><p>Botón <b>📱 VR Box</b>: pantalla dividida y movimiento de cabeza. Elige mirando un botón 2 segundos o con el gatillo del control Bluetooth.</p></article>
+        </div>
+        <p class="note">ℹ️ La realidad aumentada y las gafas requieren abrir la página con HTTPS.</p>
+      </div>
+    </section>
+
+    <section class="section alt" id="acerca">
+      <div class="shell about">
+        <img src="img/logo-isty.jpg" alt="" width="140" height="140" class="reveal" />
+        <div class="reveal">
+          <p class="eyebrow">🌳 Laboratorio virtual institucional</p>
+          <h2>Acerca del laboratorio</h2>
+          <p>El Laboratorio Virtual del ISTY reúne simuladores donde los estudiantes practican situaciones reales de su futura profesión: dictar una clase, comandar una emergencia, dirigir una obra o atender a la ciudadanía en una institución pública.</p>
+          <p>Los contenidos se alinean con los contenidos mínimos de cada carrera y deben ser validados por los docentes de la institución.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ============ DETALLE DE CARRERA ============ -->
+  <div id="vista-carrera" hidden></div>
+</main>
+
+<footer class="foot">
+  <div class="shell foot-in">
+    <img src="img/logo-isty.jpg" alt="Logo ISTY" width="64" height="64" />
+    <div>
+      <b>Instituto Superior Tecnológico CIC-Yasuní</b>
+      <p>Puyo, Pastaza – Ecuador · “Educación para el mañana”</p>
+      <p class="small">© <span id="anio"></span> Laboratorio Virtual ISTY</p>
+    </div>
+  </div>
+</footer>
+
+<script src="portal.js"></script>
+</body>
+</html>

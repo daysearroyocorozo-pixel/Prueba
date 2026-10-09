@@ -13,8 +13,7 @@
         ['plan', '📋', 'Planificar y dictar', 'Elabora la planificación microcurricular, recibe retroalimentación y luego dicta la clase.'],
         ['eval', '📊', 'Evaluar resultados', 'Calcula medidas estadísticas, aplica la escala de calificaciones y decide el refuerzo académico.'],
         ['casos', '🤝', 'Casos profesionales', 'Situaciones simuladas con familias, estudiantes y directivos: actúas en la escena y respondes hablando.'],
-        ['asig', '🎯', 'Prácticas por asignatura', 'Una situación simulada propia para cada una de las 23 asignaturas, basada en sus contenidos mínimos.'],
-        ['mapa', '🗺️', 'Mapa curricular', 'Las 23 asignaturas y el módulo con el que se relaciona cada una.']
+        ['asig', '🎯', 'Prácticas por asignatura', 'Mapa curricular interactivo: una situación simulada propia para cada una de las 23 asignaturas, basada en sus contenidos mínimos.'],
       ] },
     { id: 'incendios', emoji: '🚒', color: '#B91C1C', nombre: 'Control de Incendios y Operaciones de Rescate', corto: 'Incendios y rescate', asig: 23, ruta: 'incendios/index.html',
       desc: 'Comanda emergencias con tripulación y víctimas virtuales. Practica la toma de decisiones y la coordinación de operaciones de rescate.',
@@ -23,8 +22,7 @@
         ['tri', '🩺', 'Triage de múltiples víctimas', 'Clasifica a diez víctimas de un accidente de bus con el método START.'],
         ['lab', '🧪', 'Laboratorio técnico', 'Clases de fuego, agentes extintores, transferencia de calor, rombo NFPA y cálculos.'],
         ['casos', '🤝', 'Casos profesionales', 'Situaciones simuladas: órdenes inseguras, estrés del personal, inspecciones, coordinación interinstitucional y comunidad. Actúas en la escena y respondes hablando.'],
-        ['asig', '🎯', 'Prácticas por asignatura', 'Una situación simulada propia para cada una de las 23 asignaturas, basada en sus contenidos mínimos.'],
-        ['mapa', '🗺️', 'Mapa curricular', 'Las 23 asignaturas y su relación con los módulos del simulador.']
+        ['asig', '🎯', 'Prácticas por asignatura', 'Mapa curricular interactivo: una situación simulada propia para cada una de las 23 asignaturas, basada en sus contenidos mínimos.'],
       ] },
     { id: 'construccion', emoji: '🏗️', color: '#B45309', nombre: 'Construcción', corto: 'Construcción', asig: 23, ruta: 'construccion/index.html',
       desc: 'Dirige la obra de una vivienda de dos plantas en Puyo con una cuadrilla virtual. Toma decisiones sobre calidad, seguridad, presupuesto y plazos.',
@@ -33,8 +31,7 @@
         ['lab', '🧪', 'Laboratorio de materiales y estructuras', 'Ensayos de hormigón y suelos, esfuerzos, momentos, volúmenes y nivelación.'],
         ['ofi', '📐', 'Oficina técnica', 'Precios unitarios, cómputos, ruta crítica, VAN, marco lógico y contratación pública.'],
         ['casos', '🤝', 'Casos profesionales', 'Situaciones simuladas: proveedores, accidentes, escombros, cambios estructurales y construcción amazónica. Actúas en la escena y respondes hablando.'],
-        ['asig', '🎯', 'Prácticas por asignatura', 'Una situación simulada propia para cada una de las 23 asignaturas, basada en sus contenidos mínimos.'],
-        ['mapa', '🗺️', 'Mapa curricular', 'Las 23 asignaturas y su relación con los módulos del simulador.']
+        ['asig', '🎯', 'Prácticas por asignatura', 'Mapa curricular interactivo: una situación simulada propia para cada una de las 23 asignaturas, basada en sus contenidos mínimos.'],
       ] },
     { id: 'administracion', emoji: '🏛️', color: '#0F766E', nombre: 'Administración en Instituciones Públicas', corto: 'Administración pública', asig: 22, ruta: 'administracion/index.html',
       desc: 'Atiende a la ciudadanía como servidor público en la ventanilla de un GAD municipal. Resuelve trámites y situaciones de la gestión pública.',
@@ -43,8 +40,7 @@
         ['fin', '💰', 'Finanzas y presupuesto público', 'Contabilidad, ciclo presupuestario, momentos del gasto y cálculos.'],
         ['nor', '⚖️', 'Normativa y planificación', 'Actos administrativos, PDOT, POA, políticas públicas, contratación y control interno.'],
         ['casos', '🤝', 'Casos profesionales', 'Situaciones simuladas: nepotismo, desempeño, campañas, proveedores, políticas y mejora de trámites. Actúas en la escena y respondes hablando.'],
-        ['asig', '🎯', 'Prácticas por asignatura', 'Una situación simulada propia para cada una de las 22 asignaturas, basada en sus contenidos mínimos.'],
-        ['mapa', '🗺️', 'Mapa curricular', 'Las 22 asignaturas y su relación con los módulos del simulador.']
+        ['asig', '🎯', 'Prácticas por asignatura', 'Mapa curricular interactivo: una situación simulada propia para cada una de las 22 asignaturas, basada en sus contenidos mínimos.'],
       ] }
   ];
 

@@ -402,7 +402,7 @@
     $('#cases-list').innerHTML = '<p class="muted">Una situación simulada para cada asignatura de la malla: actúa en la escena y responde con tu voz o por escrito.</p>' +
       [1, 2, 3, 4].map(pao => {
         const ms = MALLA_ADM.filter(m => m.pao === pao && lista.some(x => x.cod === m.cod));
-        return ms.length ? `<h3 class="asig-pao">PAO ${pao}</h3><div class="topic-list">${ms.map(m => { const c = lista.find(x => x.cod === m.cod); return `<button class="choice" data-asig="${m.cod}"><span class="em">${c.persona.avatar}</span><span><b>${esc(m.n)}</b><small>${esc(c.titulo)}</small><small class="tags">${esc(c.objetivo || c.persona.rol)}</small></span></button>`; }).join('')}</div>` : '';
+        return ms.length ? `<h3 class="asig-pao">PAO ${pao}</h3><div class="topic-list">${ms.map(m => { const c = lista.find(x => x.cod === m.cod); return `<button class="choice" data-asig="${m.cod}"><span class="em">${c.persona.avatar}</span><span><b>${esc(m.n)}</b><small>${esc(c.titulo)}</small><small class="tags">${esc(c.objetivo || c.persona.rol)}</small><small class="muted">PAO ${m.pao} · también en: ${m.mod.filter(k => MODS[k]).map(k => MODS[k].emoji + ' ' + MODS[k].nombre).join(' · ')}</small></span></button>`; }).join('')}</div>` : '';
       }).join('');
     $$('[data-asig]').forEach(b => b.onclick = () => playCase(lista.find(x => x.cod === b.dataset.asig)));
     $('#case-player').hidden = true; $('#cases-list').hidden = false;

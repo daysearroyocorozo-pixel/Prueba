@@ -1,0 +1,42 @@
+/* =========================================================
+   Identidad institucional ISTY (colores del logo) para los
+   cuatro simuladores. Se carga al final y sustituye los colores
+   propios de cada carrera.
+   ========================================================= */
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&display=swap");
+:root {
+  --isty-verde-osc: #1B4D22; --isty-verde: #2E8B2E; --isty-verde-cl: #3BA34A; --isty-amarillo: #F2E21B; --isty-dorado: #C9A227;
+  --isty-grad: linear-gradient(90deg, #2E8B2E, #7cbf2a 55%, #F2E21B);
+  --primary: #2E8B2E; --accent: #C9A227; --bg: #f6f8f2; --surface-2: #edf4e8; --border: #d9e4d3;
+  /* colores de carrera reemplazados por el institucional */
+  --fire: #2E8B2E; --obra: #2E8B2E; --adm: #2E8B2E;
+}
+:root[data-theme="dark"] { --primary: #5cbf6a; --bg: #0f1a12; --surface: #172619; --surface-2: #1f3323; --border: #2c4230; --fire: #4caf5a; --obra: #4caf5a; --adm: #4caf5a; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --primary: #5cbf6a; --bg: #0f1a12; --surface: #172619; --surface-2: #1f3323; --border: #2c4230; --fire: #4caf5a; --obra: #4caf5a; --adm: #4caf5a; } }
+
+/* encabezado */
+.topbar, .cior-top, .obra-top, .adm-top { background: var(--isty-verde-osc) !important; position: relative; }
+.topbar::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 4px; background: var(--isty-grad); }
+.brand-logo img { width: 42px; height: 42px; border-radius: 50%; display: block; background: #fff; box-shadow: 0 0 0 2px rgba(255,255,255,.6); }
+.brand-name { font-family: "Playfair Display", Georgia, serif; letter-spacing: .01em; }
+h1 { font-family: "Playfair Display", Georgia, serif; }
+
+/* botones, etiquetas y acentos */
+.btn-primary, .cior-btn, .obra-btn, .adm-btn, .btn-primary.cior-btn, .btn-primary.obra-btn, .btn-primary.adm-btn { background: var(--primary); border-color: var(--primary); color: #fff; }
+.btn-ar { background: linear-gradient(135deg, var(--isty-verde-osc), var(--isty-verde) 60%, #8cbf26); color: #fff; }
+.cior-pill, .obra-pill, .adm-pill, .cior-step, .obra-step, .adm-step, .step { background: var(--primary); color: #fff; }
+.mapa-col h3, .cior-h3, .obra-h3, .adm-h3 { background: var(--isty-verde-osc) !important; }
+.cior-dialog, .obra-dialog, .adm-dialog, .dialog { border-left-color: var(--primary); }
+.hub-card .tags, .choice small.tags { color: var(--isty-verde); }
+:root[data-theme="dark"] .hub-card .tags, :root[data-theme="dark"] .choice small.tags { color: #9be3a5; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .hub-card .tags, :root:not([data-theme="light"]) .choice small.tags { color: #9be3a5; } }
+.hub-card:hover, .choice[aria-pressed="true"] { border-color: var(--primary); }
+.hub-card .em { filter: saturate(1.05); }
+.score-ring, .cior-ring, .obra-ring, .adm-ring { background: conic-gradient(var(--primary) calc(var(--p) * 1%), var(--surface-2) 0); }
+.crit-bar i { background: var(--isty-grad); }
+.hero h1, .setup-head h1 { color: var(--isty-verde-osc); }
+:root[data-theme="dark"] .hero h1, :root[data-theme="dark"] .setup-head h1 { color: #9be3a5; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .hero h1, :root:not([data-theme="light"]) .setup-head h1 { color: #9be3a5; } }
+a { color: var(--isty-verde); }
+.form-card { border-top: 5px solid var(--isty-verde); }
+.isty-user b { color: #fff; }

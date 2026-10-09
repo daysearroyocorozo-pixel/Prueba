@@ -68,6 +68,10 @@
     if (App.cfg.voice && 'speechSynthesis' in window) { const u = new SpeechSynthesisUtterance(' '); u.volume = 0; speechSynthesis.speak(u); }
     $('#hub-name').textContent = App.cfg.name ? ', ' + App.cfg.name : '';
     show('hub');
+    // enlace directo a un módulo desde el portal (?m=clave)
+    const mParam = new URLSearchParams(location.search).get('m');
+    const mBtn = mParam && document.querySelector(`[data-hub="${CSS.escape(mParam)}"]`);
+    if (mBtn) { history.replaceState(null, '', location.pathname); mBtn.click(); }
   };
   $$('[data-hub]').forEach(b => b.onclick = () => openModule(b.dataset.hub));
   function openModule(k, cod) {

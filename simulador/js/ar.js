@@ -9,7 +9,6 @@
    - Alternativa sin WebXR (p. ej. iPhone): cámara + giroscopio.
    ========================================================= */
 import * as THREE from '../vendor/three.module.min.js';
-import { createVrBox } from './vrbox.js';
 
 const App = window.AulaApp;
 const $ = s => document.querySelector(s);
@@ -548,34 +547,12 @@ function stopCam() {
 }
 
 function stopAll() {
-  vr.exit();
   if (mode === 'xr' && xrSession) { xrSession.end(); return; }
   if (mode === 'cam') stopCam();
   if (mode === 'inline') stopInline();
 }
 
-/* ================== gafas sencillas tipo VR Box (cardboard) ================== */
-const TAB_NAMES = { anticipacion: 'Inicio', construccion: 'Desarrollo', consolidacion: 'Cierre', gestion: 'Aula' };
-const vr = createVrBox({
-  App, getScene: () => scene, sync: () => sync(), color: 'rgba(20,30,48,.94)',
-  // el docente de pie junto a la pizarra, mirando a sus estudiantes
-  view: { pos: [0, 1.6, -0.9], target: [0, 0.8, 2.2] },
-  prepare: () => {
-    if (mode === 'inline') stopInline(); if (mode === 'cam') stopCam();
-    init(); buildStudents();
-    root.position.set(0, 0, 0); root.rotation.set(0, 0, 0); classroom.position.set(0, 0, 0); classroom.scale.setScalar(1); root.visible = true;
-    scene.background = new THREE.Color(0xcfe3f5);
-  },
-  extra: () => [{ label: '⇄ ' + (TAB_NAMES[App.tab] || 'Pestaña'), fn: () => App.cycleTab() }],
-  pick: ray => {
-    const hit = ray.intersectObjects([...studentObjs.values()].map(o => o.hit), false)[0];
-    if (hit && hit.object.userData.sid) { App.onStudentTap(hit.object.userData.sid); return true; }
-    return false;
-  }
-});
-
 /* ================== botones ================== */
-$('#btn-vr').onclick = () => { if (mode !== 'xr') vr.enter(); };
 $('#btn-3d').onclick = () => { if (mode === 'inline') stopInline(); else if (!mode) startInline(); };
 $('#btn-ar').onclick = async () => {
   if (mode === 'xr' || mode === 'cam') { stopAll(); return; }

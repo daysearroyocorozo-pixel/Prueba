@@ -11,6 +11,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="portal.css" />
+<script src="../simulador/js/isty-config.js"></script>
+<script src="../simulador/js/isty-auth.js"></script>
 </head>
 <body>
 <a class="skip" href="#contenido">Saltar al contenido</a>
@@ -25,6 +27,7 @@
       <a href="#inicio">Inicio</a><a href="#carreras">Carreras</a><a href="#como-usar">Cómo usar</a><a href="#dispositivos">Dispositivos</a><a href="#acerca">Acerca de</a>
     </nav>
     <div class="top-btns">
+      <div class="user" id="usuario"></div>
       <button class="icon" id="theme" type="button" aria-label="Cambiar entre modo claro y oscuro">🌓</button>
       <button class="icon menu-btn" id="menu" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="nav">☰</button>
     </div>
@@ -40,7 +43,7 @@
           <span class="badge">🌿 Conocimiento que se convierte en experiencia</span>
           <h1>Simuladores para <em>aprender haciendo</em></h1>
           <p>Practica tu profesión con personajes virtuales y desafíos reales. Aprende por niveles, interactúa con voz y explora en 3D, realidad aumentada y gafas VR Box.</p>
-          <div class="hero-cta"><a class="btn btn-gold" href="#carreras">Explorar carreras →</a><span class="small">🛡️ Sin registro · A tu ritmo</span></div>
+          <div class="hero-cta"><a class="btn btn-gold" href="#carreras">Explorar carreras →</a><span class="small">🔐 Acceso con tu cuenta · A tu ritmo</span></div>
         </div>
         <div class="hero-logo reveal">
           <img src="img/logo-isty.jpg" alt="Logo ISTY: tucán sobre las letras ISTY, Instituto Superior Tecnológico CIC-Yasuní, Educación para el mañana" width="260" height="260" />
@@ -69,6 +72,7 @@
           </div>
           <label class="search"><span aria-hidden="true">🔍</span><input id="buscar" type="search" placeholder="Buscar carrera o módulo…" aria-label="Buscar carrera o módulo" /></label>
         </div>
+        <div class="aviso" id="aviso" hidden role="alert"></div>
         <div class="careers" id="lista-carreras"></div>
         <p class="empty" id="sin-resultados" hidden>No encontramos coincidencias. Prueba con otra palabra.</p>
       </div>
@@ -79,8 +83,8 @@
         <p class="eyebrow">🧭 Paso a paso</p>
         <h2>Cómo usar los simuladores</h2>
         <ol class="steps">
-          <li class="reveal"><span>1</span><h3>🎓 Elige tu carrera</h3><p>Entra a tu carrera y escoge el módulo que quieres practicar.</p></li>
-          <li class="reveal"><span>2</span><h3>✍️ Escribe tu nombre</h3><p>Pulsa Continuar y elige el nivel: Básico, Intermedio o Avanzado.</p></li>
+          <li class="reveal"><span>1</span><h3>🔐 Ingresa con tu cuenta</h3><p>Usa el usuario y la contraseña que te entregó el administrador; verás los simuladores de tu carrera.</p></li>
+          <li class="reveal"><span>2</span><h3>🧩 Elige un módulo</h3><p>Pulsa Continuar y elige el nivel: Básico, Intermedio o Avanzado.</p></li>
           <li class="reveal"><span>3</span><h3>🗣️ Toma decisiones</h3><p>Interactúa con los personajes virtuales, que responden con voz.</p></li>
           <li class="reveal"><span>4</span><h3>📊 Revisa tu evaluación</h3><p>Recibe una rúbrica de 100 puntos con recomendaciones; puedes imprimirla o guardarla en PDF como evidencia.</p></li>
         </ol>

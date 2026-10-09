@@ -44,6 +44,10 @@
       ] }
   ];
 
+  const S = window.ISTY ? ISTY.sesion() : null;
+  const ADMIN = !!S && S.rol === 'admin';
+  // cada estudiante ve solo su carrera; el administrador ve todas
+  const visibles = () => CARRERAS.filter(c => ADMIN || (S && c.id === S.carrera));
   const $ = s => document.querySelector(s);
   const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   const norm = s => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim();
@@ -66,7 +70,7 @@
   /* tarjetas de carreras con buscador */
   function renderCarreras(q = '') {
     const t = norm(q);
-    const lista = CARRERAS.filter(c => !t || norm([c.nombre, c.desc, ...c.mods.map(m => m[2] + ' ' + m[3])].join(' ')).includes(t));
+    const lista = visibles().filter(c => !t || norm([c.nombre, c.desc, ...c.mods.map(m => m[2] + ' ' + m[3])].join(' ')).includes(t));
     $('#lista-carreras').innerHTML = lista.map(c => `
       <article class="career reveal in" style="--c:${c.color}">
         <div class="career-head"><span class="career-icon" aria-hidden="true">${c.emoji}</span><h3>${esc(c.nombre)}</h3><span class="pill">5 módulos</span></div>
@@ -91,7 +95,7 @@
         </div></div></div>
       <section class="section"><div class="shell">
         <p class="eyebrow">📖 Tu recorrido de aprendizaje</p><h2>Módulos de práctica</h2>
-        <p class="hint">Al abrir un módulo, escribe tu nombre y pulsa <b>Continuar</b>: entrarás directamente a ese módulo. Dentro elige tu nivel: Básico, Intermedio o Avanzado.</p>
+        <p class="hint">Al abrir un módulo verás tu nombre ya escrito; pulsa <b>Continuar</b> y entrarás directamente a ese módulo. Dentro elige tu nivel: Básico, Intermedio o Avanzado.</p>
         <div class="modules">${c.mods.map((m, i) => `
           <a class="module" style="--c:${c.color}" href="${urlMod(c, m)}" ${ext} aria-label="Abrir el módulo ${esc(m[2])} en una pestaña nueva">
             <small>Módulo ${i + 1}</small><span class="em" aria-hidden="true">${m[1]}</span><h3>${esc(m[2])}</h3><p>${esc(m[3])}</p><span class="go">Abrir módulo ↗</span>
@@ -104,7 +108,7 @@
   /* navegación por la dirección */
   function ruta() {
     const m = location.hash.match(/^#\/carrera\/([\w-]+)/);
-    const c = m && CARRERAS.find(x => x.id === m[1]);
+    const c = m && visibles().find(x => x.id === m[1]);
     $('#vista-inicio').hidden = !!c; $('#vista-carrera').hidden = !c;
     if (c) { renderDetalle(c); window.scrollTo(0, 0); }
     else {
@@ -123,6 +127,26 @@
     let act = 'inicio'; secciones.forEach(s => { if (s.getBoundingClientRect().top < 120) act = s.id; });
     document.querySelectorAll('.nav a').forEach(a => a.classList.toggle('on', a.getAttribute('href') === '#' + act));
   }, { passive: true });
+
+  /* usuario que inició sesión */
+  if (S) {
+    const car = CARRERAS.find(c => c.id === S.carrera);
+    $('#usuario').innerHTML = `<span class="user-chip" title="${esc(S.nombre)}">👤 <b>${esc(S.nombre.split(' ')[0])}</b><small>${ADMIN ? 'Administrador' : esc(car ? car.corto : '')}</small></span>` +
+      (ADMIN ? '<a class="btn btn-line btn-sm" href="admin.html">⚙️ Administración</a>' : '') + '<button class="btn btn-line btn-sm" id="salir" type="button">Salir</button>';
+    $('#salir').onclick = () => ISTY.logout();
+    if (!ADMIN && car) {
+      document.querySelector('#carreras h2').textContent = 'Tu carrera: ' + car.nombre;
+      document.querySelector('#carreras .muted').textContent = 'Tu cuenta tiene acceso a los simuladores de tu carrera.';
+    }
+  }
+  const sp = new URLSearchParams(location.search).get('sinpermiso');
+  if (sp) {
+    const c = CARRERAS.find(x => x.id === sp);
+    $('#aviso').hidden = false;
+    $('#aviso').textContent = `⚠️ Tu cuenta no tiene acceso al simulador de ${c ? c.nombre : 'esa carrera'}. Solo puedes usar los de tu carrera.`;
+    history.replaceState(null, '', location.pathname + location.hash);
+    setTimeout(() => document.getElementById('carreras').scrollIntoView(), 50);
+  }
 
   renderCarreras(); ruta();
 })();

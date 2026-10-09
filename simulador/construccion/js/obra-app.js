@@ -55,6 +55,7 @@
     const h = store.get('obra-history', []);
     h.unshift({ fecha: new Date().toISOString(), docente: App.cfg.name, modulo, titulo, total });
     store.set('obra-history', h.slice(0, 50));
+    window.ISTY?.registrar('resultado', { modulo, titulo, total });
   }
 
   /* ================== INICIO Y MENÚ ================== */

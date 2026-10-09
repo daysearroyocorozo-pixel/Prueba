@@ -56,6 +56,7 @@
     const h = store.get('adm-history', []);
     h.unshift({ fecha: new Date().toISOString(), docente: App.cfg.name, modulo, titulo, total });
     store.set('adm-history', h.slice(0, 50));
+    window.ISTY?.registrar('resultado', { modulo, titulo, total });
   }
 
   /* ================== INICIO Y MENÚ ================== */

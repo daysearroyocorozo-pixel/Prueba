@@ -22,6 +22,7 @@
     const h = App.store.get('aula-history', []);
     h.unshift({ fecha: new Date().toISOString(), docente: App.cfg.name, inst: App.cfg.inst, area: 'Módulo', nivel: modulo, tema: titulo, total, nivelDesemp: '' });
     App.store.set('aula-history', h.slice(0, 50));
+    window.ISTY?.registrar('resultado', { modulo, titulo, total });
   }
   function nivelTexto(t) { return t >= 85 ? 'Excelente' : t >= 70 ? 'Muy bueno' : t >= 55 ? 'Bueno' : t >= 40 ? 'En proceso' : 'Inicial'; }
   function scoreHead(titulo, sub, total) {

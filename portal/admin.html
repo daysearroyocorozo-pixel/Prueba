@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Administración | Laboratorio Virtual ISTY</title>
+<meta name="theme-color" content="#1B4D22" />
+<link rel="icon" type="image/png" href="img/favicon.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="portal.css" />
+<style>
+  .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 22px; box-shadow: var(--shadow); margin-bottom: 24px; }
+  .grid-f { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; align-items: end; }
+  .grid-f label { display: grid; gap: 4px; font-weight: 700; font-size: .85rem; }
+  .grid-f input, .grid-f select, .filtros select, .filtros input { font: inherit; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--bg); color: var(--text); min-width: 0; }
+  .tabla { width: 100%; border-collapse: collapse; font-size: .9rem; }
+  .tabla th, .tabla td { text-align: left; padding: 9px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  .tabla th { font-size: .75rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+  .scroll { overflow-x: auto; }
+  .filtros { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
+  .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 16px; }
+  .kpis div { background: var(--surface-2); border-radius: 12px; padding: 12px 14px; }
+  .kpis b { display: block; font-family: "Playfair Display", serif; font-size: 1.6rem; color: var(--verde-osc); }
+  :root[data-theme="dark"] .kpis b { color: #8fd69a; }
+  .msg { font-weight: 700; margin-top: 10px; }
+  .tabs { display: flex; gap: 8px; margin: 24px 0 18px; }
+  .tabs button[aria-selected="true"] { background: var(--verde-osc); color: #fff; }
+  .del { border: 0; background: none; cursor: pointer; font-size: 1rem; }
+</style>
+<script src="../simulador/js/isty-config.js"></script>
+<script src="../simulador/js/isty-usuarios-demo.js"></script>
+<script src="../simulador/js/isty-auth.js"></script>
+</head>
+<body>
+<header class="top"><div class="shell top-in">
+  <a class="brand" href="index.html"><img src="img/logo-isty.jpg" alt="Logo ISTY" width="48" height="48" /><span><b>Administración del laboratorio</b><small>Laboratorio Virtual ISTY</small></span></a>
+  <div class="top-btns" style="margin-left:auto"><a class="btn btn-line btn-sm" href="index.html">🏠 Portal</a><button class="btn btn-line btn-sm" id="salir" type="button">Salir</button></div>
+</div></header>
+
+<main class="shell" style="padding:24px 0 60px">
+  <div class="aviso" id="demo" hidden>🧪 Modo de demostración: los usuarios que crees y el registro se guardan solo en este navegador. Al conectar el servidor del instituto se guardarán de forma centralizada.</div>
+  <div class="aviso" id="noadmin" hidden>Esta página es solo para el administrador del laboratorio.</div>
+
+  <div id="contenido" hidden>
+    <div class="tabs" role="tablist">
+      <button class="btn btn-line btn-sm" role="tab" aria-selected="true" data-tab="registro">📋 Registro de ingresos</button>
+      <button class="btn btn-line btn-sm" role="tab" aria-selected="false" data-tab="usuarios">👥 Usuarios por carrera</button>
+    </div>
+
+    <section id="tab-registro" class="panel">
+      <h2>Registro de ingresos</h2>
+      <div class="kpis" id="kpis"></div>
+      <div class="filtros">
+        <select id="fc" aria-label="Filtrar por carrera"><option value="">Todas las carreras</option></select>
+        <select id="ft" aria-label="Filtrar por tipo"><option value="">Todos los eventos</option><option value="ingreso">Ingreso</option><option value="abrir_simulador">Abrir simulador</option><option value="resultado">Resultado</option><option value="salida">Salida</option></select>
+        <input id="fu" type="search" placeholder="Buscar usuario o nombre" aria-label="Buscar usuario o nombre" />
+        <button class="btn btn-verde btn-sm" id="csv" type="button">⬇️ Descargar Excel (CSV)</button>
+        <button class="btn btn-line btn-sm" id="borrar" type="button" hidden>Borrar registro de prueba</button>
+      </div>
+      <div class="scroll"><table class="tabla"><thead><tr><th>Fecha y hora</th><th>Usuario</th><th>Nombre</th><th>Carrera</th><th>Evento</th><th>Detalle</th></tr></thead><tbody id="filas"></tbody></table></div>
+    </section>
+
+    <section id="tab-usuarios" class="panel" hidden>
+      <h2>Usuarios por carrera</h2>
+      <p class="muted">Cada estudiante solo puede entrar al simulador de la carrera asignada.</p>
+      <form id="nuevo" class="grid-f" autocomplete="off">
+        <label>Nombre completo<input id="n-nombre" required /></label>
+        <label>Usuario<input id="n-usuario" required autocapitalize="none" spellcheck="false" placeholder="p. ej. cédula o correo" /></label>
+        <label>Contraseña<input id="n-clave" required /></label>
+        <label>Carrera<select id="n-carrera"></select></label>
+        <label>Rol<select id="n-rol"><option value="estudiante">Estudiante</option><option value="admin">Administrador</option></select></label>
+        <button class="btn btn-verde" type="submit">➕ Crear usuario</button>
+      </form>
+      <p class="msg" id="msg" role="status"></p>
+      <div class="filtros" style="margin-top:16px"><select id="uc" aria-label="Filtrar usuarios por carrera"><option value="">Todas las carreras</option></select></div>
+      <div class="scroll"><table class="tabla"><thead><tr><th>Usuario</th><th>Nombre</th><th>Carrera</th><th>Rol</th><th></th></tr></thead><tbody id="usuarios"></tbody></table></div>
+    </section>
+  </div>
+</main>
+
+<script>
+(function () {
+  const $ = s => document.querySelector(s);
+  const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  try { const t = localStorage.getItem('isty-tema'); if (t) document.documentElement.dataset.theme = t; } catch (e) { /* sin almacenamiento */ }
+  const S = ISTY.sesion();
+  $('#salir').onclick = () => ISTY.logout();
+  if (!S || S.rol !== 'admin') { $('#noadmin').hidden = false; return; }
+  $('#contenido').hidden = false; $('#demo').hidden = !ISTY.DEMO; $('#borrar').hidden = !ISTY.DEMO;
+  const opts = Object.entries(ISTY.CARRERAS).map(([k, v]) => `<option value="${k}">${esc(v)}</option>`).join('');
+  $('#fc').insertAdjacentHTML('beforeend', opts); $('#uc').insertAdjacentHTML('beforeend', opts); $('#n-carrera').innerHTML = opts;
+  $('#n-rol').onchange = () => { $('#n-carrera').disabled = $('#n-rol').value === 'admin'; };
+  document.querySelectorAll('[data-tab]').forEach(b => b.onclick = () => {
+    document.querySelectorAll('[data-tab]').forEach(x => x.setAttribute('aria-selected', x === b));
+    $('#tab-registro').hidden = b.dataset.tab !== 'registro'; $('#tab-usuarios').hidden = b.dataset.tab !== 'usuarios';
+  });
+  const TIPOS = { ingreso: '🔓 Ingreso', salida: '🔒 Salida', abrir_simulador: '▶️ Abrir simulador', resultado: '📊 Resultado' };
+  const detalle = r => r.tipo === 'resultado' ? `${r.modulo || ''} · ${r.titulo || ''} · ${r.total}/100` : r.tipo === 'abrir_simulador' ? ISTY.nombreCarrera(r.simulador) + (r.modulo ? ' · módulo ' + r.modulo : '') : '';
+
+  /* ---------- registro ---------- */
+  let REG = [];
+  const filtrados = () => {
+    const c = $('#fc').value, t = $('#ft').value, q = $('#fu').value.trim().toLowerCase();
+    return REG.filter(r => (!c || r.carrera === c) && (!t || r.tipo === t) && (!q || (r.usuario + ' ' + r.nombre).toLowerCase().includes(q)));
+  };
+  function pintarRegistro() {
+    const f = filtrados();
+    const ingresos = f.filter(r => r.tipo === 'ingreso'), res = f.filter(r => r.tipo === 'resultado');
+    const hoy = new Date().toDateString();
+    $('#kpis').innerHTML = `<div><b>${ingresos.length}</b>Ingresos</div><div><b>${new Set(ingresos.map(r => r.usuario)).size}</b>Usuarios distintos</div><div><b>${ingresos.filter(r => new Date(r.fecha).toDateString() === hoy).length}</b>Ingresos hoy</div><div><b>${res.length ? Math.round(res.reduce((a, r) => a + (+r.total || 0), 0) / res.length) : '—'}</b>Promedio de resultados</div>`;
+    $('#filas').innerHTML = f.slice(0, 500).map(r => `<tr><td>${new Date(r.fecha).toLocaleString('es-EC')}</td><td>${esc(r.usuario)}</td><td>${esc(r.nombre)}</td><td>${esc(r.carrera ? ISTY.nombreCarrera(r.carrera) : 'Administración')}</td><td>${TIPOS[r.tipo] || esc(r.tipo)}</td><td>${esc(detalle(r))}</td></tr>`).join('') || '<tr><td colspan="6" class="muted">Aún no hay registros.</td></tr>';
+  }
+  async function cargarRegistro() {
+    try { REG = await ISTY.registros() || []; } catch (e) { REG = []; $('#filas').innerHTML = '<tr><td colspan="6">No se pudo leer el registro del servidor.</td></tr>'; return; }
+    pintarRegistro();
+  }
+  ['#fc', '#ft', '#fu'].forEach(s => $(s).addEventListener('input', pintarRegistro));
+  $('#csv').onclick = () => {
+    const filas = [['Fecha', 'Usuario', 'Nombre', 'Carrera', 'Evento', 'Detalle']].concat(filtrados().map(r => [new Date(r.fecha).toLocaleString('es-EC'), r.usuario, r.nombre, r.carrera ? ISTY.nombreCarrera(r.carrera) : 'Administración', (TIPOS[r.tipo] || r.tipo).replace(/^\S+\s/, ''), detalle(r)]));
+    const csv = '﻿' + filas.map(f => f.map(v => '"' + String(v ?? '').replace(/"/g, '""') + '"').join(';')).join('\r\n');
+    const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
+    a.download = 'registro-laboratorio-isty.csv'; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  };
+  $('#borrar').onclick = () => { if (confirm('¿Borrar el registro de prueba de este navegador?')) { ISTY.borrarRegistrosDemo(); cargarRegistro(); } };
+
+  /* ---------- usuarios ---------- */
+  let USR = [];
+  function pintarUsuarios() {
+    const c = $('#uc').value;
+    $('#usuarios').innerHTML = USR.filter(u => !c || u.carrera === c).map(u => `<tr><td>${esc(u.usuario)}</td><td>${esc(u.nombre)}</td><td>${esc(u.rol === 'admin' ? 'Todas' : ISTY.nombreCarrera(u.carrera))}</td><td>${u.rol === 'admin' ? 'Administrador' : 'Estudiante'}</td><td>${u.fijo || u.usuario === S.usuario ? '' : `<button class="del" data-del="${esc(u.usuario)}" aria-label="Eliminar a ${esc(u.usuario)}">🗑️</button>`}</td></tr>`).join('') || '<tr><td colspan="5" class="muted">Sin usuarios.</td></tr>';
+    document.querySelectorAll('[data-del]').forEach(b => b.onclick = async () => {
+      if (!confirm('¿Eliminar al usuario ' + b.dataset.del + '?')) return;
+      try { await ISTY.eliminarUsuario(b.dataset.del); cargarUsuarios(); } catch (e) { $('#msg').textContent = 'No se pudo eliminar.'; }
+    });
+  }
+  async function cargarUsuarios() {
+    try { USR = await ISTY.usuarios() || []; } catch (e) { USR = []; }
+    pintarUsuarios();
+  }
+  $('#uc').addEventListener('input', pintarUsuarios);
+  $('#nuevo').onsubmit = async e => {
+    e.preventDefault();
+    const rol = $('#n-rol').value;
+    try {
+      await ISTY.crearUsuario({ nombre: $('#n-nombre').value.trim(), usuario: $('#n-usuario').value, contrasena: $('#n-clave').value, carrera: rol === 'admin' ? '' : $('#n-carrera').value, rol });
+      $('#msg').textContent = '✅ Usuario creado.'; $('#nuevo').reset(); $('#n-carrera').disabled = false; cargarUsuarios();
+    } catch (er) { $('#msg').textContent = '⚠️ ' + (er.message.startsWith('HTTP') ? 'El servidor no aceptó el usuario.' : er.message); }
+  };
+
+  cargarRegistro(); cargarUsuarios();
+})();
+</script>
+</body>
+</html>

@@ -617,6 +617,7 @@
       area: App.area.nombre, nivel: App.level.nombre, tema: App.tema.titulo, total: r.total, nivelDesemp: r.nivel
     };
     const h = store.get('aula-history', []); h.unshift(entry); store.set('aula-history', h.slice(0, 50));
+    window.ISTY?.registrar('resultado', { modulo: 'Clase · ' + entry.area + ' · ' + entry.nivel, titulo: entry.tema, total: entry.total });
     renderReport(r, entry);
     show('report');
   }

@@ -61,10 +61,71 @@
     </div>
   </section>
 
+  <!-- ================= MENÚ PRINCIPAL ================= -->
+  <section id="screen-hub" class="screen" hidden>
+    <div class="setup-head">
+      <button class="btn btn-ghost" data-go="home">⬅ Inicio</button>
+      <h1>¿Qué deseas practicar<span id="hub-name"></span>?</h1>
+    </div>
+    <div class="hub-grid">
+      <button class="hub-card" data-hub="aula"><span class="em">🏫</span><b>Dictar una clase</b><small>Aula simulada con estudiantes virtuales, por subnivel y área. Incluye vista 3D y realidad aumentada.</small><span class="tags">Didáctica · Pedagogía · Enseñanza de las áreas</span></button>
+      <button class="hub-card" data-hub="plan"><span class="em">📋</span><b>Planificar y dictar</b><small>Elabora la planificación microcurricular, recibe retroalimentación y luego dicta la clase. Se mide la coherencia entre ambas.</small><span class="tags">Planificación Curricular · Modelos Pedagógicos · Material Didáctico</span></button>
+      <button class="hub-card" data-hub="eval"><span class="em">📊</span><b>Evaluar resultados</b><small>Calcula medidas estadísticas, aplica la escala de calificaciones y decide el refuerzo académico.</small><span class="tags">Estadística Descriptiva · Evaluación de Aprendizajes</span></button>
+      <button class="hub-card" data-hub="casos"><span class="em">🤝</span><b>Casos profesionales</b><small>Resuelve situaciones con familias, estudiantes y directivos: inclusión, interculturalidad, convivencia y normativa.</small><span class="tags">Legislación · Interculturalidad · Psicología · Comunicación</span></button>
+      <button class="hub-card" data-hub="mapa"><span class="em">🗺️</span><b>Mapa curricular</b><small>Las 23 asignaturas de la carrera y el módulo del simulador con el que se relaciona cada una.</small><span class="tags">Malla de Educación Básica</span></button>
+    </div>
+  </section>
+
+  <!-- ================= PLANIFICACIÓN ================= -->
+  <section id="screen-plan" class="screen" hidden>
+    <div class="setup-head">
+      <button class="btn btn-ghost" data-go="setup">⬅ Volver</button>
+      <h1>Planificación microcurricular</h1>
+    </div>
+    <form id="plan-form-wrap">
+      <div id="plan-form" class="setup-grid"></div>
+      <div class="setup-foot" id="plan-submit"><button class="btn btn-primary btn-lg" type="submit">✔ Revisar mi planificación</button></div>
+    </form>
+    <div id="plan-result" hidden></div>
+  </section>
+
+  <!-- ================= EVALUACIÓN ================= -->
+  <section id="screen-eval" class="screen" hidden>
+    <div class="setup-head">
+      <button class="btn btn-ghost" data-go="hub">⬅ Menú</button>
+      <h1>Evaluación y análisis de resultados</h1>
+    </div>
+    <div id="eval-body" class="stack"></div>
+    <div id="eval-result" class="stack" hidden></div>
+  </section>
+
+  <!-- ================= CASOS ================= -->
+  <section id="screen-cases" class="screen" hidden>
+    <div class="setup-head">
+      <button class="btn btn-ghost" data-go="hub">⬅ Menú</button>
+      <h1>Casos de práctica profesional</h1>
+    </div>
+    <div id="cases-list"></div>
+    <div id="case-player" class="stack" hidden></div>
+  </section>
+
+  <!-- ================= MAPA CURRICULAR ================= -->
+  <section id="screen-mapa" class="screen" hidden>
+    <div class="setup-head">
+      <button class="btn btn-ghost" data-go="hub">⬅ Menú</button>
+      <h1>Mapa curricular · Educación Básica</h1>
+    </div>
+    <p class="muted">Íconos: 🏫 Aula · 📋 Planificación · 📊 Evaluación · 🤝 Casos. Borde punteado = relación parcial.</p>
+    <div class="mapa">
+      <div id="mapa-grid" class="mapa-grid"></div>
+      <div id="mapa-detail" class="card mapa-detail"></div>
+    </div>
+  </section>
+
   <!-- ================= CONFIGURACIÓN ================= -->
   <section id="screen-setup" class="screen" hidden>
     <div class="setup-head">
-      <button class="btn btn-ghost" data-go="home">⬅ Volver</button>
+      <button class="btn btn-ghost" data-go="hub">⬅ Menú</button>
       <h1>Prepara tu clase</h1>
     </div>
     <div class="setup-grid">
@@ -87,6 +148,7 @@
       </div>
     </div>
     <div class="setup-foot">
+      <label class="check-pill"><input type="checkbox" id="f-plan"> 📋 Planificar la clase antes de iniciar</label>
       <button class="btn btn-primary btn-lg" id="btn-start" disabled>🔔 Iniciar clase</button>
     </div>
   </section>
@@ -167,6 +229,11 @@
           </div>
         </div>
 
+        <details class="card log-card" id="plan-card" hidden>
+          <summary>📋 Mi planificación</summary>
+          <div id="plan-view" class="small"></div>
+        </details>
+
         <details class="card log-card">
           <summary>📜 Registro de la clase</summary>
           <ol id="log" class="log"></ol>
@@ -214,7 +281,9 @@
 
 <script src="js/content.js"></script>
 <script src="js/sim.js"></script>
+<script src="js/curriculum.js"></script>
 <script src="js/app.js"></script>
+<script src="js/modules.js"></script>
 <script type="module" src="js/ar.js"></script>
 </body>
 </html>

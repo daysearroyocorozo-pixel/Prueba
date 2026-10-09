@@ -116,7 +116,7 @@
     store.set('aula-cfg', App.cfg); syncSoundBtn(); syncBrand();
     // desbloquea la síntesis de voz en iOS con un gesto del usuario
     if (App.cfg.voice && 'speechSynthesis' in window) { const u = new SpeechSynthesisUtterance(' '); u.volume = 0; speechSynthesis.speak(u); }
-    renderSetup(); show('setup');
+    window.Modules.renderHub(); show('hub');
   };
   $$('[data-go]').forEach(b => b.onclick = () => show(b.dataset.go));
 
@@ -147,7 +147,10 @@
     }).join('');
     $('#btn-start').disabled = !(App.level && App.area && App.tema);
   }
-  $('#btn-start').onclick = startClass;
+  $('#btn-start').onclick = () => {
+    if ($('#f-plan').checked) window.Modules.openPlan();
+    else { App.plan = null; startClass(); }
+  };
 
   /* ================== AULA ================== */
   function startClass() {
@@ -155,6 +158,16 @@
     const tema = { ...t, dudas: t.dudas.map(d => ({ ...d })) };
     App.sim = new Simulation({ area: App.area, level: App.level, tema, duracion: App.cfg.dur, numEstudiantes: App.cfg.num, docente: App.cfg.name });
     App.selected = null; App.mode = 'idle'; App.busy = false; App.explained = []; App.ctx = {};
+    const plan = App.plan && App.plan.temaId === t.id ? App.plan : null;
+    if (plan) App.sim.applyPlan(plan);
+    $('#plan-card').hidden = !plan;
+    if (plan) {
+      const nom = id => (PLAN_OPTS.actividades.find(a => a.id === id) || {}).t;
+      $('#plan-view').innerHTML = `<p><b>Modelo:</b> ${esc(PLAN_OPTS.modelos.find(m => m.id === plan.modelo).t)}</p>
+        <p><b>Actividades:</b> ${esc(plan.act.map(nom).join(', ') || '—')}</p>
+        <p><b>Tiempos:</b> ${plan.tiempos.anticipacion} / ${plan.tiempos.construccion} / ${plan.tiempos.consolidacion} min</p>
+        <p><b>Recursos:</b> ${esc(plan.recursos.map(r => PLAN_OPTS.recursos.find(x => x.id === r).t).join(', ') || '—')}</p>`;
+    }
     $('#cls-area').textContent = App.area.emoji + ' ' + App.area.nombre;
     $('#cls-area').style.background = App.area.color;
     $('#cls-level').textContent = App.level.nombre + ' · ' + App.level.grados;
@@ -354,7 +367,7 @@
       const hands = App.sim.activarPrevios();
       App.mode = 'pick-previo'; updateAll();
       setDialog(`Tú: <i>“${esc(q)}”</i><br>${hands.length} estudiante(s) levantaron la mano. <b>Toca a un estudiante</b> para darle la palabra.`, [
-        { label: '✅ Cerrar la ronda de participación', fn: () => busy(async () => { await afterAction(); setDialog('Cerraste la ronda de conocimientos previos. Continúa con el desarrollo de la clase.'); setTab('construccion'); }) }
+        { label: '✅ Cerrar la ronda de participación', fn: () => busy(async () => { App.sim.students.forEach(s => { if (s.estado === 'mano') s.estado = 'ok'; }); setDialog('Cerraste la ronda de conocimientos previos. Continúa con el desarrollo de la clase.'); setTab('construccion'); await afterAction(); }) }
       ]);
     }),
     explicar: () => busy(async () => {
@@ -631,6 +644,7 @@
           <h2>Recomendaciones pedagógicas</h2>
           <ul class="rec">${r.rec.map(x => `<li>${esc(x)}</li>`).join('')}</ul>
         </div>
+        ${App.plan && App.plan.temaId === App.tema.id ? window.Modules.planCoherence(App.plan, App.sim).html : ''}
         <div class="card span2" style="grid-column:1/-1">
           <h2>Estado final de los estudiantes</h2>
           <div class="table-wrap"><table class="st">
@@ -645,12 +659,16 @@
       </div>
       <div class="report-actions">
         <button class="btn btn-primary" id="rp-again">🔁 Repetir esta clase</button>
+        <button class="btn" id="rp-eval">📊 Analizar las calificaciones del curso</button>
         <button class="btn" id="rp-new">📚 Elegir otro tema</button>
+        <button class="btn" id="rp-menu">🏠 Menú principal</button>
         <button class="btn" id="rp-print">🖨️ Imprimir / guardar PDF</button>
         <button class="btn" id="rp-json">⬇ Descargar resultados (JSON)</button>
       </div>`;
     $('#rp-again').onclick = startClass;
     $('#rp-new').onclick = () => { renderSetup(); show('setup'); };
+    $('#rp-eval').onclick = () => window.Modules.openEval(App.sim.students);
+    $('#rp-menu').onclick = () => show('hub');
     $('#rp-print').onclick = () => window.print();
     $('#rp-json').onclick = () => {
       const blob = new Blob([JSON.stringify({ ...entry, resultado: r }, null, 2)], { type: 'application/json' });
@@ -734,4 +752,5 @@
   App.setTab = setTab;
   App.cycleTab = () => { const order = ['anticipacion', 'construccion', 'consolidacion', 'gestion']; setTab(order[(order.indexOf(App.tab) + 1) % order.length]); };
   App.finish = finishClass;
+  Object.assign(App, { show, store, speak, esc, renderSetup, startClass });
 })();

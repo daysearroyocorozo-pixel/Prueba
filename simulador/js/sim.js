@@ -28,8 +28,8 @@ const ROSTER = [
   { nombre: 'Joel',    avatar: '🧒🏽', perfil: 'conversador', pitch: 1.1 },
   { nombre: 'Anahí',   avatar: '👧🏾', perfil: 'apoyo',       pitch: 1.7 },
   { nombre: 'Nayeli',  avatar: '👩🏻‍🦰', perfil: 'dislexia',   pitch: 1.45 },
-  { nombre: 'Santiago',avatar: '👦🏽', perfil: 'promedio',    pitch: 1.0 },
-  { nombre: 'Daniela', avatar: '👧🏼', perfil: 'promedio',    pitch: 1.55 }
+  { nombre: 'Yaku',    avatar: '👦🏽', perfil: 'promedio',    pitch: 1.0 },
+  { nombre: 'Sisa',    avatar: '👧🏽', perfil: 'promedio',    pitch: 1.55 }
 ];
 
 const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
@@ -109,6 +109,9 @@ class Simulation {
     this.activeEvent = null;
     this.finalizada = false;
     this.inicio = Date.now();
+    this.faseInicio = { anticipacion: 0 };
+    this.preguntasHechas = 0;
+    this.bonusExplicar = 1;
   }
 
   /* ---------- utilidades ---------- */
@@ -116,7 +119,28 @@ class Simulation {
   addLog(tipo, texto, quien = 'docente') { this.log.push({ min: Math.round(this.minuto), tipo, texto, quien }); }
   setFase(f) {
     const order = ['anticipacion', 'construccion', 'consolidacion'];
-    if (order.indexOf(f) > order.indexOf(this.fase)) this.fase = f;
+    if (order.indexOf(f) > order.indexOf(this.fase)) { this.fase = f; this.faseInicio[f] = this.minuto; }
+  }
+  /* minutos usados en cada fase */
+  tiemposFase() {
+    const fi = this.faseInicio, fin = this.minuto;
+    const c = fi.construccion ?? fin, k = fi.consolidacion ?? fin;
+    return { anticipacion: Math.round(Math.min(c, k)), construccion: Math.round(Math.max(0, k - c)), consolidacion: Math.round(Math.max(0, fin - k)) };
+  }
+  /* la planificación previa modifica las condiciones de la clase */
+  applyPlan(plan) {
+    this.plan = plan;
+    const bajo = ['preparatoria', 'elemental'].includes(this.level.id);
+    if (plan.recursos.includes('concreto') && bajo) this.bonusExplicar = 1.12;
+    if (plan.recursos.includes('visual')) this.bonusExplicar = (this.bonusExplicar || 1) * 1.05;
+    if (plan.recursos.includes('digital') || plan.recursos.includes('juego')) this.students.forEach(s => { s.atencion = clamp(s.atencion + 0.05); s.motivacion = clamp(s.motivacion + 0.04); });
+    this.students.forEach(s => {
+      const a = plan.adapt[s.perfil];
+      if (!a) return;
+      if (s.perfil === 'tdah' && (a === 'g1' || a === 'g2')) s.decay *= 0.8;
+      if (s.perfil === 'dislexia' && a === 'g2') s.adaptado = true;
+      if (s.perfil === 'dislexia' && a === 'g1') s.adaptadoParcial = true;
+    });
   }
   avg(key) { return this.students.reduce((a, s) => a + s[key], 0) / this.students.length; }
 
@@ -204,7 +228,8 @@ class Simulation {
     this.usadas.explicacion = true; this.setFase('construccion');
     this.tick(3);
     this.students.forEach(s => {
-      const gain = 0.085 * (0.3 + s.atencion * 0.9) * (s.perfil === 'dislexia' ? 0.75 : 1);
+      const dis = s.perfil === 'dislexia' ? (s.adaptado ? 0.95 : s.adaptadoParcial ? 0.85 : 0.75) : 1;
+      const gain = 0.085 * (0.3 + s.atencion * 0.9) * dis * this.bonusExplicar;
       s.comprension = clamp(s.comprension + gain);
       s.atencion = clamp(s.atencion - 0.02);
     });
@@ -222,7 +247,7 @@ class Simulation {
 
   abrirPregunta(q) {
     this.setFase('construccion');
-    this.currentQ = q; this.tick(1);
+    this.currentQ = q; this.tick(1); this.preguntasHechas++;
     this.addLog('pregunta', 'Preguntó: ' + q.q);
     const hands = this.students.filter(s => s.wantsToAnswer(this.dif));
     // el estudiante con TDAH tiende a levantar la mano siempre

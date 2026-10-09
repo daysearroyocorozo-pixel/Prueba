@@ -12,7 +12,8 @@
         ['aula', '🏫', 'Dictar una clase', 'Aula simulada con estudiantes virtuales, por subnivel y área. Incluye vista 3D, realidad aumentada y gafas VR Box.'],
         ['plan', '📋', 'Planificar y dictar', 'Elabora la planificación microcurricular, recibe retroalimentación y luego dicta la clase.'],
         ['eval', '📊', 'Evaluar resultados', 'Calcula medidas estadísticas, aplica la escala de calificaciones y decide el refuerzo académico.'],
-        ['casos', '🤝', 'Casos profesionales', 'Situaciones con familias, estudiantes y directivos: inclusión, interculturalidad, convivencia y normativa.'],
+        ['casos', '🤝', 'Casos profesionales', 'Situaciones simuladas con familias, estudiantes y directivos: actúas en la escena y respondes hablando.'],
+        ['asig', '🎯', 'Prácticas por asignatura', 'Una situación simulada propia para cada una de las 23 asignaturas, basada en sus contenidos mínimos.'],
         ['mapa', '🗺️', 'Mapa curricular', 'Las 23 asignaturas y el módulo con el que se relaciona cada una.']
       ] },
     { id: 'incendios', emoji: '🚒', color: '#B91C1C', nombre: 'Control de Incendios y Operaciones de Rescate', corto: 'Incendios y rescate', asig: 23, ruta: 'incendios/index.html',
@@ -21,7 +22,8 @@
         ['inc', '🚒', 'Comandar un incidente', 'Incendio estructural, accidente vehicular, incendio forestal y materiales peligrosos, con imprevistos. Vista 3D, RA y VR Box.'],
         ['tri', '🩺', 'Triage de múltiples víctimas', 'Clasifica a diez víctimas de un accidente de bus con el método START.'],
         ['lab', '🧪', 'Laboratorio técnico', 'Clases de fuego, agentes extintores, transferencia de calor, rombo NFPA y cálculos.'],
-        ['casos', '🤝', 'Casos profesionales', 'Órdenes inseguras, estrés del personal, inspecciones, coordinación interinstitucional y comunidad.'],
+        ['casos', '🤝', 'Casos profesionales', 'Situaciones simuladas: órdenes inseguras, estrés del personal, inspecciones, coordinación interinstitucional y comunidad. Actúas en la escena y respondes hablando.'],
+        ['asig', '🎯', 'Prácticas por asignatura', 'Una situación simulada propia para cada una de las 23 asignaturas, basada en sus contenidos mínimos.'],
         ['mapa', '🗺️', 'Mapa curricular', 'Las 23 asignaturas y su relación con los módulos del simulador.']
       ] },
     { id: 'construccion', emoji: '🏗️', color: '#B45309', nombre: 'Construcción', corto: 'Construcción', asig: 23, ruta: 'construccion/index.html',
@@ -30,7 +32,8 @@
         ['obra', '🏗️', 'Dirigir una obra', 'Nueve fases con imprevistos, presupuesto y plazo. Vista 3D, RA y VR Box.'],
         ['lab', '🧪', 'Laboratorio de materiales y estructuras', 'Ensayos de hormigón y suelos, esfuerzos, momentos, volúmenes y nivelación.'],
         ['ofi', '📐', 'Oficina técnica', 'Precios unitarios, cómputos, ruta crítica, VAN, marco lógico y contratación pública.'],
-        ['casos', '🤝', 'Casos profesionales', 'Proveedores, accidentes, escombros, cambios estructurales y construcción amazónica.'],
+        ['casos', '🤝', 'Casos profesionales', 'Situaciones simuladas: proveedores, accidentes, escombros, cambios estructurales y construcción amazónica. Actúas en la escena y respondes hablando.'],
+        ['asig', '🎯', 'Prácticas por asignatura', 'Una situación simulada propia para cada una de las 23 asignaturas, basada en sus contenidos mínimos.'],
         ['mapa', '🗺️', 'Mapa curricular', 'Las 23 asignaturas y su relación con los módulos del simulador.']
       ] },
     { id: 'administracion', emoji: '🏛️', color: '#0F766E', nombre: 'Administración en Instituciones Públicas', corto: 'Administración pública', asig: 22, ruta: 'administracion/index.html',
@@ -39,7 +42,8 @@
         ['jor', '🏛️', 'Jornada de atención ciudadana', 'Ciudadanos virtuales de 08:00 a 16:30: atención prioritaria, trámites, información pública, quejas, sobornos e imprevistos. Vista 3D, RA y VR Box.'],
         ['fin', '💰', 'Finanzas y presupuesto público', 'Contabilidad, ciclo presupuestario, momentos del gasto y cálculos.'],
         ['nor', '⚖️', 'Normativa y planificación', 'Actos administrativos, PDOT, POA, políticas públicas, contratación y control interno.'],
-        ['casos', '🤝', 'Casos profesionales', 'Nepotismo, desempeño, campañas, proveedores, políticas y mejora de trámites.'],
+        ['casos', '🤝', 'Casos profesionales', 'Situaciones simuladas: nepotismo, desempeño, campañas, proveedores, políticas y mejora de trámites. Actúas en la escena y respondes hablando.'],
+        ['asig', '🎯', 'Prácticas por asignatura', 'Una situación simulada propia para cada una de las 22 asignaturas, basada en sus contenidos mínimos.'],
         ['mapa', '🗺️', 'Mapa curricular', 'Las 22 asignaturas y su relación con los módulos del simulador.']
       ] }
   ];
@@ -73,7 +77,7 @@
     const lista = visibles().filter(c => !t || norm([c.nombre, c.desc, ...c.mods.map(m => m[2] + ' ' + m[3])].join(' ')).includes(t));
     $('#lista-carreras').innerHTML = lista.map(c => `
       <article class="career reveal in" style="--c:${c.color}">
-        <div class="career-head"><span class="career-icon" aria-hidden="true">${c.emoji}</span><h3>${esc(c.nombre)}</h3><span class="pill">5 módulos</span></div>
+        <div class="career-head"><span class="career-icon" aria-hidden="true">${c.emoji}</span><h3>${esc(c.nombre)}</h3><span class="pill">${c.mods.length} módulos</span></div>
         <p>${esc(c.desc)}</p>
         <div class="chips">${c.mods.map(m => `<a class="chip" href="${urlMod(c, m)}" ${ext} aria-label="Abrir el módulo ${esc(m[2])} en una pestaña nueva">${m[1]} ${esc(m[2])}</a>`).join('')}</div>
         <div class="career-foot"><a class="btn btn-verde" href="#/carrera/${c.id}">Ver módulos →</a><a class="btn btn-line" href="${urlSim(c)}" ${ext}>Abrir simulador ↗</a></div>
@@ -90,7 +94,7 @@
         <div class="detail-row">
           <div><div class="detail-title"><span class="career-icon" aria-hidden="true">${c.emoji}</span><h1>${esc(c.nombre)}</h1></div>
             <p class="muted">${esc(c.desc)}</p>
-            <div class="meta"><span>5 módulos</span><span>${c.asig} asignaturas relacionadas</span><span>3 niveles</span></div></div>
+            <div class="meta"><span>${c.mods.length} módulos</span><span>${c.asig} asignaturas relacionadas</span><span>3 niveles</span></div></div>
           <a class="btn btn-verde" href="${urlSim(c)}" ${ext}>Abrir simulador ↗</a>
         </div></div></div>
       <section class="section"><div class="shell">

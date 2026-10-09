@@ -82,6 +82,7 @@
     if (k === 'tri') openTriage();
     if (k === 'lab') openLab();
     if (k === 'casos') openCases(cod);
+    if (k === 'asig') openAsig(cod);
     if (k === 'mapa') openMapa();
   }
   $('#btn-history').onclick = () => {
@@ -483,7 +484,24 @@
   }
 
   /* ================== CASOS ================== */
+
+  /* ================== PRÁCTICAS POR ASIGNATURA ================== */
+  function openAsig(cod) {
+    const lista = window.CASOS_ASIG || [];
+    $('#screen-cases h1').textContent = 'Prácticas por asignatura';
+    $('#cases-list').innerHTML = '<p class="muted">Una situación simulada para cada asignatura de la malla: actúa en la escena y responde con tu voz o por escrito.</p>' +
+      [1, 2, 3, 4].map(pao => {
+        const ms = MALLA_CIOR.filter(m => m.pao === pao && lista.some(x => x.cod === m.cod));
+        return ms.length ? `<h3 class="asig-pao">PAO ${pao}</h3><div class="topic-list">${ms.map(m => { const c = lista.find(x => x.cod === m.cod); return `<button class="choice" data-asig="${m.cod}"><span class="em">${c.persona.avatar}</span><span><b>${esc(m.n)}</b><small>${esc(c.titulo)}</small><small class="tags">${esc(c.objetivo || c.persona.rol)}</small></span></button>`; }).join('')}</div>` : '';
+      }).join('');
+    $$('[data-asig]').forEach(b => b.onclick = () => playCase(lista.find(x => x.cod === b.dataset.asig)));
+    $('#case-player').hidden = true; $('#cases-list').hidden = false;
+    show('cases');
+    const b = cod && document.querySelector(`[data-asig="${cod}"]`); if (b) b.click();
+  }
+
   function openCases(cod) {
+    $('#screen-cases h1').textContent = 'Casos profesionales';
     const list = cod ? CASOS_CIOR.filter(c => c.asignaturas.includes(cod)) : CASOS_CIOR;
     $('#cases-list').innerHTML = (cod ? `<p class="muted">Casos relacionados con <b>${esc(subj(cod).n)}</b>. <button class="btn btn-sm" id="cases-all">Ver todos</button></p>` : '') +
       `<div class="topic-list">${list.map(c => `<button class="choice" data-case="${c.id}"><span class="em">${c.persona.avatar}</span><span><b>${esc(c.titulo)}</b><small>${esc(c.persona.rol)}</small><small class="tags">${c.asignaturas.map(a => esc(subj(a).n)).join(' · ')}</small></span></button>`).join('')}</div>`;
@@ -494,6 +512,14 @@
   }
   function sayLine(c, t) { return /^\(.*\)$/.test(t) ? `<div class="case-say"><i>${esc(t.slice(1, -1))}</i></div>` : `<div class="case-say"><b>${esc(c.persona.nombre)}:</b> “${esc(t)}”</div>`; }
   function playCase(c) {
+    // situación simulada: actuar en la escena y responder hablando o escribiendo
+    if (window.CasoVivo) {
+      $('#cases-list').hidden = true; $('#case-player').hidden = false;
+      const ok = CasoVivo.play(c, { P: $('#case-player'), btn: 'btn-primary cior-btn', speak: speak, toast: toast, scoreHead,
+        sub: (c.cod ? 'Práctica de la asignatura · ' : 'Caso profesional · ') + c.asignaturas.map(a => (subj(a) || {}).n).join(', '),
+        onEnd: total => saveHistory(c.cod ? 'Asignatura' : 'Casos', c.titulo, total), onList: () => c.cod ? openAsig() : openCases(), onMenu: () => show('hub') });
+      if (ok) return;
+    }
     const st = { i: 0, pts: 0, log: [] }, P = $('#case-player');
     $('#cases-list').hidden = true; P.hidden = false;
     const step = () => {
@@ -532,10 +558,10 @@
       const m = subj(b.dataset.cod), casos = CASOS_CIOR.filter(c => c.asignaturas.includes(m.cod)), escs = ESCENARIOS.filter(e => e.asignaturas.includes(m.cod));
       $$('[data-cod]').forEach(x => x.classList.toggle('sel', x === b));
       $('#mapa-detail').innerHTML = `<h2>${esc(m.n)}</h2><p class="small muted">${m.cod} · PAO ${m.pao} · Unidad ${m.u} · Relación ${m.rel}</p><p>${esc(m.sim)}</p>
-        <div class="report-actions">${m.mod.map(k => `<button class="btn" data-mod="${k}">${MODS[k].emoji} ${MODS[k].nombre}</button>`).join('')}</div>
+        <div class="report-actions">${m.mod.map(k => `<button class="btn" data-mod="${k}">${MODS[k].emoji} ${MODS[k].nombre}</button>`).join('')}${(window.CASOS_ASIG || []).some(x => x.cod === m.cod) ? '<button class="btn" data-mod="asig">🎯 Práctica de la asignatura</button>' : ''}</div>
         ${escs.length ? `<p class="small"><b>Escenarios:</b> ${escs.map(e => esc(e.nombre)).join(' · ')}</p>` : ''}
         ${casos.length ? `<p class="small"><b>Casos:</b> ${casos.map(c => esc(c.titulo)).join(' · ')}</p>` : ''}`;
-      $$('#mapa-detail [data-mod]').forEach(x => x.onclick = () => { if (x.dataset.mod === 'inc' && escs.length) App.esc = escs[0]; openModule(x.dataset.mod, casos.length ? m.cod : undefined); });
+      $$('#mapa-detail [data-mod]').forEach(x => x.onclick = () => { if (x.dataset.mod === 'inc' && escs.length) App.esc = escs[0]; openModule(x.dataset.mod, x.dataset.mod === 'asig' || casos.length ? m.cod : undefined); });
       if (innerWidth < 900) $('#mapa-detail').scrollIntoView({ behavior: 'smooth' });
     });
     $('#mapa-detail').innerHTML = '<p class="muted">Selecciona una asignatura para ver con qué módulo se practica.</p>';

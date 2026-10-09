@@ -39,6 +39,7 @@
       if (k === 'plan') { $('#f-plan').checked = true; App.renderSetup(); App.show('setup'); }
       if (k === 'eval') openEval(null);
       if (k === 'casos') openCases();
+      if (k === 'asig') openAsig();
       if (k === 'mapa') openMapa();
     });
   }
@@ -307,7 +308,24 @@
   }
 
   /* ================== CASOS ================== */
+
+  /* ================== PRÁCTICAS POR ASIGNATURA ================== */
+  function openAsig(cod) {
+    const lista = window.CASOS_ASIG || [];
+    $('#screen-cases h1').textContent = 'Prácticas por asignatura';
+    $('#cases-list').innerHTML = '<p class="muted">Una situación simulada para cada asignatura de la malla: actúa en la escena y responde con tu voz o por escrito.</p>' +
+      [1, 2, 3, 4].map(pao => {
+        const ms = MALLA.filter(m => m.pao === pao && lista.some(x => x.cod === m.cod));
+        return ms.length ? `<h3 class="asig-pao">PAO ${pao}</h3><div class="topic-list">${ms.map(m => { const c = lista.find(x => x.cod === m.cod); return `<button class="choice" data-asig="${m.cod}"><span class="em">${c.persona.avatar}</span><span><b>${esc(m.n)}</b><small>${esc(c.titulo)}</small><small class="tags">${esc(c.objetivo || c.persona.rol)}</small></span></button>`; }).join('')}</div>` : '';
+      }).join('');
+    $$('[data-asig]').forEach(b => b.onclick = () => playCase(lista.find(x => x.cod === b.dataset.asig)));
+    $('#case-player').hidden = true; $('#cases-list').hidden = false;
+    App.show('cases');
+    const b = cod && document.querySelector(`[data-asig="${cod}"]`); if (b) b.click();
+  }
+
   function openCases(filterCod) {
+    $('#screen-cases h1').textContent = 'Casos profesionales';
     const list = filterCod ? CASES.filter(c => c.asignaturas.includes(filterCod)) : CASES;
     $('#cases-list').innerHTML = (filterCod ? `<p class="muted">Casos relacionados con <b>${esc(subj(filterCod).n)}</b>. <button class="btn btn-sm" id="cases-all">Ver todos</button></p>` : '') +
       `<div class="topic-list">${list.map(c => `<button class="choice" data-case="${c.id}"><span class="em">${c.persona.avatar}</span><span><b>${esc(c.titulo)}</b><small>${esc(c.persona.rol)}</small><small class="tags">${c.asignaturas.map(a => esc(subj(a).n)).join(' · ')}</small></span></button>`).join('')}</div>`;
@@ -322,6 +340,14 @@
     return /^\(.*\)$/.test(t) ? `<div class="case-say"><i>${esc(t.slice(1, -1))}</i></div>` : `<div class="case-say"><b>${esc(c.persona.nombre)}:</b> “${esc(t)}”</div>`;
   }
   function playCase(c) {
+    // situación simulada: actuar en la escena y responder hablando o escribiendo
+    if (window.CasoVivo) {
+      $('#cases-list').hidden = true; $('#case-player').hidden = false;
+      const ok = CasoVivo.play(c, { P: $('#case-player'), btn: 'btn-primary', speak: App.speak, toast: App.toast, scoreHead,
+        sub: (c.cod ? 'Práctica de la asignatura · ' : 'Caso profesional · ') + c.asignaturas.map(a => (subj(a) || {}).n).join(', '),
+        onEnd: total => saveHistory(c.cod ? 'Asignatura' : 'Casos', c.titulo, total), onList: () => c.cod ? openAsig() : openCases(), onMenu: () => App.show('hub') });
+      if (ok) return;
+    }
     const st = { i: 0, pts: 0, log: [] };
     $('#cases-list').hidden = true; $('#case-player').hidden = false;
     const P = $('#case-player');
@@ -377,7 +403,7 @@
     $('#mapa-detail').innerHTML = `<h2>${esc(m.n)}</h2>
       <p class="small muted">${m.cod} · PAO ${m.pao} · Unidad ${m.u} · Relación ${m.rel}</p>
       <p>${esc(m.sim)}</p>
-      <div class="report-actions">${m.mod.map(k => `<button class="btn" data-mod="${k}">${MODULES[k].emoji} ${MODULES[k].nombre}</button>`).join('')}</div>
+      <div class="report-actions">${m.mod.map(k => `<button class="btn" data-mod="${k}">${MODULES[k].emoji} ${MODULES[k].nombre}</button>`).join('')}${(window.CASOS_ASIG || []).some(x => x.cod === m.cod) ? '<button class="btn" data-mod="asig">🎯 Práctica de la asignatura</button>' : ''}</div>
       ${casos.length ? `<p class="small"><b>Casos relacionados:</b> ${casos.map(c => esc(c.titulo)).join(' · ')}</p>` : ''}`;
     $$('#mapa-detail [data-mod]').forEach(b => b.onclick = () => {
       const k = b.dataset.mod;
@@ -385,6 +411,7 @@
       if (k === 'plan') { $('#f-plan').checked = true; App.renderSetup(); App.show('setup'); }
       if (k === 'eval') openEval(null);
       if (k === 'casos') openCases(casos.length ? cod : undefined);
+      if (k === 'asig') openAsig(cod);
     });
     if (window.innerWidth < 900) $('#mapa-detail').scrollIntoView({ behavior: 'smooth' });
   }

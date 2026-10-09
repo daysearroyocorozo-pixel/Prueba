@@ -5,6 +5,7 @@
      gafas de RA/RM (panel flotante 3D con las órdenes)
    ========================================================= */
 import * as THREE from '../../vendor/three.module.min.js';
+import { createVrBox } from '../../js/vrbox.js';
 
 const App = window.CiorApp;
 const $ = s => document.querySelector(s);
@@ -229,8 +230,14 @@ async function startXR(type) {
   xrSession.addEventListener('end', () => { hitSource = null; xrSession = null; mode = null; placed = false; hud.visible = false; reticle.visible = false; root.visible = true; renderer.setAnimationLoop(null); restoreUi(); });
   renderer.setAnimationLoop(animate); sync();
 }
-function stopAll() { if (mode === 'xr' && xrSession) return xrSession.end(); if (mode === 'inline') stopInline(); }
+function stopAll() { vr.exit(); if (mode === 'xr' && xrSession) return xrSession.end(); if (mode === 'inline') stopInline(); }
 
+/* gafas sencillas tipo VR Box (cardboard) */
+const vr = createVrBox({
+  App, getScene: () => scene, sync: () => sync(), color: 'rgba(60,15,15,.94)', view: { pos: [0, 1.6, 4.6], target: [0, 0.6, 0] },
+  prepare: () => { if (mode === 'inline') stopInline(); init(); build(); root.position.set(0, 0, 0); root.rotation.set(0, 0, 0); world.scale.setScalar(1); root.visible = true; scene.background = new THREE.Color(0xdbeafe); }
+});
+$('#btn-vr').onclick = () => { if (mode !== 'xr') vr.enter(); };
 $('#btn-3d').onclick = () => { if (mode === 'inline') stopInline(); else if (!mode) startInline(); };
 $('#btn-ar').onclick = async () => {
   if (mode === 'xr') return stopAll();

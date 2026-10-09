@@ -192,7 +192,7 @@
 
   /* decide qué ocurre a continuación: llamar a alguien, esperar o cerrar */
   function turno() {
-    const s = App.st; s.actual = null;
+    const s = App.st; s.actual = null; s.enCola = true;
     if (s.t >= JORNADA) { log('Son las 16:30: fin del horario de atención.'); return cerrar(); }
     if (!s.cola.length && !s.llegadas.length) return cerrar();
     renderAll();
@@ -210,7 +210,7 @@
 
   function llamar(q) {
     return busy(async () => {
-      const s = App.st;
+      const s = App.st; s.enCola = false;
       if (!q.c.prio && s.cola.some(x => x.c.prio)) { s.prioFaltas++; log(`Llamó a ${q.c.nombre} antes que a una persona de atención prioritaria.`, 'alerta'); toast('⚠️ Había una persona de atención prioritaria esperando.'); }
       s.cola = s.cola.filter(x => x !== q); s.actual = q; q.llamado = s.t;
       log(`Atiende a ${q.c.nombre}.`);
@@ -238,7 +238,7 @@
       setDialog(`<p><b>Tu respuesta:</b> ${esc(o.t)}</p><div class="case-fb" style="border-color:${color}"><b style="color:${color}">${o.p === 2 ? 'Atención adecuada' : o.p === 1 ? 'Atención parcialmente adecuada' : 'Atención inadecuada'}</b><br>${esc(o.fb)}</div><p class="small muted">Satisfacción de ${esc(q.c.nombre)}: ${Math.round(sat)}%${esperado > 15 ? ` (esperó ${Math.round(esperado)} min)` : ''}</p>`);
       await speak(sat >= 70 ? 'Muchas gracias por su atención.' : sat >= 40 ? 'Bueno… gracias.' : '¡Qué mala atención!', q.c.pitch);
       s.actual = null; renderAll();
-      const ev = maybeEvent();
+      const ev = maybeEvent(); s.enCola = false;
       setDialog($('#dialog-text').innerHTML, [{ label: ev ? '⚠️ Atender la novedad' : 'Continuar ▶', cls: 'good', fn: () => ev ? mostrarNovedad(ev) : turno() }]);
     });
   }
@@ -251,7 +251,7 @@
   }
   function mostrarNovedad(ev) {
     return busy(async () => {
-      const s = App.st; s.usados.add(ev.id);
+      const s = App.st; s.usados.add(ev.id); s.enCola = false;
       const esTarea = !!ev.titulo;
       log((esTarea ? 'Tarea interna: ' : 'Novedad: ') + (ev.titulo || ev.txt), 'evento');
       setDialog(`<span class="pill adm-pill">${esTarea ? '🗂️ Tarea interna · ' + esc(ev.titulo) : '⚠️ Imprevisto'}</span>${esTarea ? `<p class="small muted">${esc(ev.quien)}</p>` : ''}<p><b>${esc(ev.txt)}</b></p>`);
@@ -286,7 +286,7 @@
   $$('[data-fa]').forEach(b => b.onclick = () => busy(async () => {
     const r = FREE[b.dataset.fa](); if (!r) return; renderAll();
     if (r.voz) await speak(r.voz, 1.05);
-    if (!App.st.actual) turno();
+    if (App.st.enCola) turno();
   }));
 
   /* ---------- cierre y evaluación ---------- */

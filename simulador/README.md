@@ -38,6 +38,13 @@ Funciona en **computadora, celular y gafas de realidad aumentada** (WebXR).
     **en miniatura sobre la mesa**; la interfaz se muestra superpuesta a la cámara.
   - **Celulares sin WebXR (iPhone)**: modo alternativo con cámara + giroscopio.
   - Botón **↕ Escala** para alternar entre miniatura y tamaño real.
+- **Gafas sencillas tipo VR Box / cardboard** (botón **📱 VR Box**, en los cuatro simuladores):
+  el celular va dentro del visor; la pantalla se divide en dos (visión estereoscópica) y la
+  vista sigue el movimiento de la cabeza con el giroscopio. Abajo flota un panel con el texto
+  y las opciones. Para elegir: mirar un botón 1,6 s (aparece un anillo amarillo de carga) o
+  usar el control Bluetooth del visor (joystick/flechas o volumen para moverse, gatillo/Enter
+  para elegir). En EGB, mirar a un estudiante y pulsar el gatillo le da la palabra.
+  Requiere HTTPS para el giroscopio; en iPhone se pide permiso de movimiento.
 
 ## Módulos alineados con la malla de Educación Básica
 

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="theme-color" content="#7f1d1d" />
+<title>Simulador de Emergencias</title>
+<meta name="description" content="Simulador para la carrera de Control de Incendios y Operaciones de Rescate: escenarios de emergencia, triage, laboratorio técnico, casos y realidad aumentada." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/sim.css" />
+<link rel="stylesheet" href="css/cior.css" />
+</head>
+<body>
+
+<header class="topbar cior-top">
+  <div class="brand">
+    <span class="brand-logo" aria-hidden="true">🚒</span>
+    <div>
+      <div class="brand-name">Simulador de Emergencias</div>
+      <div class="brand-sub" id="brand-sub">Laboratorio Virtual · Control de Incendios y Operaciones de Rescate</div>
+    </div>
+  </div>
+  <div class="topbar-actions">
+    <button class="icon-btn" id="btn-sound" title="Activar/desactivar voces" aria-pressed="true">🔊</button>
+    <button class="icon-btn" id="btn-theme" title="Cambiar tema claro/oscuro">🌓</button>
+  </div>
+</header>
+
+<main>
+  <!-- ================= INICIO ================= -->
+  <section id="screen-home" class="screen">
+    <div class="hero">
+      <div class="hero-text">
+        <h1>Comanda emergencias con tripulación y víctimas virtuales</h1>
+        <p>Asume el mando de un incendio estructural, un accidente vehicular, un incendio forestal o un derrame de materiales peligrosos. Tu tripulación ejecuta tus órdenes, las víctimas evolucionan con el tiempo y el fuego crece si no actúas. Practica también el triage, la ciencia del fuego y casos de ética, liderazgo y normativa.</p>
+        <ul class="hero-feats">
+          <li>📱💻 Celular y computadora</li>
+          <li>🥽 Realidad aumentada (WebXR)</li>
+          <li>🎚️ 3 niveles de dificultad</li>
+          <li>📚 23 asignaturas de la malla</li>
+        </ul>
+        <p class="small"><a href="../index.html">← Ir al simulador de la carrera de Educación Básica</a></p>
+      </div>
+      <form id="home-form" class="card form-card">
+        <h2>Datos del estudiante</h2>
+        <label>Nombre<input id="f-name" required maxlength="40" placeholder="Ej.: Carlos Shiguango" autocomplete="name"></label>
+        <label>Institución / laboratorio<input id="f-inst" maxlength="60" placeholder="Laboratorio Virtual Institucional"></label>
+        <label class="check"><input type="checkbox" id="f-voice" checked> Voces de la tripulación y las víctimas</label>
+        <button class="btn btn-primary btn-lg cior-btn" type="submit">Continuar ▶</button>
+        <button class="btn btn-ghost" type="button" id="btn-history">📋 Historial</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- ================= MENÚ ================= -->
+  <section id="screen-hub" class="screen" hidden>
+    <div class="setup-head">
+      <button class="btn btn-ghost" data-go="home">⬅ Inicio</button>
+      <h1>¿Qué deseas practicar<span id="hub-name"></span>?</h1>
+    </div>
+    <div class="hub-grid">
+      <button class="hub-card" data-hub="inc"><span class="em">🚒</span><b>Comandar un incidente</b><small>Cuatro escenarios por niveles: decisiones de comando, seguridad, táctica, rescate y atención de víctimas, con imprevistos. Vista 3D y realidad aumentada.</small><span class="tags">Técnicas de Intervención · Control de Incendios · Operaciones de Rescate · Materiales Peligrosos</span></button>
+      <button class="hub-card" data-hub="tri"><span class="em">🩺</span><b>Triage de múltiples víctimas</b><small>Clasifica a diez víctimas de un accidente de bus con el método START.</small><span class="tags">Primeros Auxilios · Atención Prehospitalaria · Morfofisiología</span></button>
+      <button class="hub-card" data-hub="lab"><span class="em">🧪</span><b>Laboratorio técnico</b><small>Clases de fuego y agentes extintores, transferencia de calor, fases del incendio, rombo NFPA y cálculos de ERA, agua y áreas.</small><span class="tags">Ciencias, Química y Física del Fuego · Matemáticas · Materiales Peligrosos</span></button>
+      <button class="hub-card" data-hub="casos"><span class="em">🤝</span><b>Casos profesionales</b><small>Órdenes inseguras, estrés del personal, inspecciones, coordinación interinstitucional, informes y trabajo con la comunidad.</small><span class="tags">Ética y Liderazgo · Psicología · Legislación · Educación Ciudadana</span></button>
+      <button class="hub-card" data-hub="mapa"><span class="em">🗺️</span><b>Mapa curricular</b><small>Las 23 asignaturas de la carrera y el módulo con el que se practica cada una.</small><span class="tags">Malla de Control de Incendios y Operaciones de Rescate</span></button>
+    </div>
+  </section>
+
+  <!-- ================= PREPARAR INCIDENTE ================= -->
+  <section id="screen-setup" class="screen" hidden>
+    <div class="setup-head">
+      <button class="btn btn-ghost" data-go="hub">⬅ Menú</button>
+      <h1>Elige el escenario</h1>
+    </div>
+    <div class="setup-grid">
+      <div class="card span2"><h2><span class="step cior-step">1</span> Escenario</h2><div id="esc-list" class="topic-list"></div></div>
+      <div class="card span2"><h2><span class="step cior-step">2</span> Nivel</h2><div id="niv-list" class="choice-grid niv-grid"></div></div>
+      <div class="card span2"><h2><span class="step cior-step">3</span> Tu tripulación</h2><div id="crew-preview" class="roster-preview"></div></div>
+    </div>
+    <div class="setup-foot"><button class="btn btn-primary btn-lg cior-btn" id="btn-start" disabled>🚨 Salir a la emergencia</button></div>
+  </section>
+
+  <!-- ================= INCIDENTE ================= -->
+  <section id="screen-inc" class="screen" hidden>
+    <div class="class-bar">
+      <div class="class-info">
+        <span id="inc-esc" class="pill cior-pill"></span>
+        <span id="inc-niv" class="pill pill-soft"></span>
+        <strong id="inc-fase"></strong>
+      </div>
+      <div class="class-tools">
+        <div class="clock" title="Tiempo transcurrido">⏱️ <span id="inc-clock">0</span> min</div>
+        <button class="btn btn-sm" id="btn-3d">🧊 3D</button>
+        <button class="btn btn-sm btn-ar" id="btn-ar">🥽 RA</button>
+        <button class="btn btn-sm btn-danger" id="btn-end">Terminar</button>
+      </div>
+    </div>
+    <div class="class-layout">
+      <div class="stage">
+        <div class="card scene-card">
+          <svg id="scene" viewBox="0 0 600 330" role="img" aria-label="Escena del incidente"></svg>
+          <div id="view3d" class="view3d" hidden><canvas id="canvas3d"></canvas><div class="view3d-hint">Arrastra para girar · rueda/pellizco para acercar</div></div>
+          <div class="gauges" id="gauges"></div>
+        </div>
+        <div class="card"><h2 class="h-sm">👩‍🚒 Tripulación</h2><div id="crew" class="crew-grid"></div></div>
+        <div class="card"><h2 class="h-sm">🧍 Víctimas</h2><div id="vics" class="crew-grid"></div></div>
+      </div>
+      <aside class="panel" id="panel">
+        <div class="dialog card cior-dialog" id="dialog" aria-live="polite">
+          <div class="dialog-text" id="dialog-text"></div>
+          <div class="dialog-choices" id="dialog-choices"></div>
+        </div>
+        <div class="actions card" id="free-actions">
+          <h2 class="h-sm">Órdenes generales</h2>
+          <div class="tab-panel">
+            <button class="act" data-fa="com">📻 Informar situación a ECU 911</button>
+            <button class="act" data-fa="relevo">🔄 Relevo del equipo interior</button>
+            <button class="act" data-fa="rehab">💧 Rehabilitación e hidratación</button>
+            <button class="act" data-fa="apoyo">🚒 Solicitar unidad de apoyo</button>
+            <button class="act" data-fa="seguridad">🦺 Designar oficial de seguridad</button>
+            <button class="act" data-fa="retirada">🛑 Retirar al personal del interior</button>
+          </div>
+        </div>
+        <details class="card log-card"><summary>📜 Registro cronológico</summary><ol id="log" class="log"></ol></details>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ================= REPORTE ================= -->
+  <section id="screen-report" class="screen" hidden><div id="report"></div></section>
+
+  <!-- ================= TRIAGE ================= -->
+  <section id="screen-tri" class="screen" hidden>
+    <div class="setup-head">
+      <button class="btn btn-ghost" data-go="hub">⬅ Menú</button>
+      <h1>Triage START · Accidente de bus</h1>
+    </div>
+    <div id="tri-body"></div>
+  </section>
+
+  <!-- ================= LABORATORIO ================= -->
+  <section id="screen-lab" class="screen" hidden>
+    <div class="setup-head">
+      <button class="btn btn-ghost" data-go="hub">⬅ Menú</button>
+      <h1>Laboratorio técnico</h1>
+    </div>
+    <div id="lab-body"></div>
+  </section>
+
+  <!-- ================= CASOS ================= -->
+  <section id="screen-cases" class="screen" hidden>
+    <div class="setup-head">
+      <button class="btn btn-ghost" data-go="hub">⬅ Menú</button>
+      <h1>Casos profesionales</h1>
+    </div>
+    <div id="cases-list"></div>
+    <div id="case-player" class="stack" hidden></div>
+  </section>
+
+  <!-- ================= MAPA ================= -->
+  <section id="screen-mapa" class="screen" hidden>
+    <div class="setup-head">
+      <button class="btn btn-ghost" data-go="hub">⬅ Menú</button>
+      <h1>Mapa curricular · Control de Incendios y Operaciones de Rescate</h1>
+    </div>
+    <p class="muted">Íconos: 🚒 Incidente · 🩺 Triage · 🧪 Laboratorio · 🤝 Casos. Borde punteado = relación parcial.</p>
+    <div class="mapa"><div id="mapa-grid" class="mapa-grid"></div><div id="mapa-detail" class="card mapa-detail"></div></div>
+  </section>
+</main>
+
+<dialog id="history-dlg" class="modal">
+  <h2>📋 Historial</h2>
+  <div id="history-list"></div>
+  <div class="modal-foot"><button class="btn btn-ghost" id="history-clear">Borrar historial</button><button class="btn btn-primary" id="history-close">Cerrar</button></div>
+</dialog>
+
+<div id="xr-overlay" class="xr-overlay" hidden>
+  <div class="xr-top">
+    <span id="xr-status">Mueve el dispositivo para detectar una superficie y toca para colocar la escena.</span>
+    <div class="xr-top-btns"><button class="btn btn-sm" id="xr-scale">↕ Escala</button><button class="btn btn-sm btn-danger" id="xr-exit">✕ Salir</button></div>
+  </div>
+  <div class="xr-bottom" id="xr-bottom"></div>
+</div>
+
+<div id="toast" class="toast" role="status" hidden></div>
+
+<script src="js/cior-data.js"></script>
+<script src="js/cior-app.js"></script>
+<script type="module" src="js/cior-3d.js"></script>
+</body>
+</html>

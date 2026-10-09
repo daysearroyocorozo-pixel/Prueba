@@ -1,0 +1,61 @@
+/* Estilos específicos del Simulador de Emergencias (se suman a ../css/sim.css) */
+:root { --fire: #b91c1c; }
+.cior-top { background: #7f1d1d; }
+.cior-btn, .btn-primary.cior-btn { background: var(--fire); border-color: var(--fire); color: #fff; }
+.cior-pill { background: var(--fire); }
+.cior-step { background: var(--fire); }
+.cior-ring { background: conic-gradient(var(--fire) calc(var(--p) * 1%), var(--surface-2) 0); }
+.cior-h3 { background: #7f1d1d !important; }
+.cior-dialog { border-left-color: var(--fire); }
+.hub-card .tags, .choice small.tags { color: var(--fire); }
+:root[data-theme="dark"] .hub-card .tags, :root[data-theme="dark"] .choice small.tags { color: #fca5a5; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .hub-card .tags { color: #fca5a5; } }
+.niv-grid { grid-template-columns: repeat(3, 1fr); }
+.h-sm { font-size: 1rem; margin-bottom: 8px; }
+
+/* escena */
+.scene-card { padding: 10px; }
+#scene { width: 100%; height: auto; display: block; border-radius: 10px; }
+.flame { animation: flick .7s ease-in-out infinite alternate; transform-origin: center; }
+@keyframes flick { from { opacity: .75; } to { opacity: 1; } }
+.gauges { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px 14px; margin-top: 10px; }
+.gauge-top { display: flex; justify-content: space-between; font-size: .85rem; font-weight: 700; }
+.gauge-bar { height: 10px; background: var(--surface-2); border-radius: 6px; overflow: hidden; margin-top: 3px; }
+.gauge-bar i { display: block; height: 100%; border-radius: 6px; transition: width .4s; }
+
+/* tripulación y víctimas */
+.crew-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; }
+.unit { display: flex; gap: 10px; align-items: flex-start; background: var(--surface-2); border-radius: 12px; padding: 10px; border: 1px solid var(--border); }
+.unit.off { opacity: .6; }
+.unit > div { flex: 1; min-width: 0; }
+.unit b { display: block; font-size: .92rem; }
+.unit small { display: block; color: var(--muted); font-size: .78rem; font-weight: 700; }
+.u-av { font-size: 2rem; line-height: 1; }
+.mini-bar { display: grid; grid-template-columns: 52px 1fr; align-items: center; gap: 6px; font-size: .7rem; color: var(--muted); margin-top: 4px; position: relative; }
+.mini-bar::after { content: ''; grid-column: 2; grid-row: 1; height: 6px; background: rgba(0,0,0,.1); border-radius: 4px; }
+.mini-bar i { grid-column: 2; grid-row: 1; height: 6px; border-radius: 4px; z-index: 1; transition: width .4s; }
+
+/* triage */
+.tri-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; margin: 14px 0; }
+.tri-head { display: flex; align-items: center; gap: 10px; }
+.tri-btns { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+.tri-b { font: inherit; font-weight: 800; font-size: .8rem; border: 2px solid transparent; border-radius: 8px; padding: 8px 2px; cursor: pointer; color: #fff; opacity: .55; }
+.tri-b.sel { opacity: 1; outline: 3px solid var(--text); outline-offset: 1px; }
+.tri-b.verde, .tag-c.verde { background: #16a34a; }
+.tri-b.amarillo, .tag-c.amarillo { background: #eab308; color: #1c1300; }
+.tri-b.rojo, .tag-c.rojo { background: #dc2626; }
+.tri-b.negro, .tag-c.negro { background: #111827; }
+.tag-c { color: #fff; padding: 1px 8px; border-radius: 6px; font-weight: 800; font-size: .85rem; }
+.ok-card { border-color: var(--ok); }
+.bad-card { border-color: var(--bad); }
+
+/* laboratorio */
+.lab-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; }
+.lab-num { display: flex; gap: 8px; flex-wrap: wrap; }
+.lab-num input { font: inherit; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--border); background: var(--surface-2); color: var(--text); flex: 1; min-width: 140px; }
+
+@media (max-width: 760px) {
+  .gauges { grid-template-columns: 1fr; }
+  .niv-grid { grid-template-columns: 1fr; }
+  .crew-grid { grid-template-columns: 1fr; }
+}

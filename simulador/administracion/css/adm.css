@@ -1,0 +1,16 @@
+/* Estilos del Simulador de Gestión Pública (se suman a ../css/sim.css e ../incendios/css/cior.css) */
+:root { --adm: #0f766e; }
+.adm-top { background: #134e4a; }
+.adm-btn, .btn-primary.adm-btn { background: var(--adm); border-color: var(--adm); color: #fff; }
+.adm-pill, .adm-step { background: var(--adm); }
+.adm-ring { background: conic-gradient(var(--adm) calc(var(--p) * 1%), var(--surface-2) 0); }
+.adm-h3 { background: #134e4a !important; }
+.adm-dialog { border-left-color: var(--adm); }
+.hub-card .tags, .choice small.tags { color: var(--adm); }
+:root[data-theme="dark"] .hub-card .tags, :root[data-theme="dark"] .choice small.tags { color: #5eead4; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .hub-card .tags { color: #5eead4; } }
+.unit.prio { border-left: 4px solid #d97706; }
+#dialog-choices .btn small { display: block; font-weight: 600; opacity: .75; font-size: .8em; }
+.gauges { grid-template-columns: repeat(3, 1fr); }
+@media (max-width: 1000px) { .gauges { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 760px) { .gauges { grid-template-columns: 1fr; } }

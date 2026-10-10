@@ -41,6 +41,42 @@
         ['nor', '⚖️', 'Normativa y planificación', 'Actos administrativos, PDOT, POA, políticas públicas, contratación y control interno.'],
         ['casos', '🤝', 'Casos profesionales', 'Situaciones simuladas: nepotismo, desempeño, campañas, proveedores, políticas y mejora de trámites. Actúas en la escena y respondes hablando.'],
         ['asig', '🎯', 'Prácticas por asignatura', 'Mapa curricular interactivo: una situación simulada propia para cada una de las 22 asignaturas, basada en sus contenidos mínimos.'],
+      ] },
+    { id: 'ia', emoji: '🤖', color: '#4338CA', nombre: 'Inteligencia Artificial', corto: 'Inteligencia Artificial', asig: 20, ruta: 'ia/index.html',
+      desc: "Lidera un equipo virtual que desarrolla una solución de inteligencia artificial para un cliente de Pastaza: datos, modelos, ética, privacidad y despliegue en la nube.",
+      mods: [
+        ["proy", "🤖", "Proyecto de IA para un cliente real", "Lidera a tu equipo virtual en nueve fases: entender el problema, obtener y limpiar los datos, explorar, entrenar y evaluar el modelo, revisar el sesgo y la privacidad, desplegar en la nube y presentar al cliente. Imprevistos: datos faltantes, fugas de datos, sobreajuste, cambios de requisitos y caídas del servicio. Vista 3D, RA y VR Box."],
+        ["lab", "🧪", "Laboratorio de programación y datos", "Salida de código Python, consultas SQL, estadística y métricas de modelos con cálculos de datos aleatorios: media, desviación estándar, precisión, recall, F1, exactitud y matrices."],
+        ["resp", "⚖️", "IA responsable y seguridad", "Ética y sesgo, protección de datos personales (LOPDP de Ecuador), ciberseguridad, computación en la nube, procesamiento de lenguaje natural y big data."],
+        ["casos", "🤝", "Casos profesionales", "Situaciones simuladas: datos personales sin consentimiento, un modelo que discrimina, presión para ocultar errores, un chatbot que no se entiende, credenciales filtradas y una cámara con reconocimiento facial en la comunidad. Actúas en la escena y respondes con tu voz o por escrito."],
+        ["asig", "🎯", "Prácticas por asignatura", "Mapa curricular interactivo: 20 asignaturas de la malla, cada una con su propia situación simulada: actúa en la escena y responde con tu voz o por escrito."]
+      ] },
+    { id: 'vigilancia', emoji: '🛡️', color: '#1E40AF', nombre: 'Vigilancia y Seguridad Ciudadana', corto: 'Vigilancia y seguridad', asig: 12, ruta: 'vigilancia/index.html',
+      desc: "Cuida un sector de Puyo durante un turno de vigilancia: incidentes, protocolos, uso progresivo de la fuerza, ECU 911, primeros auxilios y trato al ciudadano.",
+      mods: [
+        ["turno", "🛡️", "Turno de vigilancia", "Vigila un sector de Puyo de 14:00 a 22:00: personas extraviadas, hurtos, riñas, crisis, emergencias médicas, objetos sospechosos y reportes por redes. Protocolo, uso progresivo de la fuerza, ECU 911, primeros auxilios, mediación y parte de novedades. Vista 3D, RA y VR Box."],
+        ["pro", "⚖️", "Protocolos y legislación", "Uso progresivo de la fuerza, derechos humanos, cadena de custodia, competencias de la vigilancia privada frente a la Policía Nacional, protocolos de emergencia y primeros auxilios."],
+        ["ana", "🗺️", "Ciberseguridad y análisis del delito", "Mapas de calor, horarios de incidencia, tasas por 100 000 habitantes, porcentajes de variación, tiempos de respuesta, phishing y contraseñas seguras."],
+        ["casos", "🤝", "Casos profesionales", "Situaciones simuladas: un compañero que quiere usar fuerza excesiva, un comerciante que ofrece dinero, un adolescente que hurta, una denuncia de violencia intrafamiliar, el video de un detenido en redes y una asamblea barrial de seguridad. Actúas en la escena y respondes con tu voz o por escrito."],
+        ["asig", "🎯", "Prácticas por asignatura", "Mapa curricular interactivo: 12 asignaturas de la malla, cada una con su propia situación simulada: actúa en la escena y responde con tu voz o por escrito."]
+      ] },
+    { id: 'salud', emoji: '🏥', color: '#0E7490', nombre: 'Administración de Sistemas de Salud', corto: 'Sistemas de salud', asig: 22, ruta: 'salud/index.html',
+      desc: "Administra un centro de salud durante una jornada: admisión, agendamiento, farmacia, presupuesto, calidad y confidencialidad de la historia clínica.",
+      mods: [
+        ["jor", "🏥", "Jornada en la administración de un centro de salud", "Atiende a usuarios virtuales en admisión de 08:00 a 16:30: agendamiento, referencia y contrarreferencia, reclamos, historia clínica y confidencialidad; tareas de farmacia, turnos y presupuesto, e imprevistos como desabastecimiento o un brote de dengue. Vista 3D, RA y VR Box."],
+        ["fin", "💰", "Finanzas y presupuesto en salud", "Contabilidad básica, presupuesto, costos e indicadores con cálculos: ejecución presupuestaria, costo por atención, días de inventario, tasa de ocupación y punto de reorden."],
+        ["snc", "🏥", "Sistema Nacional de Salud y calidad", "Niveles de atención, red pública y complementaria, referencia y contrarreferencia, calidad, derechos de los pacientes, confidencialidad, gestión documental y ética."],
+        ["casos", "🤝", "Casos profesionales", "Situaciones simuladas: confidencialidad de la historia clínica, compras sin certificación, reclamos por tiempos de espera, conflictos de turnos, vacunación intercultural y agendamiento digital inclusivo. Actúas en la escena y respondes con tu voz o por escrito."],
+        ["asig", "🎯", "Prácticas por asignatura", "Mapa curricular interactivo: 22 asignaturas de la malla, cada una con su propia situación simulada: actúa en la escena y responde con tu voz o por escrito."]
+      ] },
+    { id: 'turismo', emoji: '🛶', color: '#15803D', nombre: 'Gestión de Operaciones Turísticas', corto: 'Operaciones turísticas', asig: 25, ruta: 'turismo/index.html',
+      desc: "Opera un tour en la Amazonía con turistas virtuales: seguridad, guianza, turismo comunitario y sostenible, costos e imprevistos.",
+      mods: [
+        ["tour", "🛶", "Operar un tour en la Amazonía", "Guía a un grupo de turistas virtuales por Puyo, el Paseo de los Monos y el Parque Omaere, una comunidad kichwa, la cascada y un almuerzo típico: seguridad, interpretación, pago justo, imprevistos y encuesta final. Vista 3D, RA y VR Box."],
+        ["cos", "🧮", "Costos y operación turística", "Precio del paquete con costos fijos, variables y margen, punto de equilibrio de pasajeros, conversión de divisas, ocupación hotelera y tarifa promedio, con datos aleatorios."],
+        ["pat", "🏞️", "Patrimonio, sostenibilidad y normativa", "Patrimonio natural y cultural, turismo comunitario, buenas prácticas ambientales, Ministerio de Turismo y registro de prestadores, primeros auxilios en ruta y atención al cliente."],
+        ["casos", "🤝", "Casos profesionales", "Situaciones simuladas: artesanías de especies protegidas, sobreventa de cupos, pago injusto a la comunidad, turista perdido en el sendero, queja de alojamiento y diseño de un producto comunitario. Actúas en la escena y respondes con tu voz o por escrito."],
+        ["asig", "🎯", "Prácticas por asignatura", "Mapa curricular interactivo: 25 asignaturas de la malla, cada una con su propia situación simulada: actúa en la escena y responde con tu voz o por escrito."]
       ] }
   ];
 

@@ -173,10 +173,10 @@
     let cajas = '';
     for (let i = 0; i < 12; i++) { const x = 478 + (i % 4) * 26, y = 132 + Math.floor(i / 4) * 30; cajas += `<rect x="${x}" y="${y}" width="20" height="20" rx="3" fill="${i < nCajas ? ['#38bdf8', '#f472b6', '#facc15', '#4ade80'][i % 4] : '#e2e8f0'}" stroke="#94a3b8"/>`; }
     let h = `<rect width="600" height="330" fill="#ecfdf5"/><rect y="250" width="600" height="80" fill="#cbd5e1"/>
-      <rect x="150" y="12" width="300" height="58" rx="8" fill="#fff" stroke="#15803d" stroke-width="2"/>
-      <rect x="162" y="24" width="34" height="34" rx="4" fill="#16a34a"/><rect x="175" y="28" width="8" height="26" fill="#fff"/><rect x="166" y="37" width="26" height="8" fill="#fff"/>
-      <text x="325" y="36" font-size="13" font-weight="800" text-anchor="middle" fill="#14532d">CENTRO DE SALUD TIPO C «RÍO PUYO»</text>
-      <text x="325" y="56" font-size="11" text-anchor="middle" fill="#334155">Admisión · Estadística · Farmacia</text>
+      <rect x="128" y="12" width="352" height="58" rx="8" fill="#fff" stroke="#15803d" stroke-width="2"/>
+      <rect x="138" y="24" width="34" height="34" rx="4" fill="#16a34a"/><rect x="151" y="28" width="8" height="26" fill="#fff"/><rect x="142" y="37" width="26" height="8" fill="#fff"/>
+      <text x="326" y="36" font-size="12.5" font-weight="800" text-anchor="middle" fill="#14532d">CENTRO DE SALUD TIPO C «RÍO PUYO»</text>
+      <text x="326" y="56" font-size="11" text-anchor="middle" fill="#334155">Admisión · Estadística · Farmacia</text>
       <circle cx="545" cy="44" r="30" fill="#fff" stroke="#334155" stroke-width="3"/><text x="545" y="50" font-size="15" font-weight="800" text-anchor="middle" fill="#334155">${hora(s.t)}</text>
       <rect x="30" y="170" width="170" height="80" fill="#15803d"/><rect x="30" y="160" width="170" height="14" fill="#166534"/>
       <text x="115" y="215" font-size="13" font-weight="800" text-anchor="middle" fill="#fff">ADMISIÓN</text>
@@ -187,7 +187,7 @@
       <text x="524" y="117" font-size="12" font-weight="800" text-anchor="middle" fill="#fff">💊 FARMACIA</text>${cajas}
       <text x="524" y="244" font-size="10" text-anchor="middle" fill="#0c4a6e">Stock ${Math.round(s.abast)}%</text>
       <rect x="240" y="236" width="210" height="6" rx="3" fill="#94a3b8"/><text x="345" y="268" font-size="11" text-anchor="middle" fill="#475569">Sala de espera</text>
-      <rect x="240" y="84" width="150" height="34" rx="6" fill="#fef3c7" stroke="#d97706"/><text x="315" y="100" font-size="10" text-anchor="middle" font-weight="800" fill="#92400e">⭐ ATENCIÓN PRIORITARIA</text><text x="315" y="112" font-size="9" text-anchor="middle" fill="#92400e">Adultos mayores · embarazadas · niñez · discapacidad</text>
+      <rect x="222" y="82" width="200" height="36" rx="6" fill="#fef3c7" stroke="#d97706"/><text x="322" y="98" font-size="10" text-anchor="middle" font-weight="800" fill="#92400e">⭐ ATENCIÓN PRIORITARIA</text><text x="322" y="111" font-size="8" text-anchor="middle" fill="#92400e">Adultos mayores · embarazadas · niñez · discapacidad</text>
       <text x="8" y="245" font-size="26">🪴</text>`;
     if (s.actual) h += `<text x="230" y="230" font-size="48" text-anchor="middle">${s.actual.c.avatar}</text><path d="M205 128 h70 a8 8 0 0 1 8 8 v22 a8 8 0 0 1 -8 8 h-44 l-12 12 v-12 h-14 a8 8 0 0 1 -8 -8 v-22 a8 8 0 0 1 8 -8z" fill="#fff" stroke="#15803d"/><text x="240" y="153" font-size="17" text-anchor="middle">💬</text>`;
     s.cola.slice(0, 5).forEach((q, i) => { const x = 270 + i * 40; h += `<rect x="${x - 15}" y="214" width="30" height="20" rx="4" fill="#64748b"/><text x="${x}" y="222" font-size="30" text-anchor="middle">${q.c.avatar}</text>`; if (q.c.prio) h += `<text x="${x + 10}" y="190" font-size="13">⭐</text>`; if (espera(q) > limite() * 0.7) h += `<text x="${x - 16}" y="190" font-size="13">😤</text>`; });

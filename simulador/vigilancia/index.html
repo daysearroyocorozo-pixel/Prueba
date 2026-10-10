@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="theme-color" content="#1B4D22" />
+<title>Simulador de Vigilancia y Seguridad Ciudadana</title>
+<meta name="description" content="Simulador para la carrera de Vigilancia y Seguridad Ciudadana: turno de vigilancia con incidentes en un sector de Puyo, protocolos, uso progresivo de la fuerza, primeros auxilios, análisis del delito, casos y realidad aumentada." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/sim.css" />
+<link rel="stylesheet" href="../incendios/css/cior.css" />
+<link rel="stylesheet" href="css/vig.css" />
+<link rel="stylesheet" href="../css/isty-theme.css" />
+<script src="../js/isty-config.js"></script>
+<script src="../js/isty-auth.js"></script>
+</head>
+<body>
+
+<header class="topbar vig-top">
+  <div class="brand">
+    <span class="brand-logo"><img src="../../portal/img/logo-isty.jpg" alt="Logo del Instituto Superior Tecnológico CIC-Yasuní" width="42" height="42" /></span>
+    <div>
+      <div class="brand-name">Simulador de Vigilancia y Seguridad Ciudadana</div>
+      <div class="brand-sub" id="brand-sub">Laboratorio Virtual · Vigilancia y Seguridad Ciudadana</div>
+    </div>
+  </div>
+  <div class="topbar-actions">
+    <button class="icon-btn" id="btn-sound" title="Activar/desactivar voces" aria-pressed="true">🔊</button>
+    <button class="icon-btn" id="btn-theme" title="Cambiar tema claro/oscuro">🌓</button>
+  </div>
+</header>
+
+<main>
+  <!-- ================= INICIO ================= -->
+  <section id="screen-home" class="screen">
+    <div class="hero">
+      <div class="hero-text">
+        <h1>Cuida tu sector como agente de vigilancia</h1>
+        <p>Asume un turno de vigilancia en un sector de Puyo: el parque central, el mercado, una unidad educativa o un centro comercial. Con el reloj en marcha llegan incidentes —una persona extraviada, un hurto en flagrancia, una riña, una emergencia médica, un objeto sospechoso o un reporte por redes— y debes actuar según el protocolo, usar la fuerza solo cuando sea proporcional, coordinar con el ECU 911 y la Policía Nacional, brindar primeros auxilios, mediar y registrar cada novedad. Practica también protocolos y legislación, ciberseguridad y análisis del delito, y casos de ética y convivencia.</p>
+        <ul class="hero-feats">
+          <li>📱💻 Celular y computadora</li>
+          <li>🥽 Realidad aumentada (WebXR)</li>
+          <li>🎚️ 3 niveles de dificultad</li>
+          <li>📚 12 asignaturas de la malla</li>
+        </ul>
+        <p class="small"><a href="../../portal/">🏠 Portal del Laboratorio Virtual ISTY</a></p>
+      </div>
+      <form id="home-form" class="card form-card">
+        <h2>Datos del estudiante</h2>
+        <label>Nombre<input id="f-name" required maxlength="40" placeholder="Ej.: Darwin Santi" autocomplete="name"></label>
+        <label>Institución / laboratorio<input id="f-inst" maxlength="60" placeholder="Laboratorio Virtual Institucional"></label>
+        <label class="check"><input type="checkbox" id="f-voice" checked> Voces de la ciudadanía y los personajes</label>
+        <button class="btn btn-primary btn-lg vig-btn" type="submit">Continuar ▶</button>
+        <button class="btn btn-ghost" type="button" id="btn-history">📋 Historial</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- ================= MENÚ ================= -->
+  <section id="screen-hub" class="screen" hidden>
+    <div class="setup-head">
+      <button class="btn btn-ghost" data-go="home">⬅ Inicio</button>
+      <h1>¿Qué deseas practicar<span id="hub-name"></span>?</h1>
+    </div>
+    <div class="hub-grid">
+      <button class="hub-card" data-hub="turno"><span class="em">🛡️</span><b>Turno de vigilancia</b><small>Vigila un sector de Puyo de 14:00 a 22:00: personas extraviadas, hurtos, riñas, crisis, emergencias médicas, objetos sospechosos y reportes por redes. Protocolo, uso progresivo de la fuerza, ECU 911, primeros auxilios, mediación y parte de novedades. Vista 3D y realidad aumentada.</small><span class="tags">Protocolos I y II · Uso Progresivo de la Fuerza · Primeros Auxilios · Mediación · Legislación</span></button>
+      <button class="hub-card" data-hub="pro"><span class="em">⚖️</span><b>Protocolos y legislación</b><small>Uso progresivo de la fuerza, derechos humanos, cadena de custodia, competencias de la vigilancia privada frente a la Policía Nacional, protocolos de emergencia y primeros auxilios.</small><span class="tags">Legislación Aplicada · Protocolos · Defensa Personal · Emergencias y Primeros Auxilios</span></button>
+      <button class="hub-card" data-hub="ana"><span class="em">🗺️</span><b>Ciberseguridad y análisis del delito</b><small>Mapas de calor, horarios de incidencia, tasas por 100 000 habitantes, porcentajes de variación, tiempos de respuesta, phishing y contraseñas seguras.</small><span class="tags">Ciberseguridad y Geodiferenciación del Delito · Herramientas Tecnológicas · Metodología de la Investigación</span></button>
+      <button class="hub-card" data-hub="casos"><span class="em">🤝</span><b>Casos profesionales</b><small>Situaciones simuladas: un compañero que quiere usar fuerza excesiva, un comerciante que ofrece dinero, un adolescente que hurta, una denuncia de violencia intrafamiliar, el video de un detenido en redes y una asamblea barrial de seguridad. Actúas en la escena y respondes con tu voz o por escrito.</small><span class="tags">Ética · Derechos Humanos · Mediación · Procesos Comunitarios · Legislación</span></button>
+      <button class="hub-card" data-hub="asig"><span class="em">🎯</span><b>Prácticas por asignatura</b><small>Mapa curricular interactivo: 12 asignaturas de la malla, cada una con su propia situación simulada: actúa en la escena y responde con tu voz o por escrito.</small><span class="tags">Malla por período · Una práctica por asignatura · Contenidos mínimos</span></button>
+    </div>
+  </section>
+
+  <!-- ================= PREPARAR TURNO ================= -->
+  <section id="screen-setup" class="screen" hidden>
+    <div class="setup-head">
+      <button class="btn btn-ghost" data-go="hub">⬅ Menú</button>
+      <h1>Turno de vigilancia · Puyo, Pastaza</h1>
+    </div>
+    <div class="setup-grid">
+      <div class="card span2"><h2>📋 Tu puesto</h2><p>Eres agente de vigilancia y seguridad asignado a un sector de Puyo. Recibes reportes de incidentes y decides cuál atiendes primero y cómo actúas, siempre según el protocolo, con respeto a los derechos humanos y coordinando con el ECU 911 y la Policía Nacional. El reloj avanza: un incidente que espera demasiado puede agravarse. El supervisor de turno también te dará consignas. <span class="small muted">(Situaciones ficticias con fines formativos.)</span></p></div>
+      <div class="card span2"><h2><span class="step vig-step">1</span> Sector</h2><div id="sec-list" class="choice-grid sec-grid"></div></div>
+      <div class="card span2"><h2><span class="step vig-step">2</span> Nivel</h2><div id="niv-list" class="choice-grid niv-grid"></div></div>
+      <div class="card span2"><h2><span class="step vig-step">3</span> Incidentes que pueden presentarse</h2><div id="inc-preview" class="roster-preview"></div></div>
+    </div>
+    <div class="setup-foot"><button class="btn btn-primary btn-lg vig-btn" id="btn-start">🛡️ Iniciar el turno</button></div>
+  </section>
+
+  <!-- ================= TURNO ================= -->
+  <section id="screen-turno" class="screen" hidden>
+    <div class="class-bar">
+      <div class="class-info">
+        <span class="pill vig-pill" id="turno-sec">🛡️ Turno de vigilancia</span>
+        <span id="turno-niv" class="pill pill-soft"></span>
+        <strong id="turno-fase"></strong>
+      </div>
+      <div class="class-tools">
+        <div class="clock" title="Hora del turno">🕑 <span id="turno-clock">14:00</span></div>
+        <button class="btn btn-sm" id="btn-3d">🧊 3D</button>
+        <button class="btn btn-sm btn-ar" id="btn-ar">🥽 RA</button>
+        <button class="btn btn-sm btn-ar" id="btn-vr" title="Gafas sencillas tipo VR Box / cardboard con control Bluetooth">📱 VR Box</button>
+        <button class="btn btn-sm btn-danger" id="btn-end">Terminar</button>
+      </div>
+    </div>
+    <div class="class-layout">
+      <div class="stage">
+        <div class="card scene-card">
+          <svg id="scene" viewBox="0 0 600 330" role="img" aria-label="Sector vigilado con caseta, cámaras, bancas y personas"></svg>
+          <div id="view3d" class="view3d" hidden><canvas id="canvas3d"></canvas><div class="view3d-hint">Arrastra para girar · rueda/pellizco para acercar</div></div>
+          <div class="gauges" id="gauges"></div>
+        </div>
+        <div class="card"><h2 class="h-sm">🚨 Incidentes pendientes</h2><div id="cola" class="crew-grid"></div></div>
+      </div>
+      <aside class="panel" id="panel">
+        <div class="dialog card vig-dialog" id="dialog" aria-live="polite">
+          <div class="dialog-text" id="dialog-text"></div>
+          <div class="dialog-choices" id="dialog-choices"></div>
+        </div>
+        <div class="actions card" id="free-actions">
+          <h2 class="h-sm">Acciones generales</h2>
+          <div class="tab-panel">
+            <button class="act" data-fa="patrullar">🚶 Patrullar la zona (ronda preventiva)</button>
+            <button class="act" data-fa="camaras">📹 Revisar las cámaras de videovigilancia</button>
+            <button class="act" data-fa="radio">📻 Informar por radio a la central y al ECU 911</button>
+            <button class="act" data-fa="registrar">📝 Registrar la novedad en el parte</button>
+            <button class="act" data-fa="comite">🏘️ Coordinar con el comité barrial</button>
+          </div>
+        </div>
+        <details class="card log-card"><summary>📜 Libro de novedades del turno</summary><ol id="log" class="log"></ol></details>
+      </aside>
+    </div>
+  </section>
+
+  <section id="screen-report" class="screen" hidden><div id="report"></div></section>
+
+  <section id="screen-pro" class="screen" hidden>
+    <div class="setup-head"><button class="btn btn-ghost" data-go="hub">⬅ Menú</button><h1>Protocolos y legislación</h1></div>
+    <div id="pro-body"></div>
+  </section>
+
+  <section id="screen-ana" class="screen" hidden>
+    <div class="setup-head"><button class="btn btn-ghost" data-go="hub">⬅ Menú</button><h1>Ciberseguridad y análisis del delito</h1></div>
+    <div id="ana-body"></div>
+  </section>
+
+  <section id="screen-cases" class="screen" hidden>
+    <div class="setup-head"><button class="btn btn-ghost" data-go="hub">⬅ Menú</button><h1>Casos profesionales</h1></div>
+    <div id="cases-list"></div>
+    <div id="case-player" class="stack" hidden></div>
+  </section>
+
+  <section id="screen-mapa" class="screen" hidden>
+    <div class="setup-head"><button class="btn btn-ghost" data-go="hub">⬅ Menú</button><h1>Mapa curricular · Vigilancia y Seguridad Ciudadana</h1></div>
+    <p class="muted">Íconos: 🛡️ Turno · ⚖️ Protocolos · 🗺️ Análisis del delito · 🤝 Casos. Borde punteado = relación parcial.</p>
+    <div class="mapa"><div id="mapa-grid" class="mapa-grid"></div><div id="mapa-detail" class="card mapa-detail"></div></div>
+  </section>
+</main>
+
+<dialog id="history-dlg" class="modal">
+  <h2>📋 Historial</h2>
+  <div id="history-list"></div>
+  <div class="modal-foot"><button class="btn btn-ghost" id="history-clear">Borrar historial</button><button class="btn btn-primary" id="history-close">Cerrar</button></div>
+</dialog>
+
+<div id="xr-overlay" class="xr-overlay" hidden>
+  <div class="xr-top">
+    <span id="xr-status">Mueve el dispositivo para detectar una superficie y toca para colocar el sector.</span>
+    <div class="xr-top-btns"><button class="btn btn-sm" id="xr-scale">↕ Escala</button><button class="btn btn-sm btn-danger" id="xr-exit">✕ Salir</button></div>
+  </div>
+  <div class="xr-bottom" id="xr-bottom"></div>
+</div>
+
+<div id="toast" class="toast" role="status" hidden></div>
+
+<script src="../js/caso-vivo.js"></script>
+<script src="js/vig-data.js"></script>
+<script src="js/casos-vivos-vig.js"></script>
+<script src="js/casos-asig-vig-a.js"></script>
+<script src="js/casos-asig-vig-b.js"></script>
+<script src="js/vig-app.js"></script>
+<script type="module" src="js/vig-3d.js"></script>
+</body>
+</html>

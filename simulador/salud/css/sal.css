@@ -1,0 +1,13 @@
+/* Estilos del Simulador de Gestión en Salud (se suman a ../css/sim.css e ../incendios/css/cior.css).
+   Los colores institucionales los define ../css/isty-theme.css: aquí solo se usan sus variables. */
+.sal-top { background: var(--isty-verde-osc, #1B4D22); }
+.sal-btn, .btn-primary.sal-btn { background: var(--primary); border-color: var(--primary); color: #fff; }
+.sal-pill, .sal-step { background: var(--primary); color: #fff; }
+.sal-ring { background: conic-gradient(var(--primary) calc(var(--p) * 1%), var(--surface-2) 0); }
+.sal-h3 { background: var(--isty-verde-osc, #1B4D22) !important; }
+.sal-dialog { border-left-color: var(--primary); }
+.unit.prio { border-left: 4px solid #d97706; }
+#dialog-choices .btn small { display: block; font-weight: 600; opacity: .75; font-size: .8em; }
+.gauges { grid-template-columns: repeat(3, 1fr); }
+@media (max-width: 1000px) { .gauges { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 760px) { .gauges { grid-template-columns: 1fr; } }

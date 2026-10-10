@@ -1,0 +1,16 @@
+/* Estilos del Simulador de Vigilancia y Seguridad Ciudadana (se suman a ../css/sim.css e ../incendios/css/cior.css).
+   Los colores institucionales los define ../css/isty-theme.css (se carga al final); aquí solo se reutilizan sus variables. */
+:root { --vig: var(--primary); }
+.vig-top { background: var(--isty-verde-osc, #1B4D22); }
+.vig-btn, .btn-primary.vig-btn { background: var(--primary); border-color: var(--primary); color: #fff; }
+.vig-pill, .vig-step { background: var(--primary); color: #fff; }
+.vig-ring { background: conic-gradient(var(--primary) calc(var(--p) * 1%), var(--surface-2) 0); }
+.vig-h3 { background: var(--isty-verde-osc, #1B4D22) !important; }
+.vig-dialog { border-left-color: var(--primary); }
+.unit.prio { border-left: 4px solid var(--bad); }
+.unit.media { border-left: 4px solid var(--warn); }
+#dialog-choices .btn small { display: block; font-weight: 600; opacity: .75; font-size: .8em; }
+.sec-grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+.gauges { grid-template-columns: repeat(3, 1fr); }
+@media (max-width: 1000px) { .gauges { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 760px) { .gauges { grid-template-columns: 1fr; } }

@@ -36,7 +36,7 @@ Todas las respuestas son JSON. Después del inicio de sesión, el navegador env�
 | `POST /usuarios` | Administrador | `{ "usuario", "nombre", "contrasena", "carrera", "rol" }` | `201`; `409` si ya existe |
 | `DELETE /usuarios/{usuario}` | Administrador | — | `204` |
 
-- `carrera`: `educacion-basica`, `incendios`, `construccion` o `administracion` (vacío para administradores).
+- `carrera`: `educacion-basica`, `incendios`, `construccion`, `administracion`, `ia`, `vigilancia`, `salud` o `turismo` (vacío para administradores).
 - `rol`: `estudiante` o `admin`.
 - Guarde las contraseñas **con hash** (bcrypt o argon2); nunca en texto plano.
 - El token debe caducar (por ejemplo, 12 horas, igual que la sesión del navegador).

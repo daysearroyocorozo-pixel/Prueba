@@ -15,7 +15,7 @@
   const API = (CFG.API_URL || '').replace(/\/+$/, '');
   const DEMO = !API;
   const K_SES = 'isty-sesion', K_REG = 'isty-registros', DURACION = 12 * 3600 * 1000;
-  const CARRERAS = { 'educacion-basica': 'Educación Básica', incendios: 'Control de Incendios y Operaciones de Rescate', construccion: 'Construcción', administracion: 'Administración en Instituciones Públicas' };
+  const CARRERAS = { 'educacion-basica': 'Educación Básica', incendios: 'Control de Incendios y Operaciones de Rescate', construccion: 'Construcción', administracion: 'Administración en Instituciones Públicas', ia: 'Inteligencia Artificial', vigilancia: 'Vigilancia y Seguridad Ciudadana', salud: 'Administración de Sistemas de Salud', turismo: 'Gestión de Operaciones Turísticas' };
 
   // raíz del sitio (la carpeta que contiene portal/ y simulador/), deducida de este archivo
   const src = (document.currentScript && document.currentScript.src) || '';
@@ -37,7 +37,7 @@
   function simuladorActual() {
     const p = location.pathname;
     if (!/\/simulador\//.test(p)) return '';
-    for (const k of ['incendios', 'construccion', 'administracion']) if (p.includes('/simulador/' + k + '/')) return k;
+    for (const k of ['incendios', 'construccion', 'administracion', 'ia', 'vigilancia', 'salud', 'turismo']) if (p.includes('/simulador/' + k + '/')) return k;
     return 'educacion-basica';
   }
 

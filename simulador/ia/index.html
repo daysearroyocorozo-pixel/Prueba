@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="theme-color" content="#1B4D22" />
+<title>Simulador de Proyectos de IA</title>
+<meta name="description" content="Simulador para la carrera de Inteligencia Artificial (en línea): proyecto de IA para un cliente real con equipo virtual, laboratorio de programación y datos, IA responsable y seguridad, casos profesionales y realidad aumentada." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/sim.css" />
+<link rel="stylesheet" href="../incendios/css/cior.css" />
+<link rel="stylesheet" href="css/ia.css" />
+<link rel="stylesheet" href="../css/isty-theme.css" />
+<script src="../js/isty-config.js"></script>
+<script src="../js/isty-auth.js"></script>
+</head>
+<body>
+
+<header class="topbar ia-top">
+  <div class="brand">
+    <span class="brand-logo"><img src="../../portal/img/logo-isty.jpg" alt="Logo del Instituto Superior Tecnológico CIC-Yasuní" width="42" height="42" /></span>
+    <div>
+      <div class="brand-name">Simulador de Proyectos de IA</div>
+      <div class="brand-sub" id="brand-sub">Laboratorio Virtual · Inteligencia Artificial</div>
+    </div>
+  </div>
+  <div class="topbar-actions">
+    <button class="icon-btn" id="btn-sound" title="Activar/desactivar voces" aria-pressed="true">🔊</button>
+    <button class="icon-btn" id="btn-theme" title="Cambiar tema claro/oscuro">🌓</button>
+  </div>
+</header>
+
+<main>
+  <!-- ================= INICIO ================= -->
+  <section id="screen-home" class="screen">
+    <div class="hero">
+      <div class="hero-text">
+        <h1>Lidera un proyecto de inteligencia artificial</h1>
+        <p>Dirige un equipo virtual (analista de datos, desarrolladora y especialista en ética) que construye una solución de IA para un cliente de Pastaza: una cooperativa agrícola que quiere predecir su demanda o un municipio que necesita clasificar las solicitudes ciudadanas. Del problema a los datos, el modelo, la revisión ética, la nube y la presentación final. Practica también programación, estadística y métricas, IA responsable y seguridad, y casos profesionales.</p>
+        <ul class="hero-feats">
+          <li>📱💻 Celular y computadora</li>
+          <li>🥽 Realidad aumentada (WebXR)</li>
+          <li>🎚️ 3 niveles de dificultad</li>
+          <li>📚 20 asignaturas de la malla</li>
+        </ul>
+        <p class="small"><a href="../../portal/">🏠 Portal del Laboratorio Virtual ISTY</a></p>
+      </div>
+      <form id="home-form" class="card form-card">
+        <h2>Datos del estudiante</h2>
+        <label>Nombre<input id="f-name" required maxlength="40" placeholder="Ej.: Jhoselyn Grefa" autocomplete="name"></label>
+        <label>Institución / laboratorio<input id="f-inst" maxlength="60" placeholder="Laboratorio Virtual Institucional"></label>
+        <label class="check"><input type="checkbox" id="f-voice" checked> Voces del equipo y los personajes</label>
+        <button class="btn btn-primary btn-lg ia-btn" type="submit">Continuar ▶</button>
+        <button class="btn btn-ghost" type="button" id="btn-history">📋 Historial</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- ================= MENÚ ================= -->
+  <section id="screen-hub" class="screen" hidden>
+    <div class="setup-head">
+      <button class="btn btn-ghost" data-go="home">⬅ Inicio</button>
+      <h1>¿Qué deseas practicar<span id="hub-name"></span>?</h1>
+    </div>
+    <div class="hub-grid">
+      <button class="hub-card" data-hub="proy"><span class="em">🤖</span><b>Proyecto de IA para un cliente real</b><small>Lidera a tu equipo virtual en nueve fases: entender el problema, obtener y limpiar los datos, explorar, entrenar y evaluar el modelo, revisar el sesgo y la privacidad, desplegar en la nube y presentar al cliente. Imprevistos: datos faltantes, fugas de datos, sobreajuste, cambios de requisitos y caídas del servicio. Vista 3D y realidad aumentada.</small><span class="tags">Aprendizaje Automático · Procesamiento de Datos · Computación en la Nube · Ética · Trabajo de Integración Curricular</span></button>
+      <button class="hub-card" data-hub="lab"><span class="em">🧪</span><b>Laboratorio de programación y datos</b><small>Salida de código Python, consultas SQL, estadística y métricas de modelos con cálculos de datos aleatorios: media, desviación estándar, precisión, recall, F1, exactitud y matrices.</small><span class="tags">Fundamentos de Programación · Bases de Datos · Matemática · Estadística · Aprendizaje Automático</span></button>
+      <button class="hub-card" data-hub="resp"><span class="em">⚖️</span><b>IA responsable y seguridad</b><small>Ética y sesgo, protección de datos personales (LOPDP de Ecuador), ciberseguridad, computación en la nube, procesamiento de lenguaje natural y big data.</small><span class="tags">Ética de la IA · Seguridad de la Información · Nube · PLN · Big Data · Cultura Digital</span></button>
+      <button class="hub-card" data-hub="casos"><span class="em">🤝</span><b>Casos profesionales</b><small>Situaciones simuladas: datos personales sin consentimiento, un modelo que discrimina, presión para ocultar errores, un chatbot que no se entiende, credenciales filtradas y una cámara con reconocimiento facial en la comunidad. Actúas en la escena y respondes con tu voz o por escrito.</small><span class="tags">Ética · Protección de Datos · PLN · Seguridad · Aplicaciones de IA</span></button>
+      <button class="hub-card" data-hub="asig"><span class="em">🎯</span><b>Prácticas por asignatura</b><small>Mapa curricular interactivo: 20 asignaturas de la malla, cada una con su propia situación simulada: actúa en la escena y responde con tu voz o por escrito.</small><span class="tags">Malla por PAO · Una práctica por asignatura · Contenidos mínimos</span></button>
+    </div>
+  </section>
+
+  <!-- ================= PREPARAR PROYECTO ================= -->
+  <section id="screen-setup" class="screen" hidden>
+    <div class="setup-head">
+      <button class="btn btn-ghost" data-go="hub">⬅ Menú</button>
+      <h1>Proyecto de IA para un cliente de Pastaza</h1>
+    </div>
+    <div class="setup-grid">
+      <div class="card span2"><h2>📋 Tu rol</h2><p>Eres líder técnico de un pequeño equipo de inteligencia artificial que trabaja en línea. Decides cómo se ejecuta cada fase del proyecto y respondes a los imprevistos. Cada decisión afecta la precisión del modelo, la equidad, la privacidad, el presupuesto de cómputo, el plazo y la satisfacción del cliente. <span class="small muted">(Clientes ficticios con fines formativos.)</span></p></div>
+      <div class="card span2"><h2><span class="step ia-step">1</span> Cliente y problema</h2><div id="proj-list" class="choice-grid"></div></div>
+      <div class="card span2"><h2><span class="step ia-step">2</span> Nivel</h2><div id="niv-list" class="choice-grid niv-grid"></div></div>
+      <div class="card span2"><h2><span class="step ia-step">3</span> Tu equipo virtual</h2><div id="crew-preview" class="roster-preview"></div></div>
+    </div>
+    <div class="setup-foot"><button class="btn btn-primary btn-lg ia-btn" id="btn-start">🤖 Iniciar el proyecto</button></div>
+  </section>
+
+  <!-- ================= PROYECTO ================= -->
+  <section id="screen-proy" class="screen" hidden>
+    <div class="class-bar">
+      <div class="class-info">
+        <span class="pill ia-pill" id="proy-cli">🤖 Proyecto de IA</span>
+        <span id="proy-niv" class="pill pill-soft"></span>
+        <strong id="proy-fase"></strong>
+      </div>
+      <div class="class-tools">
+        <div class="clock" title="Días transcurridos">📅 Día <span id="proy-clock">0</span></div>
+        <button class="btn btn-sm" id="btn-3d">🧊 3D</button>
+        <button class="btn btn-sm btn-ar" id="btn-ar">🥽 RA</button>
+        <button class="btn btn-sm btn-ar" id="btn-vr" title="Gafas sencillas tipo VR Box / cardboard con control Bluetooth">📱 VR Box</button>
+        <button class="btn btn-sm btn-danger" id="btn-end">Terminar</button>
+      </div>
+    </div>
+    <div class="class-layout">
+      <div class="stage">
+        <div class="card scene-card">
+          <svg id="scene" viewBox="0 0 600 330" role="img" aria-label="Laboratorio de inteligencia artificial del equipo"></svg>
+          <div id="view3d" class="view3d" hidden><canvas id="canvas3d"></canvas><div class="view3d-hint">Arrastra para girar · rueda/pellizco para acercar</div></div>
+          <div class="gauges" id="gauges"></div>
+        </div>
+        <div class="card"><h2 class="h-sm">🧑‍💻 Equipo virtual</h2><div id="crew" class="crew-grid"></div></div>
+      </div>
+      <aside class="panel" id="panel">
+        <div class="dialog card ia-dialog" id="dialog" aria-live="polite">
+          <div class="dialog-text" id="dialog-text"></div>
+          <div class="dialog-choices" id="dialog-choices"></div>
+        </div>
+        <div class="actions card" id="free-actions">
+          <h2 class="h-sm">Acciones generales</h2>
+          <div class="tab-panel">
+            <button class="act" data-fa="documentar">📒 Documentar avances en el repositorio</button>
+            <button class="act" data-fa="reunion">🗣️ Reunión de seguimiento con el cliente</button>
+            <button class="act" data-fa="accesos">🔐 Revisar accesos y credenciales</button>
+            <button class="act" data-fa="respaldo">💾 Respaldar datos y versionar el código ($60)</button>
+            <button class="act" data-fa="apagar">⚡ Apagar recursos de nube sin uso</button>
+            <button class="act" data-fa="gpu">⏩ GPU adicional en la próxima fase (+$400)</button>
+          </div>
+        </div>
+        <details class="card log-card"><summary>📜 Bitácora del proyecto</summary><ol id="log" class="log"></ol></details>
+      </aside>
+    </div>
+  </section>
+
+  <section id="screen-report" class="screen" hidden><div id="report"></div></section>
+
+  <section id="screen-lab" class="screen" hidden>
+    <div class="setup-head"><button class="btn btn-ghost" data-go="hub">⬅ Menú</button><h1>Laboratorio de programación y datos</h1></div>
+    <div id="lab-body"></div>
+  </section>
+
+  <section id="screen-resp" class="screen" hidden>
+    <div class="setup-head"><button class="btn btn-ghost" data-go="hub">⬅ Menú</button><h1>IA responsable y seguridad</h1></div>
+    <div id="resp-body"></div>
+  </section>
+
+  <section id="screen-cases" class="screen" hidden>
+    <div class="setup-head"><button class="btn btn-ghost" data-go="hub">⬅ Menú</button><h1>Casos profesionales</h1></div>
+    <div id="cases-list"></div>
+    <div id="case-player" class="stack" hidden></div>
+  </section>
+
+  <section id="screen-mapa" class="screen" hidden>
+    <div class="setup-head"><button class="btn btn-ghost" data-go="hub">⬅ Menú</button><h1>Mapa curricular · Inteligencia Artificial</h1></div>
+    <p class="muted">Íconos: 🤖 Proyecto · 🧪 Laboratorio · ⚖️ IA responsable · 🤝 Casos. Borde punteado = relación parcial.</p>
+    <div class="mapa"><div id="mapa-grid" class="mapa-grid"></div><div id="mapa-detail" class="card mapa-detail"></div></div>
+  </section>
+</main>
+
+<dialog id="history-dlg" class="modal">
+  <h2>📋 Historial</h2>
+  <div id="history-list"></div>
+  <div class="modal-foot"><button class="btn btn-ghost" id="history-clear">Borrar historial</button><button class="btn btn-primary" id="history-close">Cerrar</button></div>
+</dialog>
+
+<div id="xr-overlay" class="xr-overlay" hidden>
+  <div class="xr-top">
+    <span id="xr-status">Mueve el dispositivo para detectar una superficie y toca para colocar el laboratorio.</span>
+    <div class="xr-top-btns"><button class="btn btn-sm" id="xr-scale">↕ Escala</button><button class="btn btn-sm btn-danger" id="xr-exit">✕ Salir</button></div>
+  </div>
+  <div class="xr-bottom" id="xr-bottom"></div>
+</div>
+
+<div id="toast" class="toast" role="status" hidden></div>
+
+<script src="../js/caso-vivo.js"></script>
+<script src="js/ia-data.js"></script>
+<script src="js/casos-vivos-ia.js"></script>
+<script src="js/casos-asig-ia-a.js"></script>
+<script src="js/casos-asig-ia-b.js"></script>
+<script src="js/ia-app.js"></script>
+<script type="module" src="js/ia-3d.js"></script>
+</body>
+</html>

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="theme-color" content="#1B4D22" />
+<title>Simulador de Operaciones Turísticas</title>
+<meta name="description" content="Simulador para la carrera de Gestión de Operaciones Turísticas: opera un tour de un día en la Amazonía con turistas virtuales, costos, patrimonio y normativa, casos profesionales, prácticas por asignatura y realidad aumentada." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/sim.css" />
+<link rel="stylesheet" href="../incendios/css/cior.css" />
+<link rel="stylesheet" href="css/tur.css" />
+<link rel="stylesheet" href="../css/isty-theme.css" />
+<script src="../js/isty-config.js"></script>
+<script src="../js/isty-auth.js"></script>
+</head>
+<body>
+
+<header class="topbar tur-top">
+  <div class="brand">
+    <span class="brand-logo"><img src="../../portal/img/logo-isty.jpg" alt="Logo del Instituto Superior Tecnológico CIC-Yasuní" width="42" height="42" /></span>
+    <div>
+      <div class="brand-name">Simulador de Operaciones Turísticas</div>
+      <div class="brand-sub" id="brand-sub">Laboratorio Virtual · Gestión de Operaciones Turísticas</div>
+    </div>
+  </div>
+  <div class="topbar-actions">
+    <button class="icon-btn" id="btn-sound" title="Activar/desactivar voces" aria-pressed="true">🔊</button>
+    <button class="icon-btn" id="btn-theme" title="Cambiar tema claro/oscuro">🌓</button>
+  </div>
+</header>
+
+<main>
+  <!-- ================= INICIO ================= -->
+  <section id="screen-home" class="screen">
+    <div class="hero">
+      <div class="hero-text">
+        <h1>Opera un tour en la Amazonía como guía profesional</h1>
+        <p>Conduce un tour de un día desde Puyo con un grupo de turistas virtuales nacionales y extranjeros: prepara permisos y seguros, da la bienvenida, guía en sitios naturales y culturales, visita una comunidad kichwa con respeto y pago justo, cuida el almuerzo y la aventura, y resuelve imprevistos como la lluvia o una lesión. Practica también costos y operación turística, patrimonio y normativa, casos profesionales y una práctica por cada asignatura de la malla.</p>
+        <ul class="hero-feats">
+          <li>📱💻 Celular y computadora</li>
+          <li>🥽 Realidad aumentada (WebXR)</li>
+          <li>🎚️ 3 niveles de dificultad</li>
+          <li>📚 25 asignaturas de la malla</li>
+        </ul>
+        <p class="small"><a href="../../portal/">🏠 Portal del Laboratorio Virtual ISTY</a></p>
+      </div>
+      <form id="home-form" class="card form-card">
+        <h2>Datos del estudiante</h2>
+        <label>Nombre<input id="f-name" required maxlength="40" placeholder="Ej.: Jessica Santi" autocomplete="name"></label>
+        <label>Institución / laboratorio<input id="f-inst" maxlength="60" placeholder="Laboratorio Virtual Institucional"></label>
+        <label class="check"><input type="checkbox" id="f-voice" checked> Voces de los turistas y los personajes</label>
+        <button class="btn btn-primary btn-lg tur-btn" type="submit">Continuar ▶</button>
+        <button class="btn btn-ghost" type="button" id="btn-history">📋 Historial</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- ================= MENÚ ================= -->
+  <section id="screen-hub" class="screen" hidden>
+    <div class="setup-head">
+      <button class="btn btn-ghost" data-go="home">⬅ Inicio</button>
+      <h1>¿Qué deseas practicar<span id="hub-name"></span>?</h1>
+    </div>
+    <div class="hub-grid">
+      <button class="hub-card" data-hub="tour"><span class="em">🛶</span><b>Operar un tour en la Amazonía</b><small>Guía a un grupo de turistas virtuales por Puyo, el Paseo de los Monos y el Parque Omaere, una comunidad kichwa, la cascada y un almuerzo típico: seguridad, interpretación, pago justo, imprevistos y encuesta final. Vista 3D y realidad aumentada.</small><span class="tags">Técnicas de Guianza · Gestión de Operaciones Turísticas · Turismo Comunitario · Transporte · Servicio al Cliente</span></button>
+      <button class="hub-card" data-hub="cos"><span class="em">🧮</span><b>Costos y operación turística</b><small>Precio del paquete con costos fijos, variables y margen, punto de equilibrio de pasajeros, conversión de divisas, ocupación hotelera y tarifa promedio, con datos aleatorios.</small><span class="tags">Gestión Financiera · Contabilidad · Gestión de Alojamiento · Gestión de Operaciones</span></button>
+      <button class="hub-card" data-hub="pat"><span class="em">🏞️</span><b>Patrimonio, sostenibilidad y normativa</b><small>Patrimonio natural y cultural, turismo comunitario, buenas prácticas ambientales, Ministerio de Turismo y registro de prestadores, primeros auxilios en ruta y atención al cliente.</small><span class="tags">Geografía Turística · Culturas del Ecuador · Gestión Ambiental · Legislación Turística · Guianza</span></button>
+      <button class="hub-card" data-hub="casos"><span class="em">🤝</span><b>Casos profesionales</b><small>Situaciones simuladas: artesanías de especies protegidas, sobreventa de cupos, pago injusto a la comunidad, turista perdido en el sendero, queja de alojamiento y diseño de un producto comunitario. Actúas en la escena y respondes con tu voz o por escrito.</small><span class="tags">Legislación · Agencias de viajes · Turismo Comunitario · Guianza · Calidad</span></button>
+      <button class="hub-card" data-hub="asig"><span class="em">🎯</span><b>Prácticas por asignatura</b><small>Mapa curricular interactivo: 25 asignaturas de la malla, cada una con su propia situación simulada: actúa en la escena y responde con tu voz o por escrito.</small><span class="tags">Malla por PAO · Una práctica por asignatura · Contenidos mínimos</span></button>
+    </div>
+  </section>
+
+  <!-- ================= PREPARAR TOUR ================= -->
+  <section id="screen-setup" class="screen" hidden>
+    <div class="setup-head">
+      <button class="btn btn-ghost" data-go="hub">⬅ Menú</button>
+      <h1>Tour de un día · Amazonía de Pastaza</h1>
+    </div>
+    <div class="setup-grid">
+      <div class="card span2"><h2>📋 Tu rol</h2><p>Eres guía y operador del tour <b>Puyo – Paseo de los Monos y Parque Omaere – comunidad kichwa – cascada – almuerzo típico</b>. Tomas las decisiones de cada fase: preparación, recepción, traslado, guianza, visita comunitaria, almuerzo, aventura y cierre. Cuida la satisfacción, la seguridad, el ambiente, el beneficio comunitario, los costos y el itinerario. <span class="small muted">(Operadora, turistas y valores ficticios con fines formativos.)</span></p></div>
+      <div class="card span2"><h2><span class="step tur-step">1</span> Nivel</h2><div id="niv-list" class="choice-grid niv-grid"></div></div>
+      <div class="card span2"><h2><span class="step tur-step">2</span> Grupo de turistas</h2><div id="tur-preview" class="roster-preview"></div></div>
+    </div>
+    <div class="setup-foot"><button class="btn btn-primary btn-lg tur-btn" id="btn-start">🛶 Iniciar el tour</button></div>
+  </section>
+
+  <!-- ================= TOUR ================= -->
+  <section id="screen-tour" class="screen" hidden>
+    <div class="class-bar">
+      <div class="class-info">
+        <span class="pill tur-pill">🛶 Tour amazónico</span>
+        <span id="tour-niv" class="pill pill-soft"></span>
+        <strong id="tour-fase"></strong>
+      </div>
+      <div class="class-tools">
+        <div class="clock" title="Hora del tour">🕗 <span id="tour-clock">07:30</span></div>
+        <button class="btn btn-sm" id="btn-3d">🧊 3D</button>
+        <button class="btn btn-sm btn-ar" id="btn-ar">🥽 RA</button>
+        <button class="btn btn-sm btn-ar" id="btn-vr" title="Gafas sencillas tipo VR Box / cardboard con control Bluetooth">📱 VR Box</button>
+        <button class="btn btn-sm btn-danger" id="btn-end">Terminar</button>
+      </div>
+    </div>
+    <div class="class-layout">
+      <div class="stage">
+        <div class="card scene-card">
+          <svg id="scene" viewBox="0 0 600 330" role="img" aria-label="Sendero amazónico con río, comunidad y turistas"></svg>
+          <div id="view3d" class="view3d" hidden><canvas id="canvas3d"></canvas><div class="view3d-hint">Arrastra para girar · rueda/pellizco para acercar</div></div>
+          <div class="gauges" id="gauges"></div>
+        </div>
+        <div class="card"><h2 class="h-sm">🧳 Grupo de turistas</h2><div id="grupo" class="crew-grid"></div></div>
+      </div>
+      <aside class="panel" id="panel">
+        <div class="dialog card tur-dialog" id="dialog" aria-live="polite">
+          <div class="dialog-text" id="dialog-text"></div>
+          <div class="dialog-choices" id="dialog-choices"></div>
+        </div>
+        <div class="actions card" id="free-actions">
+          <h2 class="h-sm">Acciones generales</h2>
+          <div class="tab-panel">
+            <button class="act" data-fa="botiquin">🩹 Revisar botiquín, radio y contar al grupo</button>
+            <button class="act" data-fa="hidratar">💧 Pausa de hidratación y descanso</button>
+            <button class="act" data-fa="ingles">🗣️ Interpretar en inglés para los extranjeros</button>
+            <button class="act" data-fa="residuos">♻️ Recoger residuos («no dejar rastro»)</button>
+            <button class="act" data-fa="base">📞 Reportar ubicación y novedades a la operadora</button>
+            <button class="act" data-fa="bitacora">📒 Registrar en la hoja de ruta</button>
+          </div>
+        </div>
+        <details class="card log-card"><summary>📒 Hoja de ruta del tour</summary><ol id="log" class="log"></ol></details>
+      </aside>
+    </div>
+  </section>
+
+  <section id="screen-report" class="screen" hidden><div id="report"></div></section>
+
+  <section id="screen-cos" class="screen" hidden>
+    <div class="setup-head"><button class="btn btn-ghost" data-go="hub">⬅ Menú</button><h1>Costos y operación turística</h1></div>
+    <div id="cos-body"></div>
+  </section>
+
+  <section id="screen-pat" class="screen" hidden>
+    <div class="setup-head"><button class="btn btn-ghost" data-go="hub">⬅ Menú</button><h1>Patrimonio, sostenibilidad y normativa</h1></div>
+    <div id="pat-body"></div>
+  </section>
+
+  <section id="screen-cases" class="screen" hidden>
+    <div class="setup-head"><button class="btn btn-ghost" data-go="hub">⬅ Menú</button><h1>Casos profesionales</h1></div>
+    <div id="cases-list"></div>
+    <div id="case-player" class="stack" hidden></div>
+  </section>
+
+  <section id="screen-mapa" class="screen" hidden>
+    <div class="setup-head"><button class="btn btn-ghost" data-go="hub">⬅ Menú</button><h1>Mapa curricular · Gestión de Operaciones Turísticas</h1></div>
+    <p class="muted">Íconos: 🛶 Tour · 🧮 Costos · 🏞️ Patrimonio · 🤝 Casos. Borde punteado = relación parcial.</p>
+    <div class="mapa"><div id="mapa-grid" class="mapa-grid"></div><div id="mapa-detail" class="card mapa-detail"></div></div>
+  </section>
+</main>
+
+<dialog id="history-dlg" class="modal">
+  <h2>📋 Historial</h2>
+  <div id="history-list"></div>
+  <div class="modal-foot"><button class="btn btn-ghost" id="history-clear">Borrar historial</button><button class="btn btn-primary" id="history-close">Cerrar</button></div>
+</dialog>
+
+<div id="xr-overlay" class="xr-overlay" hidden>
+  <div class="xr-top">
+    <span id="xr-status">Mueve el dispositivo para detectar una superficie y toca para colocar el sendero.</span>
+    <div class="xr-top-btns"><button class="btn btn-sm" id="xr-scale">↕ Escala</button><button class="btn btn-sm btn-danger" id="xr-exit">✕ Salir</button></div>
+  </div>
+  <div class="xr-bottom" id="xr-bottom"></div>
+</div>
+
+<div id="toast" class="toast" role="status" hidden></div>
+
+<script src="../js/caso-vivo.js"></script>
+<script src="js/tur-data.js"></script>
+<script src="js/casos-vivos-tur.js"></script>
+<script src="js/casos-asig-tur-a.js"></script>
+<script src="js/casos-asig-tur-b.js"></script>
+<script src="js/tur-app.js"></script>
+<script type="module" src="js/tur-3d.js"></script>
+</body>
+</html>

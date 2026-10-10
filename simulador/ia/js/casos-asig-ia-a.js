@@ -107,7 +107,7 @@ window.CASOS_ASIG = (window.CASOS_ASIG || []).concat([
           conceptos: [
             { n: 'Plantea la función lineal', claves: ['funcion', 'lineal', 'c de x', 'formula', 'ecuacion', 'pendiente'] },
             { n: 'Separa costo fijo y costo por kilo', claves: ['fijo', '120', 'ciento veinte', 'por kilo', 'por cada kilo', '0 80'] },
-            { n: 'Da el resultado correcto', claves: ['360', 'trescientos sesenta'] }
+            { n: 'Da el resultado correcto', claves: ['360', 'trescientos sesenta', '360 dolares', 'pago 360', 'total de 360'] }
           ],
           evitar: [ { claves: ['420', 'cuatrocientos veinte'], fb: 'Sumar kilos y dólares da un resultado sin sentido.' } ],
           modelo: 'Es una función lineal: el costo fijo es 120 y se suman 0,80 por cada kilo. Con 300 kilos son 120 más 240, o sea 360 dólares.'
@@ -120,8 +120,8 @@ window.CASOS_ASIG = (window.CASOS_ASIG || []).concat([
           ],
           conceptos: [
             { n: 'Usa la matriz de ventas y el vector de precios', claves: ['matriz', 'vector', 'tabla', 'filas', 'columnas', 'producto'] },
-            { n: 'Calcula la semana 1', claves: ['120', 'ciento veinte'] },
-            { n: 'Calcula la semana 2', claves: ['130', 'ciento treinta'] }
+            { n: 'Calcula la semana 1', claves: ['120', 'ciento veinte', '120 dolares', 'semana 1 son', 'primera semana 120'] },
+            { n: 'Calcula la semana 2', claves: ['130', 'ciento treinta', '130 dolares', 'semana 2 son', 'segunda semana 130'] }
           ],
           evitar: [ { claves: ['a ojo', 'mas o menos'], fb: 'Las decisiones del negocio requieren cálculos exactos.' } ],
           modelo: 'Multiplico la matriz de ventas por el vector de precios: la semana 1 son 20 por 3 más 15 por 4, igual a 120 dólares, y la semana 2 son 10 por 3 más 25 por 4, igual a 130 dólares.'
@@ -207,7 +207,7 @@ window.CASOS_ASIG = (window.CASOS_ASIG || []).concat([
           conceptos: [
             { n: 'Propone aplicaciones concretas para el sector', claves: ['reservas', 'preguntas frecuentes', 'traduc', 'asistente', 'chatbot', 'comentarios', 'turistas'] },
             { n: 'Sugiere herramientas básicas para empezar', claves: ['herramienta', 'sencilla', 'empezar', 'gratuita', 'probar', 'paso a paso'] },
-            { n: 'Recuerda la supervisión y los datos', claves: ['revisar', 'supervis', 'cuidar los datos', 'proteger', 'privacidad', 'verificar'] }
+            { n: 'Recuerda la supervisión y los datos', claves: ['revis', 'supervis', 'cuid', 'proteger', 'privacidad', 'verificar'] }
           ],
           evitar: [ { claves: ['lo hace todo sola', 'ya no necesita personal'], fb: 'La IA apoya, pero no reemplaza la gestión humana.' } ],
           modelo: 'Podríamos empezar con una herramienta sencilla: un asistente que responda preguntas frecuentes de reservas y un traductor para turistas, revisando siempre las respuestas y cuidando los datos de los clientes.'
@@ -277,7 +277,7 @@ window.CASOS_ASIG = (window.CASOS_ASIG || []).concat([
             { icono: '💥', t: 'Ejecutar DELETE sin WHERE', p: 0, fb: 'Borra todas las entregas.', efecto: { confianza: -14, tension: 14 } }
           ],
           conceptos: [
-            { n: 'Hace un respaldo', claves: ['respaldo', 'backup', 'copia de seguridad', 'copia'] },
+            { n: 'Hace un respaldo', claves: ['respaldo', 'respaldar', 'backup', 'copia de seguridad', 'copia'] },
             { n: 'Usa DELETE con WHERE probado', claves: ['where', 'delete', 'probar', 'select primero', 'condicion'] },
             { n: 'Controla los permisos de usuario', claves: ['permiso', 'usuario', 'autoriz', 'acceso', 'responsable'] }
           ],
@@ -394,7 +394,7 @@ window.CASOS_ASIG = (window.CASOS_ASIG || []).concat([
           ],
           conceptos: [
             { n: 'Lee el archivo con Pandas', claves: ['read csv', 'pandas', 'pd', 'leer', 'cargar'] },
-            { n: 'Usa un DataFrame', claves: ['dataframe', 'tabla', 'df'] },
+            { n: 'Usa un DataFrame', claves: ['dataframe', 'data frame', 'tabla', 'df', 'estructura de pandas'] },
             { n: 'Revisa la estructura de los datos', claves: ['head', 'info', 'shape', 'columnas', 'tipos', 'filas'] }
           ],
           evitar: [ { claves: ['a mano', 'copiarlo uno por uno'], fb: 'El procesamiento manual no escala.' } ],
@@ -408,8 +408,8 @@ window.CASOS_ASIG = (window.CASOS_ASIG || []).concat([
           ],
           conceptos: [
             { n: 'Filtra las fechas del feriado', claves: ['filtr', 'condicion', 'fecha', 'feriado', 'carnaval', 'to datetime'] },
-            { n: 'Agrupa por cantón', claves: ['groupby', 'agrup', 'por canton', 'canton'] },
-            { n: 'Suma los visitantes', claves: ['sum', 'suma', 'total', 'visitantes'] }
+            { n: 'Agrupa por cantón', claves: ['groupby', 'group by', 'agrup', 'por canton', 'canton'] },
+            { n: 'Suma los visitantes', claves: ['sum', 'suma', 'total', 'visitantes', 'cuantos turistas'] }
           ],
           evitar: [ { claves: ['promedio de todo el ano'], fb: 'Hay que filtrar el período pedido.' } ],
           modelo: 'Filtro las filas con una condición sobre la fecha del feriado de carnaval y luego uso groupby por cantón con sum de la columna visitantes para obtener el total.'
@@ -465,8 +465,8 @@ window.CASOS_ASIG = (window.CASOS_ASIG || []).concat([
             { icono: '🏆', t: 'Destacar solo la finca de 30 quintales', p: 0, fb: 'Presentar el máximo como típico engaña.', efecto: { confianza: -10, tension: 8 } }
           ],
           conceptos: [
-            { n: 'Calcula la media', claves: ['media', 'promedio', '14', 'catorce'] },
-            { n: 'Calcula la mediana', claves: ['mediana', '10', 'diez', 'valor central'] },
+            { n: 'Calcula la media', claves: ['media', 'promedio', '14', 'catorce', '70 dividido'] },
+            { n: 'Calcula la mediana', claves: ['mediana', '10', 'diez', 'valor central', 'dato del medio'] },
             { n: 'Identifica el valor atípico', claves: ['atipico', 'extremo', '30', 'treinta', 'jala', 'distorsiona'] }
           ],
           evitar: [ { claves: ['reporto 30', 'el mejor valor'], fb: 'El máximo no representa a todas las fincas.' } ],
@@ -494,7 +494,7 @@ window.CASOS_ASIG = (window.CASOS_ASIG || []).concat([
           ],
           conceptos: [
             { n: 'Plantea casos favorables sobre posibles', claves: ['6 de 40', 'seis de cuarenta', 'dividir', 'casos', 'favorables', 'total'] },
-            { n: 'Da el resultado', claves: ['15', 'quince', '0 15'] },
+            { n: 'Da el resultado', claves: ['15', 'quince', '0 15', 'quince por ciento', 'probabilidad de 0'] },
             { n: 'Interpreta para la acción', claves: ['revisar', 'muestra', 'actuar', 'prevenir', 'control', 'confirmar'] }
           ],
           evitar: [ { claves: ['seis por ciento', '6 por ciento'], fb: 'Se debe dividir para el total de lotes.' } ],
@@ -552,7 +552,7 @@ window.CASOS_ASIG = (window.CASOS_ASIG || []).concat([
             { icono: '🎲', t: 'Inventar valores para los huecos', p: 0, fb: 'Inventar datos destruye la confiabilidad.', efecto: { confianza: -12, tension: 10 } }
           ],
           conceptos: [
-            { n: 'Elimina duplicados', claves: ['duplicad', 'repetid', 'drop duplicates'] },
+            { n: 'Elimina duplicados', claves: ['duplicad', 'repetid', 'drop duplicates', 'filas iguales', 'dobles'] },
             { n: 'Trata el código de error como faltante', claves: ['999', 'codigo de error', 'faltante', 'nulo', 'valor perdido', 'error del sensor'] },
             { n: 'Completa con criterio y lo documenta', claves: ['interpol', 'imput', 'marcar', 'document', 'registro', 'criterio'] }
           ],

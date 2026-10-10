@@ -351,7 +351,7 @@ window.CASOS_ASIG = (window.CASOS_ASIG || []).concat([
           conceptos: [
             { n: 'Mantiene el almacenamiento privado', claves: ['privado', 'no publico', 'enlaces temporales', 'por cliente', 'acceso limitado'] },
             { n: 'Aplica controles de seguridad', claves: ['multifactor', 'mfa', 'permisos minimos', 'cifrado', 'dos pasos', 'contrasena'] },
-            { n: 'Reconoce la responsabilidad compartida', claves: ['responsabilidad compartida', 'nuestra responsabilidad', 'configuracion', 'proveedor protege'] }
+            { n: 'Reconoce la responsabilidad compartida', claves: ['responsabilidad compartida', 'nuestra responsabilidad', 'configuracion', 'proveedor protege', 'nos toca proteger'] }
           ],
           evitar: [ { claves: ['dejalo publico', 'contrasena facil'], fb: 'Un contenedor público o una clave débil provocan fugas.' } ],
           modelo: 'Mejor no: el contenedor debe ser privado y compartimos enlaces temporales por cliente, con autenticación multifactor, permisos mínimos y cifrado; la configuración segura es nuestra responsabilidad.'
@@ -480,7 +480,7 @@ window.CASOS_ASIG = (window.CASOS_ASIG || []).concat([
           ],
           conceptos: [
             { n: 'Almacenamiento distribuido o data lake', claves: ['distribuid', 'data lake', 'lago de datos', 'nube', 'cluster'] },
-            { n: 'Formato columnar comprimido', claves: ['parquet', 'columnar', 'comprimid', 'formato eficiente'] },
+            { n: 'Formato columnar comprimido', claves: ['parquet', 'columnar', 'comprimid', 'formato eficiente', 'por columnas'] },
             { n: 'Particionado para consultar lo necesario', claves: ['particion', 'por fecha', 'solo lo necesario', 'por dia', 'consultar'] }
           ],
           evitar: [ { claves: ['en el celular', 'un excel por dia'], fb: 'No permite manejar datos masivos.' } ],
@@ -638,7 +638,7 @@ window.CASOS_ASIG = (window.CASOS_ASIG || []).concat([
           ],
           conceptos: [
             { n: 'Prueba en un entorno de pruebas', claves: ['postman', 'entorno de pruebas', 'probar', 'pruebas', 'casos'] },
-            { n: 'Versiona la API', claves: ['version', 'v1', 'versionar', 'compatib'] },
+            { n: 'Versiona la API', claves: ['version', 'v1', 'versionar', 'compatib', 'no romper'] },
             { n: 'Monitorea en producción', claves: ['monitore', 'tiempos de respuesta', 'fallas', 'alertas', 'registros'] }
           ],
           evitar: [ { claves: ['directamente en produccion'], fb: 'Primero se prueba en un entorno controlado.' } ],

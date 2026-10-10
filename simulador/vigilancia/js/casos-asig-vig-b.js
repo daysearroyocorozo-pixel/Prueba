@@ -124,7 +124,7 @@ window.CASOS_ASIG = (window.CASOS_ASIG || []).concat([
             { icono: '🔢', t: 'Escribir 24 % en el informe', p: 0, fb: 'Confunde frecuencia con porcentaje.', efecto: { confianza: -10, tension: 8 } }
           ],
           conceptos: [
-            { n: 'Da el resultado correcto', claves: ['40', 'cuarenta'] },
+            { n: 'Da el resultado correcto', claves: ['40', 'cuarenta', '40 por ciento', 'cuarenta por ciento', 'es el 40', 'el 40'] },
             { n: 'Explica el procedimiento', claves: ['24', 'dividido', 'divido', '60', 'por 100', 'por cien', 'sobre 60'] },
             { n: 'Interpreta el dato', claves: ['casi la mitad', 'concentra', 'tres horas', 'franja', 'mayor parte', 'justifica'] }
           ],

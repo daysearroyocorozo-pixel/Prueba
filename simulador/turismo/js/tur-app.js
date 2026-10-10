@@ -194,7 +194,7 @@
       <text x="205" y="150" font-size="22">🐒</text><text x="262" y="132" font-size="18">🦜</text>
       <circle cx="560" cy="34" r="22" fill="#fff" stroke="#334155" stroke-width="2"/><text x="560" y="39" font-size="12" font-weight="800" text-anchor="middle" fill="#334155">${hora(s.t)}</text>`;
     if (s.lluvia) { h += `<text x="80" y="60" font-size="34">🌧️</text><text x="360" y="55" font-size="30">🌧️</text>`; for (let i = 0; i < 24; i++) { const x = (i * 53) % 600, y = 20 + (i * 37) % 200; h += `<line x1="${x}" y1="${y}" x2="${x - 5}" y2="${y + 14}" stroke="#475569" stroke-width="1.2" opacity=".6"/>`; } }
-    if (k <= 2 || k >= 8) h += `<text x="${k >= 8 ? 110 : POS[k] + 30}" y="232" font-size="34">🚐</text>`;
+    if (k <= 2 || k >= 8) h += `<text x="${(k >= 8 ? POS[8] : POS[k]) + 105}" y="236" font-size="34">🚐</text>`;
     if (k === 5) h += `<text x="380" y="210" font-size="22">🍲</text>`;
     if (k === 6) h += `<text x="430" y="${rio + 14}" font-size="22">🛟</text>`;
     const x0 = POS[Math.min(k, POS.length - 1)];

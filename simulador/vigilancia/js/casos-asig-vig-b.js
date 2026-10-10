@@ -3,73 +3,73 @@ window.CASOS_ASIG = (window.CASOS_ASIG || []).concat([
   /* ===================== VSC-07 Protocolos y Procedimientos de Seguridad Ciudadana II ===================== */
   {
     id: 'asig-VSC-07', cod: 'VSC-07',
-    titulo: 'Robo en una ferretería: preservar la escena',
+    titulo: 'Concierto de las fiestas de Puyo y una extorsión',
     asignaturas: ['VSC-07'],
-    persona: { nombre: 'Sra. Mónica Andrade', rol: 'Dueña de una ferretería en la avenida Alberto Zambrano', avatar: '👩🏻', pitch: 1.15 },
-    contexto: 'Al amanecer descubres que forzaron la puerta lateral de una ferretería de tu sector. La dueña llega alterada y quiere entrar a revisar. Debes actuar como primer respondiente y coordinar con la Policía Nacional.',
-    objetivo: 'Aplicar el protocolo de primer respondiente: preservación de la escena, identificación de testigos, coordinación interinstitucional y cadena de custodia.',
+    persona: { nombre: 'Lcdo. Fernando Vargas', rol: 'Coordinador de seguridad del concierto en el Coliseo de Puyo', avatar: '🧑🏽‍💼', pitch: 0.95 },
+    contexto: 'Por las fiestas de fundación de Puyo se realiza un concierto masivo en el coliseo. Formas parte del dispositivo de seguridad privada. Durante el evento, un comerciante te cuenta que lo están extorsionando por teléfono.',
+    objetivo: 'Practica: protocolos de control de multitudes y eventos masivos, control de accesos y perímetros, actuación ante amenazas como la extorsión con activación de la cadena de alerta, y evaluación con listas de verificación e indicadores.',
     pasos: [
-      { dice: '¡Déjeme entrar! Tengo que ver qué se llevaron y arreglar todo antes de abrir.', opciones: [
-          { t: 'Le explico con empatía que no debemos entrar ni tocar nada hasta que llegue la Policía, acordono el acceso y llamo al ECU 911.', p: 2, r: 'Está bien… pero que vengan rápido.', fb: 'Preservar la escena evita contaminar los indicios que permitirán investigar.' },
-          { t: 'La dejo entrar, pero le pido que no toque mucho.', p: 1, r: '(La dueña camina por todo el local.)', fb: 'Cada ingreso altera la escena, aunque se tenga cuidado.' },
-          { t: 'Entramos juntos y ordenamos para que pueda abrir.', p: 0, r: '(Se pierden huellas y evidencias.)', fb: 'Alterar la escena destruye evidencias y perjudica la investigación.' } ] },
-      { dice: 'El vecino de al lado dice que escuchó un carro a las tres de la mañana.', opciones: [
-          { t: 'Anoto sus datos y lo que vio y escuchó, le pido que espere para declarar ante la Policía y reviso si hay cámaras de la zona que lo hayan grabado.', p: 2, r: 'Claro, me quedo para contarles.', fb: 'Identificar testigos y fuentes de video aporta información valiosa a la investigación.' },
-          { t: 'Le agradezco y le digo que se vaya.', p: 1, r: 'Bueno, ya me voy.', fb: 'Se pierde un testigo importante.' },
-          { t: 'Le digo que seguro fue el vecino de enfrente.', p: 0, r: '(Surge un rumor en el barrio.)', fb: 'Especular sobre culpables es irresponsable y puede afectar a inocentes.' } ] },
-      { dice: '(Llega la patrulla.) Policía: «¿Qué tenemos aquí?»', opciones: [
-          { t: 'Informo de forma ordenada: hora del hallazgo, lo que observé, que nadie ingresó, los datos del testigo y la ubicación de las cámaras; entrego la escena y lo dejo constar en el acta y en el parte.', p: 2, r: 'Excelente trabajo, la escena está intacta.', fb: 'Un informe ordenado y la entrega formal mantienen la cadena de custodia.' },
-          { t: 'Les digo «roban todos los días por aquí» y me voy.', p: 1, r: 'Necesitamos detalles.', fb: 'Sin información precisa se pierde tiempo valioso.' },
-          { t: 'Les entrego un destornillador que recogí del piso para ayudar.', p: 0, r: '¡Eso no debió tocarse!', fb: 'Manipular indicios rompe la cadena de custodia.' } ] }
+      { dice: 'Faltan dos horas para abrir las puertas. ¿Qué revisas en tu sector del dispositivo?', opciones: [
+          { t: 'Verifico con la lista de chequeo el aforo autorizado, los puntos de control de acceso, el perímetro, las rutas de evacuación despejadas, la ubicación de la ambulancia y la comunicación por radio con el puesto de mando.', p: 2, r: 'Excelente, así trabajamos con orden.', fb: 'La planificación del dispositivo para eventos masivos gestiona los riesgos colectivos antes de que ocurran.' },
+          { t: 'Espero a que llegue la gente y veo qué pasa.', p: 1, r: 'Hay que anticiparse.', fb: 'Sin planificación previa los riesgos colectivos se multiplican.' },
+          { t: 'Cierro una salida de emergencia para controlar mejor el ingreso.', p: 0, r: '¡Eso es peligrosísimo!', fb: 'Bloquear salidas de emergencia pone en riesgo vidas en caso de evacuación.' } ] },
+      { dice: '(Un comerciante del patio de comidas, nervioso:) «Me llaman diciendo que si no pago una vacuna hoy, me queman el puesto».', opciones: [
+          { t: 'Lo llevo a un lugar reservado, le recomiendo no pagar ni negociar, conservar las llamadas y mensajes, y activo la cadena de alerta: aviso al coordinador y llamamos al ECU 911 para que intervenga la unidad especializada de la Policía.', p: 2, r: 'Gracias, no sabía qué hacer.', fb: 'Ante una extorsión se activa la cadena institucional de alerta y se preservan los registros, sin exceder el ámbito de la vigilancia.' },
+          { t: 'Le digo que pague para evitar problemas.', p: 1, r: '¿Y si vuelven a pedir?', fb: 'Pagar suele aumentar las exigencias y no se reporta el delito.' },
+          { t: 'Le pido el número y llamo yo a amenazar al extorsionador.', p: 0, r: '(La situación se vuelve más peligrosa.)', fb: 'Investigar o confrontar al delincuente excede tus funciones y aumenta el riesgo.' } ] },
+      { dice: 'El concierto terminó. ¿Cómo evaluamos el dispositivo?', opciones: [
+          { t: 'Con la lista de verificación y los indicadores: tiempo de ingreso, incidentes atendidos, tiempo de evacuación y novedades; propongo mejoras para actualizar el protocolo.', p: 2, r: 'Con eso mejoramos para el próximo evento.', fb: 'La mejora continua de los protocolos se basa en indicadores y retroalimentación.' },
+          { t: 'Decimos que todo salió bien y nos vamos.', p: 1, r: 'Sin datos no aprendemos.', fb: 'Sin evaluación no hay mejora.' },
+          { t: 'Borramos los registros de incidentes para que la empresa quede bien.', p: 0, r: 'Eso es ocultar información.', fb: 'Ocultar novedades impide mejorar y es una falta.' } ] }
     ],
     vivo: {
-      lugar: 'Ferretería en la avenida Alberto Zambrano, Puyo', fondo: 'exterior',
-      inicio: { confianza: 35, tension: 75 },
+      lugar: 'Coliseo de Puyo durante el concierto de las fiestas', fondo: 'exterior',
+      inicio: { confianza: 50, tension: 60 },
       pasos: [
         {
           acciones: [
-            { icono: '🚧', t: 'Colocar cinta para acordonar la puerta', p: 2, fb: 'Acordonar impide el ingreso de personas no autorizadas.', efecto: { confianza: 4, tension: -6 } },
-            { icono: '📞', t: 'Llamar al ECU 911 para reportar el robo', p: 2, fb: 'La Policía y criminalística deben intervenir.', efecto: { confianza: 8, tension: -6 } },
-            { icono: '🚪', t: 'Dejarla entrar con cuidado', p: 1, fb: 'Cada ingreso altera la escena.', efecto: { confianza: 6, tension: -2 } },
-            { icono: '🧹', t: 'Ayudar a ordenar el local', p: 0, fb: 'Destruye evidencias.', efecto: { confianza: 8, tension: -6 } }
+            { icono: '✅', t: 'Recorrer el sector con la lista de chequeo', p: 2, fb: 'La lista de chequeo asegura que nada se olvide.', efecto: { confianza: 8, tension: -6 } },
+            { icono: '🚪', t: 'Comprobar que las salidas de emergencia están libres', p: 2, fb: 'Las salidas libres son vitales en una evacuación.', efecto: { confianza: 8, tension: -6 } },
+            { icono: '⏳', t: 'Esperar a que llegue el público', p: 1, fb: 'No te anticipas a los riesgos.', efecto: { confianza: 0, tension: 4 } },
+            { icono: '🔒', t: 'Encadenar una salida de emergencia', p: 0, fb: 'Pone en riesgo vidas.', efecto: { confianza: -15, tension: 18 } }
           ],
           conceptos: [
-            { n: 'Pide no entrar ni tocar nada', claves: ['no entrar', 'no podemos entrar', 'no tocar', 'no toque', 'nadie entra', 'esperar afuera'] },
-            { n: 'Preserva la escena', claves: ['escena', 'preserv', 'acordon', 'evidencia', 'indicios', 'huellas'] },
-            { n: 'Coordina con la Policía y el ECU 911', claves: ['policia', '911', 'ecu', 'criminalistica', 'autoridad', 'patrulla'] }
+            { n: 'Aforo y control de accesos', claves: ['aforo', 'acceso', 'puntos de control', 'ingreso', 'entrada'] },
+            { n: 'Perímetro y rutas de evacuación', claves: ['perimetro', 'rutas de evacuacion', 'salidas', 'evacuacion', 'despejad'] },
+            { n: 'Coordinación con el puesto de mando', claves: ['radio', 'puesto de mando', 'ambulancia', 'coordin', 'lista de chequeo'] }
           ],
-          evitar: [ { claves: ['entremos', 'ordenemos', 'pase nomas'], fb: 'No se ingresa ni se altera la escena.' } ],
-          modelo: 'Señora, entiendo su preocupación, pero no podemos entrar ni tocar nada para preservar la escena y las huellas. Acordono el acceso y llamo al ECU 911 para que venga la Policía.'
+          evitar: [ { claves: ['cierro la salida', 'encadeno'], fb: 'Las salidas de emergencia nunca se bloquean.' } ],
+          modelo: 'Con la lista de chequeo verifico el aforo autorizado, los puntos de control de acceso, el perímetro, las rutas de evacuación despejadas, la ambulancia y la comunicación por radio con el puesto de mando.'
         },
         {
           acciones: [
-            { icono: '🗒️', t: 'Anotar los datos y el relato del vecino', p: 2, fb: 'El testimonio temprano es más preciso.', efecto: { confianza: 8, tension: -4 } },
-            { icono: '📹', t: 'Ubicar cámaras cercanas que apunten a la calle', p: 2, fb: 'Las grabaciones pueden identificar el vehículo.', efecto: { confianza: 6, tension: -4 } },
-            { icono: '👋', t: 'Agradecer al vecino y despedirlo', p: 1, fb: 'Se pierde un testigo.', efecto: { confianza: 0, tension: 2 } },
-            { icono: '🗯️', t: 'Especular sobre quién fue el ladrón', p: 0, fb: 'Puede afectar a inocentes.', efecto: { confianza: -10, tension: 10 } }
+            { icono: '🤫', t: 'Llevar al comerciante a un lugar reservado', p: 2, fb: 'La reserva protege a la víctima.', efecto: { confianza: 8, tension: -6 } },
+            { icono: '📞', t: 'Avisar al coordinador y llamar al ECU 911', p: 2, fb: 'Se activa la cadena institucional de alerta.', efecto: { confianza: 6, tension: -4 } },
+            { icono: '💸', t: 'Aconsejarle que pague la «vacuna»', p: 1, fb: 'Aumenta las exigencias y no se reporta.', efecto: { confianza: 2, tension: 4 } },
+            { icono: '☎️', t: 'Llamar tú al extorsionador para amenazarlo', p: 0, fb: 'Excede tus funciones y aumenta el riesgo.', efecto: { confianza: -12, tension: 15 } }
           ],
           conceptos: [
-            { n: 'Identifica al testigo', claves: ['sus datos', 'nombre', 'testigo', 'telefono', 'cedula', 'anoto'] },
-            { n: 'Registra lo que vio y escuchó', claves: ['que vio', 'que escucho', 'hora', 'carro', 'relato', 'tres de la manana'] },
-            { n: 'Busca fuentes de video', claves: ['camaras', 'video', 'grabacion', 'cctv', 'imagenes'] }
+            { n: 'No pagar ni negociar', claves: ['no pague', 'no pagar', 'no negocie', 'no negociar', 'no ceda'] },
+            { n: 'Conservar los registros', claves: ['conserve', 'conservar', 'llamadas', 'mensajes', 'capturas', 'no borre'] },
+            { n: 'Activar la cadena de alerta', claves: ['cadena de alerta', 'coordinador', 'ecu 911', 'policia', 'unidad especializada', 'denuncia'] }
           ],
-          evitar: [ { claves: ['seguro fue', 'ya se quien'], fb: 'No especules sobre culpables.' } ],
-          modelo: 'Por favor, deme sus datos y cuénteme qué vio y escuchó y a qué hora pasó el carro. Le pido esperar para declarar como testigo, y reviso si hay cámaras que lo hayan grabado.'
+          evitar: [ { claves: ['pague nomas', 'yo lo llamo', 'lo voy a buscar'], fb: 'No se paga ni se confronta al extorsionador.' } ],
+          modelo: 'Le recomiendo no pagar ni negociar, y conservar las llamadas y los mensajes. Activo la cadena de alerta: aviso al coordinador y llamamos al ECU 911 para que intervenga la unidad especializada de la Policía.'
         },
         {
           acciones: [
-            { icono: '🧾', t: 'Entregar un informe verbal ordenado al policía', p: 2, fb: 'La información clara agiliza la investigación.', efecto: { confianza: 8, tension: -6 } },
-            { icono: '✍️', t: 'Firmar el acta de entrega de la escena', p: 2, fb: 'El acta documenta la cadena de custodia.', efecto: { confianza: 6, tension: -4 } },
-            { icono: '🤷', t: 'Decir que roban siempre y retirarse', p: 1, fb: 'Faltan datos.', efecto: { confianza: -4, tension: 4 } },
-            { icono: '🪛', t: 'Entregar un destornillador que recogiste', p: 0, fb: 'Rompe la cadena de custodia.', efecto: { confianza: -10, tension: 10 } }
+            { icono: '📋', t: 'Completar la lista de verificación final', p: 2, fb: 'Permite comparar lo planificado con lo ejecutado.', efecto: { confianza: 8, tension: -4 } },
+            { icono: '📊', t: 'Calcular los indicadores del evento', p: 2, fb: 'Los indicadores muestran qué mejorar.', efecto: { confianza: 8, tension: -4 } },
+            { icono: '👌', t: 'Reportar solo «todo salió bien»', p: 1, fb: 'Sin datos no hay mejora.', efecto: { confianza: 0, tension: 2 } },
+            { icono: '🗑️', t: 'Borrar los registros de incidentes', p: 0, fb: 'Es ocultar información.', efecto: { confianza: -12, tension: 10 } }
           ],
           conceptos: [
-            { n: 'Informa hora y hallazgo', claves: ['hora', 'hallazgo', 'encontre', 'observe', 'puerta lateral', 'forzada'] },
-            { n: 'Confirma que nadie alteró la escena', claves: ['nadie ingreso', 'nadie entro', 'intacta', 'no se toco', 'sin alterar', 'preservada'] },
-            { n: 'Entrega formal y cadena de custodia', claves: ['acta', 'cadena de custodia', 'entrego', 'parte', 'testigo', 'camaras'] }
+            { n: 'Usa la lista de verificación', claves: ['lista de verificacion', 'lista de chequeo', 'checklist', 'verificacion', 'lo planificado'] },
+            { n: 'Mide indicadores', claves: ['indicador', 'tiempo de ingreso', 'incidentes', 'tiempo de evacuacion', 'novedades'] },
+            { n: 'Propone mejoras al protocolo', claves: ['mejora', 'actualizar', 'protocolo', 'retroalimenta', 'proximo evento'] }
           ],
-          evitar: [ { claves: ['recogi', 'lo guarde para ayudar'], fb: 'Los indicios no se manipulan.' } ],
-          modelo: 'A las cinco y treinta encontré la puerta lateral forzada. Nadie ingresó, la escena está intacta. Aquí están los datos del testigo y la ubicación de las cámaras; le entrego la escena y lo dejo constar en el acta y en el parte.'
+          evitar: [ { claves: ['borrar los registros', 'ocultar'], fb: 'Las novedades no se ocultan.' } ],
+          modelo: 'Evaluamos con la lista de verificación y los indicadores: tiempo de ingreso, incidentes atendidos, tiempo de evacuación y novedades. Con eso propongo mejoras para actualizar el protocolo.'
         }
       ]
     }
@@ -82,9 +82,9 @@ window.CASOS_ASIG = (window.CASOS_ASIG || []).concat([
     asignaturas: ['VSC-08'],
     persona: { nombre: 'Ing. Daniela Freire', rol: 'Jefa de monitoreo de una empresa de seguridad', avatar: '👩🏻‍💻', pitch: 1.1 },
     contexto: 'En la central de monitoreo, la jefa te muestra el mapa de calor de los hurtos del último mes en el centro de Puyo y te pide proponer acciones. Además, llega un correo sospechoso al sistema de cámaras.',
-    objetivo: 'Interpretar un mapa de calor y la distribución horaria del delito, calcular porcentajes y aplicar medidas básicas de ciberseguridad ante el phishing.',
+    objetivo: 'Practica: SIG y mapas de calor (QGIS, mapas de incidencia del ECU 911), distribución espacial y horaria de la criminalidad, y ciberdelitos como el phishing: conservar los registros y reportar a la instancia competente.',
     pasos: [
-      { dice: 'Mira el mapa: el punto más rojo está en el Paseo Turístico, entre las 18:00 y las 21:00. ¿Qué propones?', opciones: [
+      { dice: 'Cargamos en QGIS las coordenadas de los partes y generamos el mapa de calor: el punto más rojo está en el Paseo Turístico, entre las 18:00 y las 21:00. ¿Qué propones?', opciones: [
           { t: 'Reforzar la presencia preventiva en ese lugar y franja horaria, y proponer al municipio mejorar la iluminación y eliminar puntos ciegos.', p: 2, r: 'Bien: focalizas recursos donde y cuando ocurre el delito.', fb: 'La geodiferenciación orienta el patrullaje y la prevención situacional.' },
           { t: 'Patrullar todo el centro por igual, todo el día.', p: 1, r: 'No tenemos personal para todo.', fb: 'Sin focalización se desperdician recursos.' },
           { t: 'Prohibir que los jóvenes caminen por el paseo en la noche.', p: 0, r: 'Eso es discriminatorio.', fb: 'Restringir derechos de un grupo no es prevención.' } ] },
@@ -93,7 +93,7 @@ window.CASOS_ASIG = (window.CASOS_ASIG || []).concat([
           { t: 'Es más o menos la mitad.', p: 1, r: 'Aproximado, pero necesitamos la cifra.', fb: 'La estimación no es precisa: el valor es 40 %.' },
           { t: 'Es el 24 por ciento.', p: 0, r: 'No, 24 son casos, no porcentaje.', fb: 'Confundir frecuencia con porcentaje lleva a errores de análisis.' } ] },
       { dice: '(Llega un correo: «Actualice urgente su contraseña del sistema de cámaras en este enlace».) ¿Qué hacemos?', opciones: [
-          { t: 'No abro el enlace ni descargo nada; verifico con el proveedor por su canal oficial, reporto el intento de phishing, cambio la contraseña por una robusta y activo el doble factor.', p: 2, r: 'Perfecto, eso protege las grabaciones.', fb: 'Ante el phishing: no hacer clic, verificar, reportar y reforzar la autenticación.' },
+          { t: 'No abro el enlace; conservo el correo como evidencia, verifico con el proveedor por su canal oficial, lo reporto al área de sistemas (y a la Fiscalía si hubo fraude), cambio la contraseña por una robusta y activo el doble factor.', p: 2, r: 'Perfecto, eso protege las grabaciones.', fb: 'Ante el phishing: no hacer clic, verificar, reportar y reforzar la autenticación.' },
           { t: 'Lo borro sin avisar a nadie.', p: 1, r: 'Bien que no lo abriste, pero hay que reportarlo.', fb: 'Borrarlo evita el riesgo personal, pero otros podrían caer.' },
           { t: 'Entro al enlace y pongo la clave para no perder el acceso.', p: 0, r: '¡Acabas de entregar la clave a un atacante!', fb: 'Entregar credenciales expone el sistema y los datos personales grabados.' } ] }
     ],
@@ -140,11 +140,11 @@ window.CASOS_ASIG = (window.CASOS_ASIG || []).concat([
           ],
           conceptos: [
             { n: 'No abre el enlace', claves: ['no abro', 'no hago clic', 'no entro al enlace', 'no descargo', 'no ingreso', 'sospechoso'] },
-            { n: 'Verifica y reporta el phishing', claves: ['phishing', 'reporto', 'verifico', 'canal oficial', 'proveedor', 'soporte'] },
+            { n: 'Conserva el registro y reporta el ciberdelito', claves: ['phishing', 'conservo', 'evidencia', 'reporto', 'fiscalia', 'canal oficial', 'sistemas'] },
             { n: 'Refuerza la contraseña y la autenticación', claves: ['contrasena', 'clave robusta', 'doble factor', 'dos pasos', 'autenticacion', 'cambio la clave'] }
           ],
           evitar: [ { claves: ['pongo la clave', 'entro al link', 'ingreso mis datos'], fb: 'Nunca entregues credenciales por un enlace.' } ],
-          modelo: 'No abro el enlace ni descargo nada. Es un intento de phishing: lo reporto, verifico con el proveedor por su canal oficial, cambio la contraseña por una robusta y activo el doble factor.'
+          modelo: 'No abro el enlace ni descargo nada. Es un intento de phishing: conservo el correo como evidencia, lo reporto al área de sistemas y, si hubo fraude, a la Fiscalía; cambio la contraseña por una robusta y activo el doble factor.'
         }
       ]
     }
@@ -157,10 +157,10 @@ window.CASOS_ASIG = (window.CASOS_ASIG || []).concat([
     asignaturas: ['VSC-09'],
     persona: { nombre: 'Don Hugo Cerda', rol: 'Vecino del conjunto habitacional Los Ceibos', avatar: '👨🏽‍🦳', pitch: 0.9 },
     contexto: 'Don Hugo y su vecina, la señora Paola, discuten desde hace semanas por la música alta y un carro que bloquea la entrada. La administración del conjunto te pide facilitar una mediación en la caseta.',
-    objetivo: 'Aplicar técnicas de mediación: reglas y principios, escucha activa, identificación de intereses y construcción de acuerdos.',
+    objetivo: 'Practica: principios y marco legal de la mediación en el Ecuador, comunicación efectiva, escucha activa y desescalamiento, fases del protocolo de mediación vecinal con documentación básica y derivación a la instancia competente.',
     pasos: [
       { dice: '¡Yo no me siento con esa señora! Ella es la del problema.', opciones: [
-          { t: 'Les doy la bienvenida, explico que la mediación es voluntaria, confidencial e imparcial, y acordamos reglas: hablar por turnos, sin insultos y con respeto.', p: 2, r: 'Bueno… si es así, la escucho.', fb: 'Presentar el proceso y las reglas genera un espacio seguro para dialogar.' },
+          { t: 'Les doy la bienvenida, explico que la mediación es voluntaria, confidencial e imparcial, como la reconoce la normativa ecuatoriana, y acordamos reglas: hablar por turnos, sin insultos y con respeto.', p: 2, r: 'Bueno… si es así, la escucho.', fb: 'Presentar el proceso y las reglas genera un espacio seguro para dialogar.' },
           { t: 'Les pido que se calmen y empiecen a hablar.', p: 1, r: '(Ambos hablan al mismo tiempo.)', fb: 'Sin reglas claras la conversación se desordena.' },
           { t: 'Le digo que si no colabora, llamo a la Policía para que lo saquen.', p: 0, r: '¡Encima me amenaza!', fb: 'Amenazar rompe la confianza y la voluntariedad.' } ] },
       { dice: 'Ella pone música hasta medianoche y yo me levanto a las cinco para trabajar.', opciones: [
@@ -168,7 +168,7 @@ window.CASOS_ASIG = (window.CASOS_ASIG || []).concat([
           { t: 'Le doy la razón: la música alta molesta a todos.', p: 1, r: '¡Ve, tengo razón!', fb: 'Tomar partido rompe la imparcialidad.' },
           { t: 'Le digo que exagera, que todos ponen música.', p: 0, r: '¡Usted está de su lado!', fb: 'Minimizar la queja invalida a una de las partes.' } ] },
       { dice: 'Bueno, ¿y ahora qué hacemos?', opciones: [
-          { t: 'Les invito a proponer soluciones y llegamos a un acuerdo concreto y equilibrado: música hasta las 22:00, el carro fuera de la entrada, por escrito y con seguimiento en quince días.', p: 2, r: 'Me parece justo, firmo.', fb: 'Los acuerdos concretos, construidos por las partes y por escrito, son más sostenibles.' },
+          { t: 'Les invito a proponer soluciones y llegamos a un acuerdo concreto: música hasta las 22:00 y el carro fuera de la entrada, por escrito y con seguimiento; si no se cumple, registro los datos y derivo el caso a un centro de mediación.', p: 2, r: 'Me parece justo, firmo.', fb: 'Los acuerdos concretos, construidos por las partes y por escrito, son más sostenibles.' },
           { t: 'Les digo que se porten bien de aquí en adelante.', p: 1, r: '¿Y qué significa eso?', fb: 'Un acuerdo vago no se puede cumplir ni verificar.' },
           { t: 'Decido yo: la señora no pone más música nunca.', p: 0, r: '¡Eso no es justo!', fb: 'En la mediación las partes construyen el acuerdo; imponerlo no es mediar.' } ] }
     ],
@@ -216,10 +216,10 @@ window.CASOS_ASIG = (window.CASOS_ASIG || []).concat([
           conceptos: [
             { n: 'Invita a proponer soluciones', claves: ['propuesta', 'proponer', 'que proponen', 'soluciones', 'ideas', 'opciones'] },
             { n: 'Construye un acuerdo concreto', claves: ['acuerdo', 'hasta las', '22', 'la entrada', 'horario', 'concreto', 'equilibrado'] },
-            { n: 'Lo formaliza y da seguimiento', claves: ['por escrito', 'acta', 'firma', 'seguimiento', 'quince dias', 'revisar'] }
+            { n: 'Lo documenta, da seguimiento o deriva', claves: ['por escrito', 'acta', 'seguimiento', 'registro los datos', 'derivo', 'centro de mediacion'] }
           ],
           evitar: [ { claves: ['decido yo', 'se acabo la musica'], fb: 'El acuerdo lo construyen las partes.' } ],
-          modelo: 'Les invito a proponer soluciones. Si están de acuerdo: música hasta las 22:00 y el carro fuera de la entrada. Lo dejamos por escrito en un acta y hacemos seguimiento en quince días.'
+          modelo: 'Les invito a proponer soluciones. Si están de acuerdo: música hasta las 22:00 y el carro fuera de la entrada. Lo dejamos por escrito en un acta con seguimiento en quince días; si no se cumple, registro los datos y derivo el caso a un centro de mediación.'
         }
       ]
     }
@@ -228,73 +228,73 @@ window.CASOS_ASIG = (window.CASOS_ASIG || []).concat([
   /* ===================== VSC-10 Protocolos en Emergencias y Primeros Auxilios ===================== */
   {
     id: 'asig-VSC-10', cod: 'VSC-10',
-    titulo: 'Simulacro de sismo y una estudiante que convulsiona',
+    titulo: 'Crecida del río Puyo: alerta, triaje y RCP',
     asignaturas: ['VSC-10'],
-    persona: { nombre: 'Lic. Nelly Santi', rol: 'Coordinadora de gestión de riesgos de una unidad educativa de Puyo', avatar: '👩🏽‍💼', pitch: 1.1 },
-    contexto: 'Apoyas un simulacro de evacuación por sismo en una unidad educativa. Durante la evacuación, una estudiante cae al suelo con una crisis convulsiva. Debes aplicar los protocolos de emergencia y primeros auxilios.',
-    objetivo: 'Aplicar el protocolo de evacuación ante sismos, los primeros auxilios ante una convulsión y la evaluación del simulacro.',
+    persona: { nombre: 'Lic. Nelly Santi', rol: 'Coordinadora de gestión de riesgos de una unidad educativa junto al río Puyo', avatar: '👩🏽‍💼', pitch: 1.1 },
+    contexto: 'Tras lluvias intensas, las autoridades declaran alerta naranja por crecida del río Puyo. Apoyas la evacuación de una unidad educativa ribereña; en el camino hay varios heridos leves y un adulto que deja de respirar.',
+    objetivo: 'Practica: niveles de alerta y roles del ECU 911 en el Sistema Nacional Descentralizado de Gestión de Riesgos, plan de emergencia y evacuación, triaje, cadena de supervivencia y RCP.',
     pasos: [
-      { dice: '¡Inicia el simulacro! Suena la alarma de sismo. ¿Qué indicas a los estudiantes?', opciones: [
-          { t: 'Que se agachen, se cubran y se sujeten mientras dura el movimiento; luego evacuar en orden por la ruta señalizada al punto de encuentro, sin correr y sin regresar por objetos.', p: 2, r: '¡Muy bien, así lo practicamos!', fb: 'Es el protocolo general de autoprotección y evacuación ante sismos.' },
-          { t: 'Que salgan todos corriendo de inmediato.', p: 1, r: '(Hay empujones en la escalera.)', fb: 'Correr durante el movimiento provoca caídas y aglomeraciones.' },
-          { t: 'Que se queden junto a las ventanas para ver qué pasa.', p: 0, r: '¡Peligro, los vidrios!', fb: 'Las ventanas son zonas de riesgo por la caída de vidrios.' } ] },
-      { dice: '(Una estudiante cae al suelo y empieza a convulsionar. Sus compañeros gritan.)', opciones: [
-          { t: 'Protejo su cabeza con algo blando, retiro objetos cercanos, no la sujeto ni le pongo nada en la boca, tomo el tiempo y, cuando termine, la coloco de lado; si dura más de cinco minutos, llamo al ECU 911.', p: 2, r: '(La crisis cede y la estudiante respira.)', fb: 'Ante una convulsión se protege a la persona, no se la sujeta ni se introduce nada en la boca, y se controla el tiempo.' },
-          { t: 'La sujeto fuerte para que deje de moverse.', p: 1, r: '(Se golpea el brazo contra el piso.)', fb: 'Sujetar puede causar lesiones; hay que proteger, no inmovilizar.' },
-          { t: 'Le meto un esfero en la boca para que no se muerda la lengua.', p: 0, r: '(Se rompe un diente.)', fb: 'Introducir objetos en la boca puede causar lesiones y asfixia.' } ] },
-      { dice: 'Terminó el simulacro. ¿Qué incluimos en el informe?', opciones: [
-          { t: 'El tiempo total de evacuación, el conteo en el punto de encuentro, la atención a la estudiante, las dificultades encontradas y las mejoras propuestas.', p: 2, r: 'Con eso mejoramos el plan de emergencia.', fb: 'La evaluación del simulacro permite actualizar el plan de gestión de riesgos.' },
-          { t: 'Solo que el simulacro salió bien.', p: 1, r: 'Necesitamos más detalle.', fb: 'Sin datos no se puede mejorar.' },
-          { t: 'No mencionar lo de la estudiante para no preocupar a los padres.', p: 0, r: 'Eso no sería transparente.', fb: 'Omitir incidentes impide mejorar y resta transparencia.' } ] }
+      { dice: 'Acaban de declarar alerta naranja por la crecida del río. ¿Qué significa y qué hacemos?', opciones: [
+          { t: 'Que el evento es inminente y hay que alistar la respuesta: comunico la alerta por la cadena institucional, activo el plan de emergencia y preparamos la evacuación por la ruta segura al punto de encuentro, en coordinación con el ECU 911.', p: 2, r: 'Correcto, empecemos ya.', fb: 'Los niveles de alerta orientan la respuesta; la naranja implica preparar la evacuación según el plan y la cadena de mando.' },
+          { t: 'Que es solo un aviso; seguimos con clases normales.', p: 1, r: '¿Y si sube el río?', fb: 'Subestimar la alerta retrasa la respuesta.' },
+          { t: 'Que cada uno se vaya a su casa como pueda.', p: 0, r: '¡Así se pierden niños!', fb: 'Evacuar sin orden ni plan expone a las personas.' } ] },
+      { dice: 'En el punto de encuentro hay cinco personas lesionadas y llega una sola ambulancia. ¿Cómo priorizas?', opciones: [
+          { t: 'Aplico un triaje básico: rojo para quien tiene riesgo vital inmediato, amarillo para lesiones graves que pueden esperar, verde para quien camina, y lo informo al ECU 911 y a los paramédicos.', p: 2, r: 'Bien, así la ambulancia atiende primero a quien más lo necesita.', fb: 'El triaje clasifica a los lesionados por gravedad para usar mejor los recursos.' },
+          { t: 'Atiendo primero a quien grita más.', p: 1, r: 'El que más grita no siempre es el más grave.', fb: 'Quien grita está consciente y respira; puede haber otros más graves en silencio.' },
+          { t: 'Subo a todos a la ambulancia a la vez.', p: 0, r: '(La ambulancia no puede atender a nadie bien.)', fb: 'Sin clasificación se pierde la atención a quien tiene riesgo vital.' } ] },
+      { dice: '(Un padre de familia cae al suelo, no responde y no respira con normalidad.)', opciones: [
+          { t: 'Aplico la cadena de supervivencia: pido que llamen al ECU 911 y traigan un DEA, inicio RCP con compresiones fuertes y rápidas en el centro del pecho (100 a 120 por minuto) y sigo hasta que llegue el soporte avanzado.', p: 2, r: '(Los paramédicos llegan y continúan la reanimación.)', fb: 'Reconocer, llamar, RCP precoz, desfibrilación y soporte avanzado son los eslabones de la cadena de supervivencia.' },
+          { t: 'Lo coloco de lado y espero a la ambulancia.', p: 1, r: '(No hay compresiones.)', fb: 'La posición lateral es para quien sí respira.' },
+          { t: 'Le doy agua y lo sacudo para despertarlo.', p: 0, r: '(Se pierde tiempo vital.)', fb: 'Retrasa la RCP y puede causar daño.' } ] }
     ],
     vivo: {
-      lugar: 'Patio y pasillos de una unidad educativa de Puyo', fondo: 'aula',
-      inicio: { confianza: 50, tension: 70 },
+      lugar: 'Unidad educativa junto al río Puyo, punto de encuentro', fondo: 'emergencia',
+      inicio: { confianza: 50, tension: 75 },
       pasos: [
         {
           acciones: [
-            { icono: '🔔', t: 'Indicar con el megáfono: agacharse, cubrirse, sujetarse', p: 2, fb: 'La autoprotección durante el movimiento reduce lesiones.', efecto: { confianza: 8, tension: -6 } },
-            { icono: '➡️', t: 'Señalar la ruta de evacuación', p: 2, fb: 'Una ruta clara evita aglomeraciones.', efecto: { confianza: 6, tension: -4 } },
-            { icono: '🏃‍♀️', t: 'Gritar que todos salgan corriendo', p: 1, fb: 'Provoca caídas y empujones.', efecto: { confianza: -2, tension: 8 } },
-            { icono: '🪟', t: 'Dejar que se acerquen a las ventanas', p: 0, fb: 'Riesgo por caída de vidrios.', efecto: { confianza: -10, tension: 12 } }
+            { icono: '📻', t: 'Comunicar la alerta naranja por la cadena institucional', p: 2, fb: 'La alerta debe llegar a todos por el canal oficial.', efecto: { confianza: 8, tension: -4 } },
+            { icono: '🗺️', t: 'Abrir el plan de emergencia en la ruta de evacuación', p: 2, fb: 'El plan define rutas, roles y punto de encuentro.', efecto: { confianza: 8, tension: -6 } },
+            { icono: '📚', t: 'Seguir con las clases normales', p: 1, fb: 'Subestima la alerta.', efecto: { confianza: -2, tension: 6 } },
+            { icono: '🚶‍♂️', t: 'Mandar a todos a casa por su cuenta', p: 0, fb: 'Evacuación desordenada y peligrosa.', efecto: { confianza: -12, tension: 14 } }
           ],
           conceptos: [
-            { n: 'Agacharse, cubrirse y sujetarse', claves: ['agach', 'cubr', 'sujet', 'debajo de la mesa', 'proteger la cabeza'] },
-            { n: 'Evacuar por la ruta al punto de encuentro', claves: ['ruta', 'evacu', 'punto de encuentro', 'senalizad', 'salida'] },
-            { n: 'Orden y seguridad durante la evacuación', claves: ['sin correr', 'en orden', 'no regresar', 'calma', 'sin empujar', 'no usar'] }
+            { n: 'Interpreta el nivel de alerta', claves: ['alerta naranja', 'inminente', 'nivel de alerta', 'alistar', 'preparar la respuesta'] },
+            { n: 'Comunica por la cadena institucional', claves: ['cadena institucional', 'comunico', 'ecu 911', 'coordin', 'cadena de mando'] },
+            { n: 'Activa el plan y la evacuación', claves: ['plan de emergencia', 'evacu', 'ruta segura', 'punto de encuentro', 'ruta'] }
           ],
-          evitar: [ { claves: ['salgan corriendo', 'corran'], fb: 'Correr provoca accidentes.' } ],
-          modelo: 'Agáchense, cúbranse y sujétense mientras dura el movimiento. Luego evacuamos en orden por la ruta señalizada hasta el punto de encuentro, sin correr y sin regresar por objetos.'
+          evitar: [ { claves: ['clases normales', 'cada uno se vaya'], fb: 'La alerta exige activar el plan.' } ],
+          modelo: 'La alerta naranja indica que el evento es inminente: comunico la alerta por la cadena institucional, activo el plan de emergencia y preparamos la evacuación por la ruta segura al punto de encuentro, coordinando con el ECU 911.'
         },
         {
           acciones: [
-            { icono: '🧥', t: 'Colocar una chompa doblada bajo su cabeza', p: 2, fb: 'Protege la cabeza de golpes.', efecto: { confianza: 8, tension: -6 } },
-            { icono: '⏱️', t: 'Tomar el tiempo de la convulsión', p: 2, fb: 'Si supera cinco minutos se requiere atención urgente.', efecto: { confianza: 6, tension: -4 } },
-            { icono: '✊', t: 'Sujetarle los brazos con fuerza', p: 1, fb: 'Puede causar lesiones.', efecto: { confianza: -4, tension: 6 } },
-            { icono: '🖊️', t: 'Ponerle un esfero en la boca', p: 0, fb: 'Puede causar lesiones y asfixia.', efecto: { confianza: -14, tension: 14 } }
+            { icono: '🔴', t: 'Colocar tarjeta roja a quien tiene riesgo vital', p: 2, fb: 'El riesgo vital inmediato se atiende primero.', efecto: { confianza: 8, tension: -6 } },
+            { icono: '🟢', t: 'Pedir a quienes caminan que esperen en zona verde', p: 2, fb: 'Separar a los leves ordena la atención.', efecto: { confianza: 6, tension: -4 } },
+            { icono: '😫', t: 'Atender primero a quien grita más', p: 1, fb: 'No siempre es el más grave.', efecto: { confianza: 0, tension: 4 } },
+            { icono: '🚑', t: 'Subir a todos a la ambulancia', p: 0, fb: 'Sin clasificación se pierde atención vital.', efecto: { confianza: -10, tension: 12 } }
           ],
           conceptos: [
-            { n: 'Protege la cabeza y retira objetos', claves: ['cabeza', 'algo blando', 'retiro objetos', 'espacio', 'proteger', 'chompa'] },
-            { n: 'No sujeta ni introduce nada en la boca', claves: ['no la sujeto', 'nada en la boca', 'no sujetar', 'no meter', 'no introducir', 'dejar que pase'] },
-            { n: 'Controla el tiempo, la coloca de lado y avisa', claves: ['tiempo', 'cinco minutos', 'de lado', 'posicion lateral', '911', 'ecu'] }
+            { n: 'Aplica el triaje', claves: ['triaje', 'clasific', 'priorizo', 'por gravedad', 'prioridad'] },
+            { n: 'Usa los colores de prioridad', claves: ['rojo', 'amarillo', 'verde', 'riesgo vital', 'camina'] },
+            { n: 'Informa a los organismos de respuesta', claves: ['ecu 911', 'paramedicos', 'informo', 'ambulancia', 'aviso'] }
           ],
-          evitar: [ { claves: ['le meto', 'sujetarla fuerte', 'en la boca para que no'], fb: 'Nunca se introduce nada en la boca ni se sujeta a la fuerza.' } ],
-          modelo: 'Protejo su cabeza con algo blando y retiro los objetos cercanos; no la sujeto y no le pongo nada en la boca. Tomo el tiempo y, cuando termine, la coloco de lado; si pasa de cinco minutos, llamo al ECU 911.'
+          evitar: [ { claves: ['el que grita', 'todos a la vez'], fb: 'Se prioriza por gravedad.' } ],
+          modelo: 'Aplico un triaje básico: rojo para quien tiene riesgo vital inmediato, amarillo para lesiones graves que pueden esperar y verde para quien camina. Lo informo al ECU 911 y a los paramédicos.'
         },
         {
           acciones: [
-            { icono: '⏲️', t: 'Anotar el tiempo total de evacuación', p: 2, fb: 'Es un indicador clave del simulacro.', efecto: { confianza: 8, tension: -4 } },
-            { icono: '✅', t: 'Revisar la lista del conteo en el punto de encuentro', p: 2, fb: 'El conteo confirma que nadie quedó atrás.', efecto: { confianza: 6, tension: -4 } },
-            { icono: '👌', t: 'Escribir solo «todo salió bien»', p: 1, fb: 'Sin datos no se mejora.', efecto: { confianza: 0, tension: 2 } },
-            { icono: '🙊', t: 'Omitir la crisis de la estudiante', p: 0, fb: 'Resta transparencia.', efecto: { confianza: -10, tension: 8 } }
+            { icono: '📢', t: 'Pedir que llamen al ECU 911 y traigan un DEA', p: 2, fb: 'Activar la ayuda y el desfibrilador son eslabones clave.', efecto: { confianza: 8, tension: -4 } },
+            { icono: '🫀', t: 'Iniciar compresiones en el centro del pecho', p: 2, fb: 'La RCP precoz mantiene el flujo de sangre al cerebro.', efecto: { confianza: 10, tension: -6 } },
+            { icono: '↪️', t: 'Ponerlo de lado y esperar', p: 1, fb: 'Si no respira, se necesitan compresiones.', efecto: { confianza: -2, tension: 6 } },
+            { icono: '💧', t: 'Darle agua y sacudirlo', p: 0, fb: 'Retrasa la RCP.', efecto: { confianza: -12, tension: 12 } }
           ],
           conceptos: [
-            { n: 'Registra el tiempo y el conteo', claves: ['tiempo', 'conteo', 'minutos', 'punto de encuentro', 'lista'] },
-            { n: 'Incluye los incidentes atendidos', claves: ['estudiante', 'convulsion', 'atencion', 'incidente', 'primeros auxilios', 'novedades'] },
-            { n: 'Propone mejoras al plan', claves: ['mejora', 'dificultades', 'plan de emergencia', 'recomendacion', 'corregir', 'actualizar'] }
+            { n: 'Cadena de supervivencia: llamar y DEA', claves: ['cadena de supervivencia', 'ecu 911', 'llamen', 'dea', 'desfibrilador'] },
+            { n: 'RCP de calidad', claves: ['rcp', 'compresiones', 'centro del pecho', '100', 'fuertes y rapidas'] },
+            { n: 'Continúa hasta el soporte avanzado', claves: ['hasta que llegue', 'soporte avanzado', 'paramedicos', 'sigo', 'no me detengo'] }
           ],
-          evitar: [ { claves: ['no mencionar', 'mejor ocultar'], fb: 'Los incidentes deben reportarse.' } ],
-          modelo: 'Incluimos el tiempo total de evacuación en minutos, el conteo en el punto de encuentro, la atención a la estudiante con la convulsión, las dificultades y las mejoras al plan de emergencia.'
+          evitar: [ { claves: ['le doy agua', 'lo sacudo'], fb: 'Se debe iniciar RCP sin demora.' } ],
+          modelo: 'Aplico la cadena de supervivencia: pido que llamen al ECU 911 y traigan un DEA, inicio RCP con compresiones fuertes y rápidas en el centro del pecho, de 100 a 120 por minuto, y sigo hasta que llegue el soporte avanzado.'
         }
       ]
     }
@@ -303,24 +303,24 @@ window.CASOS_ASIG = (window.CASOS_ASIG || []).concat([
   /* ===================== VSC-11 Legislación Aplicada a la Vigilancia y Seguridad Ciudadana ===================== */
   {
     id: 'asig-VSC-11', cod: 'VSC-11',
-    titulo: 'El gerente quiere encerrar a un cliente',
+    titulo: 'Límites legales en el supermercado y la inspección',
     asignaturas: ['VSC-11'],
     persona: { nombre: 'Sr. Marco Andrade', rol: 'Gerente de un supermercado en Puyo', avatar: '🧑🏻‍💼', pitch: 0.95 },
-    contexto: 'El gerente sospecha que un cliente escondió productos en su mochila y te ordena revisarla a la fuerza, encerrarlo en la bodega y publicar su foto. Debes actuar dentro de lo que la ley permite a la vigilancia privada.',
-    objetivo: 'Aplicar en términos generales los límites legales de la vigilancia privada: flagrancia, derechos de la persona retenida, requisas y protección de datos personales.',
+    contexto: 'El gerente sospecha que un cliente escondió productos y te ordena encerrarlo en la bodega. Días después, el supervisor te pide preparar la documentación del puesto para una inspección de control.',
+    objetivo: 'Practica: marco constitucional y legal de la seguridad ciudadana (Constitución, COIP, Ley de Seguridad Pública y del Estado), derechos y garantías frente a la detención y el debido proceso, responsabilidad civil, penal y administrativa del agente, y requisitos legales de las empresas de seguridad privada.',
     pasos: [
-      { dice: '¡Revísele la mochila a la fuerza y enciérrelo en la bodega hasta que confiese!', opciones: [
-          { t: 'Le explico que no puedo revisar a la fuerza ni encerrar a nadie: puedo pedir al cliente que muestre voluntariamente su mochila y, si hay delito flagrante, retenerlo solo hasta entregarlo a la Policía.', p: 2, r: 'Bueno, haga lo que dice la ley.', fb: 'La vigilancia privada no hace requisas forzosas ni privaciones de libertad; en flagrancia entrega de inmediato a la Policía.' },
-          { t: 'Le reviso la mochila, pero no lo encierro.', p: 1, r: '(El cliente protesta.)', fb: 'La revisión forzada también excede las funciones de la vigilancia privada.' },
-          { t: 'Obedezco: lo encierro en la bodega.', p: 0, r: '(El cliente queda encerrado.)', fb: 'Encerrar a una persona puede constituir un delito contra su libertad.' } ] },
-      { dice: 'Cliente: «¿Por qué me retienen? ¡Tengo derechos!»', opciones: [
-          { t: 'Le informo con respeto el motivo, le garantizo un trato digno, que puede comunicarse con un familiar y que la Policía Nacional resolverá la situación.', p: 2, r: 'Está bien, esperaré a la Policía.', fb: 'Toda persona retenida tiene derecho a conocer el motivo, a un trato digno y a comunicarse.' },
-          { t: 'Le digo que espere callado.', p: 1, r: '¡Esto es un abuso!', fb: 'No informar el motivo aumenta la tensión y vulnera derechos.' },
-          { t: 'Le digo que los ladrones no tienen derechos.', p: 0, r: '¡Lo voy a denunciar!', fb: 'Los derechos humanos se respetan siempre; además rige la presunción de inocencia.' } ] },
-      { dice: 'Gerente: «Voy a publicar su foto de las cámaras en Facebook con un letrero de ladrón».', opciones: [
-          { t: 'Le explico que las imágenes son datos personales protegidos y que hay presunción de inocencia; la grabación se entrega solo a la Policía o a la Fiscalía con cadena de custodia.', p: 2, r: 'No sabía que podía meterme en problemas.', fb: 'La Ley Orgánica de Protección de Datos Personales y la presunción de inocencia impiden esa publicación.' },
-          { t: 'Le digo que la publique con la cara tapada.', p: 1, r: 'Ya, así la subo.', fb: 'Aun así puede identificarse y vulnerar derechos.' },
-          { t: 'Le ayudo a elegir la mejor foto.', p: 0, r: '(La foto se viraliza.)', fb: 'Exponer a una persona vulnera su honra y sus datos personales.' } ] }
+      { dice: '¡Enciérrelo en la bodega hasta que confiese, y revísele la mochila a la fuerza!', opciones: [
+          { t: 'Le explico que la Constitución y el COIP lo prohíben: encerrarlo sería privación ilegal de la libertad; solo puedo pedir una revisión voluntaria y, si hay flagrancia, entregarlo de inmediato a la Policía, respetando el debido proceso.', p: 2, r: 'Bueno, haga lo que dice la ley.', fb: 'La vigilancia privada no priva de libertad ni hace requisas forzosas; las garantías del debido proceso protegen a toda persona.' },
+          { t: 'Le reviso la mochila, pero no lo encierro.', p: 1, r: '(El cliente protesta.)', fb: 'La revisión forzada también excede tus funciones.' },
+          { t: 'Obedezco: lo encierro en la bodega.', p: 0, r: '(El cliente queda encerrado.)', fb: 'Encerrar a una persona puede constituir un delito y genera responsabilidad penal.' } ] },
+      { dice: 'Si algo sale mal, ¿qué responsabilidad tendría usted?', opciones: [
+          { t: 'Penal si cometo un delito, como privar de libertad o lesionar; civil si causo un daño que debe repararse, como romper sus pertenencias; y administrativa ante la empresa y el ente de control por incumplir normas y procedimientos.', p: 2, r: 'No sabía que eran tres tipos distintos.', fb: 'Las responsabilidades penal, civil y administrativa son independientes y pueden concurrir.' },
+          { t: 'Ninguna, porque cumplía órdenes del gerente.', p: 1, r: '¿Seguro?', fb: 'Cumplir una orden ilegal no exime de responsabilidad.' },
+          { t: 'Solo me pueden descontar del sueldo.', p: 0, r: 'Es mucho más que eso.', fb: 'Desconocer la responsabilidad penal y civil lleva a actuar con imprudencia.' } ] },
+      { dice: '(Supervisor:) Mañana hay una inspección de control. ¿Qué documentación verificas en el puesto?', opciones: [
+          { t: 'Que la empresa esté legalmente constituida y autorizada, mi credencial y certificado de capacitación vigentes, el permiso de uso de frecuencias de radio de ARCOTEL, el contrato del servicio y el libro de novedades al día.', p: 2, r: 'Completo, así pasamos la inspección.', fb: 'Las empresas de seguridad privada deben cumplir requisitos legales de constitución, autorización, capacitación del personal y uso de frecuencias.' },
+          { t: 'Solo que mi uniforme esté limpio.', p: 1, r: 'Eso no basta.', fb: 'La presentación importa, pero la inspección verifica requisitos legales.' },
+          { t: 'Inventar los registros que falten la noche anterior.', p: 0, r: '¡Eso es falsificar!', fb: 'Falsear documentos genera responsabilidad penal y administrativa.' } ] }
     ],
     vivo: {
       lugar: 'Supermercado en el centro de Puyo, zona de cajas', fondo: 'oficina',
@@ -328,48 +328,48 @@ window.CASOS_ASIG = (window.CASOS_ASIG || []).concat([
       pasos: [
         {
           acciones: [
-            { icono: '🙋', t: 'Pedir al cliente que muestre su mochila voluntariamente', p: 2, fb: 'La revisión solo procede con consentimiento.', efecto: { confianza: 6, tension: -6 } },
+            { icono: '📘', t: 'Citar la Constitución y el COIP al gerente', p: 2, fb: 'La norma sustenta tu negativa.', efecto: { confianza: 6, tension: -4 } },
             { icono: '📞', t: 'Llamar al ECU 911 si hay delito flagrante', p: 2, fb: 'En flagrancia la persona se entrega a la Policía.', efecto: { confianza: 6, tension: -4 } },
             { icono: '🎒', t: 'Abrir tú mismo la mochila sin permiso', p: 1, fb: 'La requisa forzosa excede tus funciones.', efecto: { confianza: -4, tension: 8 } },
-            { icono: '🔒', t: 'Encerrar al cliente en la bodega', p: 0, fb: 'Puede constituir delito contra la libertad.', efecto: { confianza: -15, tension: 18 } }
+            { icono: '🔒', t: 'Encerrar al cliente en la bodega', p: 0, fb: 'Puede constituir delito.', efecto: { confianza: -15, tension: 18 } }
           ],
           conceptos: [
-            { n: 'Rechaza la requisa forzosa y el encierro', claves: ['no puedo revisar a la fuerza', 'no puedo encerrar', 'a la fuerza no', 'encerrar', 'privar de libertad', 'no esta permitido'] },
-            { n: 'Pide revisión voluntaria', claves: ['voluntari', 'consentimiento', 'si usted acepta', 'le pido que muestre', 'con su permiso'] },
-            { n: 'Aplica la flagrancia y entrega a la Policía', claves: ['flagrancia', 'flagrante', 'policia', 'entregar', 'ecu 911', 'de inmediato'] }
+            { n: 'Invoca el marco legal', claves: ['constitucion', 'coip', 'la ley', 'prohib', 'privacion ilegal'] },
+            { n: 'Respeta la libertad y el debido proceso', claves: ['debido proceso', 'libertad', 'no puedo encerrar', 'garantias', 'derechos'] },
+            { n: 'Flagrancia y entrega a la Policía', claves: ['flagrancia', 'policia', 'de inmediato', 'entregar', 'voluntari'] }
           ],
           evitar: [ { claves: ['lo encierro', 'hasta que confiese'], fb: 'Encerrar a una persona es ilegal.' } ],
-          modelo: 'Señor gerente, no puedo revisar a la fuerza ni encerrar a nadie. Le pido al cliente que muestre su mochila de forma voluntaria y, si hay delito flagrante, lo retengo solo para entregarlo de inmediato a la Policía.'
+          modelo: 'Señor gerente, la Constitución y el COIP lo prohíben: encerrarlo sería privación ilegal de la libertad. Solo puedo pedir una revisión voluntaria y, si hay flagrancia, entregarlo de inmediato a la Policía, respetando el debido proceso.'
         },
         {
           acciones: [
-            { icono: 'ℹ️', t: 'Explicar al cliente el motivo de la retención', p: 2, fb: 'Conocer el motivo es un derecho.', efecto: { confianza: 8, tension: -8 } },
-            { icono: '📱', t: 'Permitirle llamar a un familiar', p: 2, fb: 'La comunicación es un derecho de la persona retenida.', efecto: { confianza: 8, tension: -6 } },
-            { icono: '🤫', t: 'Ordenarle que espere callado', p: 1, fb: 'Aumenta la tensión.', efecto: { confianza: -4, tension: 6 } },
-            { icono: '🗯️', t: 'Decirle que los ladrones no tienen derechos', p: 0, fb: 'Vulnera la presunción de inocencia.', efecto: { confianza: -15, tension: 15 } }
+            { icono: '⚖️', t: 'Dibujar los tres tipos de responsabilidad', p: 2, fb: 'Diferenciarlas ayuda a actuar con prudencia.', efecto: { confianza: 8, tension: -6 } },
+            { icono: '📑', t: 'Mostrar el reglamento interno de la empresa', p: 2, fb: 'Las faltas administrativas se definen en la normativa y el reglamento.', efecto: { confianza: 6, tension: -4 } },
+            { icono: '🙋', t: 'Decir que solo cumplías órdenes', p: 1, fb: 'Una orden ilegal no exime.', efecto: { confianza: -2, tension: 4 } },
+            { icono: '💲', t: 'Decir que solo te descuentan del sueldo', p: 0, fb: 'Desconoce la responsabilidad penal y civil.', efecto: { confianza: -10, tension: 8 } }
           ],
           conceptos: [
-            { n: 'Informa el motivo', claves: ['motivo', 'le explico', 'la razon', 'por que', 'se le retiene porque', 'sospecha'] },
-            { n: 'Garantiza trato digno', claves: ['trato digno', 'respeto', 'sus derechos', 'nadie le va a', 'dignidad', 'tranquilo'] },
-            { n: 'Permite comunicarse y espera a la Policía', claves: ['familiar', 'llamar', 'comunicarse', 'policia', 'abogado', 'esperar'] }
+            { n: 'Responsabilidad penal', claves: ['penal', 'delito', 'privar de libertad', 'lesion', 'carcel'] },
+            { n: 'Responsabilidad civil', claves: ['civil', 'reparar', 'dano', 'indemniz', 'pertenencias'] },
+            { n: 'Responsabilidad administrativa', claves: ['administrativ', 'empresa', 'ente de control', 'sancion', 'reglamento'] }
           ],
-          evitar: [ { claves: ['no tiene derechos', 'callese'], fb: 'Los derechos se respetan siempre.' } ],
-          modelo: 'Le explico el motivo: hay una sospecha que debe aclarar la Policía. Tiene derecho a un trato digno y a comunicarse con un familiar mientras esperamos a la Policía.'
+          evitar: [ { claves: ['ninguna responsabilidad', 'solo cumplia ordenes'], fb: 'Cumplir órdenes ilegales no exime.' } ],
+          modelo: 'Tendría responsabilidad penal si cometo un delito, como privar de libertad; civil si causo un daño que debo reparar, como romper sus pertenencias; y administrativa ante la empresa y el ente de control por incumplir normas.'
         },
         {
           acciones: [
-            { icono: '🛡️', t: 'Resguardar la grabación sin copiarla', p: 2, fb: 'Las imágenes son datos personales protegidos.', efecto: { confianza: 6, tension: -4 } },
-            { icono: '📦', t: 'Preparar el acta para entregar el video a la Policía', p: 2, fb: 'La entrega formal mantiene la cadena de custodia.', efecto: { confianza: 6, tension: -4 } },
-            { icono: '🙈', t: 'Sugerir publicarla con la cara tapada', p: 1, fb: 'Aún puede identificarse.', efecto: { confianza: 2, tension: 2 } },
-            { icono: '📸', t: 'Ayudar a elegir la foto para Facebook', p: 0, fb: 'Vulnera la honra y los datos personales.', efecto: { confianza: -12, tension: 12 } }
+            { icono: '🏢', t: 'Revisar la autorización legal de la empresa', p: 2, fb: 'La empresa debe estar constituida y autorizada.', efecto: { confianza: 8, tension: -4 } },
+            { icono: '📡', t: 'Verificar el permiso de frecuencias de ARCOTEL', p: 2, fb: 'El uso de radios requiere autorización de frecuencias.', efecto: { confianza: 6, tension: -4 } },
+            { icono: '👔', t: 'Revisar solo que el uniforme esté limpio', p: 1, fb: 'No basta para la inspección.', efecto: { confianza: 0, tension: 2 } },
+            { icono: '✍️', t: 'Inventar los registros que faltan', p: 0, fb: 'Es falsificar documentos.', efecto: { confianza: -14, tension: 12 } }
           ],
           conceptos: [
-            { n: 'Las imágenes son datos personales', claves: ['datos personales', 'proteccion de datos', 'imagen', 'privacidad', 'lopdp'] },
-            { n: 'Presunción de inocencia', claves: ['presuncion de inocencia', 'inocente', 'no esta probado', 'un juez', 'no es culpable'] },
-            { n: 'Entrega solo a la autoridad con cadena de custodia', claves: ['policia', 'fiscalia', 'cadena de custodia', 'acta', 'autoridad', 'entregar'] }
+            { n: 'Constitución y autorización de la empresa', claves: ['legalmente constituida', 'autorizada', 'autorizacion', 'superintendencia', 'empresa'] },
+            { n: 'Credencial y capacitación del personal', claves: ['credencial', 'capacitacion', 'certificado', 'vigente', 'curso'] },
+            { n: 'Frecuencias de radio y registros', claves: ['arcotel', 'frecuencias', 'contrato', 'libro de novedades', 'documentacion'] }
           ],
-          evitar: [ { claves: ['publiquela', 'subala', 'letrero de ladron'], fb: 'Publicar la imagen vulnera derechos.' } ],
-          modelo: 'No puede publicarla: la imagen es un dato personal protegido y rige la presunción de inocencia. La grabación se entrega solo a la Policía o a la Fiscalía, con acta y cadena de custodia.'
+          evitar: [ { claves: ['inventar', 'llenar despues', 'falsificar'], fb: 'Falsear documentos es un delito.' } ],
+          modelo: 'Verifico que la empresa esté legalmente constituida y autorizada, que mi credencial y mi certificado de capacitación estén vigentes, el permiso de frecuencias de ARCOTEL, el contrato del servicio y el libro de novedades al día.'
         }
       ]
     }
@@ -382,14 +382,14 @@ window.CASOS_ASIG = (window.CASOS_ASIG || []).concat([
     asignaturas: ['VSC-12'],
     persona: { nombre: 'Mgs. Carlos Guevara', rol: 'Presidente del tribunal de integración curricular', avatar: '👨🏻‍🏫', pitch: 0.9 },
     contexto: 'Defiendes tu trabajo de integración curricular: un protocolo de seguridad para la salida de estudiantes de una unidad educativa de Puyo, construido con datos de tus prácticas preprofesionales.',
-    objetivo: 'Integrar los aprendizajes de la carrera: problema y objetivo, método con datos de campo, resultados, propuesta aplicable y principios éticos.',
+    objetivo: 'Practica: planteamiento del problema, objetivos y marco teórico, diseño metodológico (tipo de investigación, técnicas e instrumentos), descripción de resultados y defensa de la propuesta ante el tribunal.',
     pasos: [
       { dice: 'Buenos días. Explíquenos qué problema abordó y cuál fue su objetivo.', opciones: [
-          { t: 'Abordé los incidentes en la salida de estudiantes de la unidad educativa; mi objetivo fue diseñar un protocolo de seguridad basado en datos de mis prácticas.', p: 2, r: 'Claro y pertinente para el territorio.', fb: 'Un problema concreto del entorno y un objetivo aplicable son la base del trabajo de integración.' },
+          { t: 'Abordé los incidentes en la salida de estudiantes de la unidad educativa; mi objetivo fue diseñar un protocolo de seguridad basado en datos de mis prácticas, con un marco teórico de prevención situacional.', p: 2, r: 'Claro y pertinente para el territorio.', fb: 'Un problema concreto del entorno y un objetivo aplicable son la base del trabajo de integración.' },
           { t: 'Hablé de la inseguridad en Ecuador en general.', p: 1, r: 'Muy amplio; ¿qué aportó usted concretamente?', fb: 'Un tema demasiado amplio diluye el aporte técnico.' },
           { t: 'Elegí el tema porque fue el más fácil de copiar.', p: 0, r: 'Eso es grave.', fb: 'El plagio vulnera la integridad académica.' } ] },
       { dice: '¿Qué método usó y qué encontró?', opciones: [
-          { t: 'Apliqué fichas de observación durante tres meses y revisé el libro de novedades: de 18 incidentes, 12 ocurrieron en la salida de 12:30 a 13:30, es decir, dos de cada tres.', p: 2, r: 'Datos claros que sustentan la propuesta.', fb: 'Instrumentos de campo y análisis de datos sustentan las conclusiones.' },
+          { t: 'Fue una investigación aplicada descriptiva: apliqué fichas de observación durante tres meses y revisé el libro de novedades; de 18 incidentes, 12 ocurrieron en la salida de 12:30 a 13:30, es decir, dos de cada tres.', p: 2, r: 'Datos claros que sustentan la propuesta.', fb: 'Instrumentos de campo y análisis de datos sustentan las conclusiones.' },
           { t: 'Pregunté a algunos padres y todos dijeron que es peligroso.', p: 1, r: 'Es una percepción, faltan datos.', fb: 'Las opiniones deben contrastarse con registros.' },
           { t: 'No recogí datos; la propuesta es mi opinión.', p: 0, r: 'Sin datos no hay sustento.', fb: 'Un trabajo técnico requiere evidencia.' } ] },
       { dice: '¿Cuál es su propuesta y qué aporta a la comunidad?', opciones: [
@@ -429,7 +429,7 @@ window.CASOS_ASIG = (window.CASOS_ASIG || []).concat([
             { n: 'Ubica lugar y horario', claves: ['salida', '12 30', '13 30', 'horario', 'franja', 'mediodia'] }
           ],
           evitar: [ { claves: ['es mi opinion', 'no hacia falta datos'], fb: 'Un trabajo técnico requiere evidencia.' } ],
-          modelo: 'Apliqué fichas de observación durante tres meses y revisé el libro de novedades: de 18 incidentes, 12 ocurrieron en la salida, entre las 12:30 y las 13:30; es decir, dos de cada tres.'
+          modelo: 'Fue una investigación aplicada descriptiva: apliqué fichas de observación durante tres meses y revisé el libro de novedades. De 18 incidentes, 12 ocurrieron en la salida, entre las 12:30 y las 13:30; es decir, dos de cada tres.'
         },
         {
           acciones: [

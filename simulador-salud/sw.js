@@ -1,7 +1,7 @@
 /* Service worker: permite usar el simulador sin conexión una vez visitado. */
-const CACHE = "martins-salud-v1";
+const CACHE = "martins-salud-v2";
 const ASSETS = [
-  "./", "index.html", "css/styles.css", "js/data.js", "js/sims2d.js", "js/app.js", "js/scene3d.js",
+  "./", "index.html", "css/styles.css", "js/data.js", "js/store.js", "js/sims2d.js", "js/admin.js", "js/app.js", "js/scene3d.js",
   "vendor/three.module.min.js", "vendor/OrbitControls.js", "vendor/StereoEffect.js",
   "assets/logo.jpg", "assets/emblema.png", "assets/icon-192.png", "assets/icon-512.png", "manifest.webmanifest"
 ];

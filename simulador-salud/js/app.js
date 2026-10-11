@@ -1,15 +1,15 @@
 /* Martin´s Capacitaciones · Lógica de la aplicación.
    Navegación por hash (#/curso/<id>/<pestaña>) para que el botón "atrás" del
-   celular funcione. Todo el progreso se guarda en localStorage. */
+   celular funcione. Los ajustes visuales se guardan en el dispositivo; los
+   usuarios y el progreso, en Store (base compartida o el dispositivo). */
 
 (function () {
   "use strict";
 
   const STORAGE_KEY = "martins_salud_v1";
   const PASS = 70;
+  const SESSION_KEY = "martins_sesion_v1";
   const defaultState = {
-    nombre: "",
-    documento: "",
     tema: "auto",
     texto: "m",
     voz: 1,
@@ -25,14 +25,36 @@
       const raw = localStorage.getItem(STORAGE_KEY);
       if (!raw) return structuredClone(defaultState);
       const p = JSON.parse(raw);
-      return { ...structuredClone(defaultState), ...p, progreso: p.progreso || {} };
+      return { ...structuredClone(defaultState), ...p, progreso: {} };
     } catch (e) {
       return structuredClone(defaultState);
     }
   }
+  // Sesión: usuario que ha iniciado sesión (cuenta creada por el administrador).
+  let session = null;
+  let saveTimer = 0;
   function saveState() {
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) { /* sin almacenamiento */ }
+    const { progreso, ...ajustes } = state;
+    void progreso;
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(ajustes)); } catch (e) { /* sin almacenamiento */ }
+    if (session) {
+      clearTimeout(saveTimer);
+      const u = session.usuario;
+      const snapshot = JSON.parse(JSON.stringify(state.progreso));
+      saveTimer = setTimeout(() => {
+        Store.saveProgress(u, snapshot).catch((e) => {
+          if (e && e.code === "invalid_argument") toast("Tu progreso no se pudo guardar en línea: pide al administrador acceso de colaborador a la página.");
+        });
+      }, 1200);
+    }
   }
+  const isAdmin = () => !!session && session.rol === "admin";
+  function allowed(c) {
+    if (!session) return false;
+    if (isAdmin()) return true;
+    return (session.areas || []).includes(c.cat) || (session.cursos || []).includes(c.id);
+  }
+  const myCourses = () => COURSES.filter(allowed);
   function prog(id) {
     if (!state.progreso[id]) state.progreso[id] = { lecc: [], prac: {}, quiz: 0, reto3d: 0, cine: false, cert: null };
     return state.progreso[id];
@@ -77,8 +99,8 @@
   if ("speechSynthesis" in window) speechSynthesis.onvoiceschanged = () => {};
 
   // ===== Progreso =====
-  function courseProgress(c) {
-    const p = state.progreso[c.id];
+  function courseProgress(c, progreso = state.progreso) {
+    const p = progreso[c.id];
     if (!p) return 0;
     const lec = p.lecc.length / c.lecciones.length;
     const prac = c.practicas.filter((_, i) => (p.prac[i] || 0) >= 60).length / c.practicas.length;
@@ -88,7 +110,7 @@
   }
   function totalPoints() {
     let pts = 0;
-    for (const c of COURSES) {
+    for (const c of myCourses()) {
       const p = state.progreso[c.id];
       if (!p) continue;
       pts += p.lecc.length * 10;
@@ -120,22 +142,25 @@
   let filtroTxt = "";
 
   function renderHome() {
-    $("#hero-name").textContent = state.nombre ? state.nombre.split(" ")[0] : "bienvenido/a";
-    $("#name-input").value = state.nombre;
-    $("#name-form").hidden = !!state.nombre;
+    $("#hero-name").textContent = session.nombre.split(" ")[0];
+    const mine = myCourses();
+    $("#hero-access").textContent = isAdmin()
+      ? "Eres administrador: tienes acceso a todos los cursos y al portal de usuarios."
+      : `Tienes acceso a ${mine.length} curso(s)${(session.areas || []).length ? ` de: ${session.areas.join(", ")}` : ""}.`;
 
-    const started = COURSES.filter((c) => courseProgress(c) > 0).length;
-    const done = COURSES.filter((c) => courseProgress(c) >= 100).length;
-    const certs = COURSES.filter((c) => state.progreso[c.id] && state.progreso[c.id].cert).length;
+    const started = mine.filter((c) => courseProgress(c) > 0).length;
+    const done = mine.filter((c) => courseProgress(c) >= 100).length;
+    const certs = mine.filter((c) => state.progreso[c.id] && state.progreso[c.id].cert).length;
     $("#stats").innerHTML = [
-      ["📚", COURSES.length, "Cursos"],
+      ["📚", mine.length, "Mis cursos"],
       ["🚀", started, "Iniciados"],
       ["🎓", certs, "Certificados"],
       ["⭐", totalPoints(), "Puntos"]
     ].map(([i, n, l]) => `<div class="stat"><span class="ico">${i}</span><div><b>${n}</b><small>${l}</small></div></div>`).join("");
     void done;
 
-    const cats = ["Todos", ...CATEGORIAS.filter((c) => COURSES.some((x) => x.cat === c))];
+    const cats = ["Todos", ...CATEGORIAS.filter((c) => mine.some((x) => x.cat === c))];
+    if (!cats.includes(filtroCat)) filtroCat = "Todos";
     $("#cat-chips").innerHTML = cats.map((c) => `<button class="cat-chip${c === filtroCat ? " active" : ""}" data-cat="${esc(c)}">${esc(c)}</button>`).join("");
     renderGrid();
   }
@@ -144,13 +169,14 @@
 
   function renderGrid() {
     const q = norm(filtroTxt.trim());
-    const list = COURSES.filter((c) => {
+    const list = myCourses().filter((c) => {
       if (filtroCat !== "Todos" && c.cat !== filtroCat) return false;
       if (!q) return true;
       const hay = norm([c.nombre, c.cat, c.desc, ...c.lecciones.map((l) => l.t), ...c.practicas.map((p) => p.titulo)].join(" "));
       return q.split(/\s+/).every((w) => hay.includes(w));
     });
     $("#empty").hidden = list.length > 0;
+    $("#empty").textContent = myCourses().length ? "No se encontraron cursos con esa búsqueda." : "Todavía no tienes cursos asignados. Pide a tu administrador que te asigne un área.";
     $("#course-grid").innerHTML = list.map((c) => {
       const pr = courseProgress(c);
       const cert = state.progreso[c.id] && state.progreso[c.id].cert;
@@ -174,15 +200,6 @@
     renderGrid();
   });
   $("#search").addEventListener("input", (e) => { filtroTxt = e.target.value; renderGrid(); });
-  $("#name-form").addEventListener("submit", (e) => {
-    e.preventDefault();
-    const v = $("#name-input").value.trim();
-    if (!v) return;
-    state.nombre = v;
-    saveState();
-    toast(`¡Hola, ${v.split(" ")[0]}! Tu nombre aparecerá en tus certificados.`);
-    renderHome();
-  });
 
   // ===================================================================
   // CURSO
@@ -213,7 +230,11 @@
 
   function openCourse(id, tab) {
     const c = byId(id);
-    if (!c) { location.hash = "#/"; return; }
+    if (!c || !allowed(c)) {
+      if (c) toast("Ese curso no está asignado a tu usuario.");
+      location.hash = "#/";
+      return;
+    }
     const changed = current !== c;
     current = c;
     showView("course");
@@ -473,7 +494,7 @@
   }
 
   function certCode(c) {
-    const base = `${state.nombre}|${c.id}|${Date.now()}`;
+    const base = `${session.usuario}|${c.id}|${Date.now()}`;
     let h = 2166136261;
     for (let k = 0; k < base.length; k++) { h ^= base.charCodeAt(k); h = Math.imul(h, 16777619); }
     return `MC-${c.id.slice(0, 3).toUpperCase()}-${(h >>> 0).toString(36).toUpperCase().padStart(7, "0")}`;
@@ -494,19 +515,6 @@
         <a class="btn btn-primary" href="#/curso/${c.id}/quiz">📝 Ir a la evaluación</a></div>`;
       return;
     }
-    if (!state.nombre) {
-      panel.innerHTML = `<div class="card"><h2>🎓 ¡Felicitaciones!</h2><p>Escribe tu nombre completo tal como debe aparecer en el certificado.</p>
-        <form class="name-form" data-f><input type="text" maxlength="60" placeholder="Nombre y apellidos" required /><button class="btn btn-primary">Generar certificado</button></form></div>`;
-      panel.querySelector("[data-f]").onsubmit = (e) => {
-        e.preventDefault();
-        const v = e.target.querySelector("input").value.trim();
-        if (!v) return;
-        state.nombre = v;
-        saveState();
-        tabCert(c, panel);
-      };
-      return;
-    }
     const f = new Date(p.cert.fecha).toLocaleDateString("es-EC", { day: "numeric", month: "long", year: "numeric" });
     panel.innerHTML = `<div class="panel-intro"><p>Descárgalo como PDF eligiendo «Guardar como PDF» en la ventana de impresión.</p>
       <div class="result-actions" style="margin:0"><button class="btn btn-primary" data-print>🖨️ Imprimir / PDF</button>${navigator.share ? '<button class="btn btn-secondary" data-share>📤 Compartir</button>' : ""}</div></div>
@@ -515,8 +523,8 @@
         <p class="cert-sub">Otorga el presente</p>
         <h2>CERTIFICADO DE APROBACIÓN</h2>
         <p>a:</p>
-        <div class="cert-name">${esc(state.nombre)}</div>
-        ${state.documento ? `<p>C.I. ${esc(state.documento)}</p>` : ""}
+        <div class="cert-name">${esc(session.nombre)}</div>
+        ${session.documento ? `<p>C.I. ${esc(session.documento)}</p>` : ""}
         <p>por haber aprobado el curso de capacitación con simulación interactiva</p>
         <p><strong style="font-size:1.15em;color:#223146">${esc(c.nombre)}</strong></p>
         <p>con una duración de <strong>${c.horas} horas</strong> y una calificación de <strong>${p.cert.nota}%</strong>.</p>
@@ -538,10 +546,39 @@
   function showView(v) {
     $("#view-home").hidden = v !== "home";
     $("#view-course").hidden = v !== "course";
+    $("#view-login").hidden = v !== "login";
+    $("#view-admin").hidden = v !== "admin";
+    $("#view-loading").hidden = v !== "loading";
+    document.body.classList.toggle("logged-out", v === "login" || v === "loading");
   }
 
   function route() {
     const parts = location.hash.replace(/^#\/?/, "").split("/");
+    if (!session) {
+      teardown();
+      current = null;
+      currentTab = null;
+      showView("login");
+      renderLogin();
+      return;
+    }
+    if (parts[0] === "admin") {
+      teardown();
+      current = null;
+      currentTab = null;
+      if (!isAdmin()) { location.hash = "#/"; return; }
+      showView("admin");
+      window.scrollTo(0, 0);
+      AdminPortal.render($("#view-admin"), {
+        toast,
+        courseProgress,
+        currentUser: () => session,
+        appLink: () => (window.self !== window.top ? "(el enlace que te compartió tu administrador)" : location.href.split("#")[0]),
+        onUsersChanged(u) { if (u && u.usuario === session.usuario) { session = { ...session, ...u }; updateHeader(); } }
+      });
+      updatePoints();
+      return;
+    }
     if (parts[0] === "curso" && parts[1]) {
       const prevCourse = current;
       openCourse(parts[1], parts[2] || "teoria");
@@ -563,8 +600,9 @@
   const settings = $("#settings");
   const overlay = $("#overlay");
   function openSettings() {
-    $("#set-name").value = state.nombre;
-    $("#set-doc").value = state.documento;
+    document.querySelector(".acct").hidden = !session;
+    $("#reset").hidden = !session;
+    $("#acct-info").innerHTML = session ? `<strong>${esc(session.nombre)}</strong><small>@${esc(session.usuario)} · ${isAdmin() ? "Administrador" : "Estudiante"}</small>` : "";
     $("#set-rate").value = state.voz;
     $("#set-sfx").checked = state.sfx;
     $("#set-motion").checked = state.reduceMotion;
@@ -575,13 +613,12 @@
     $("#settings-close").focus();
   }
   function closeSettings() {
-    state.nombre = $("#set-name").value.trim();
-    state.documento = $("#set-doc").value.trim();
     saveState();
     settings.hidden = true;
     overlay.hidden = true;
-    if (!current) renderHome();
-    else if (currentTab === "cert") { const t = currentTab; currentTab = null; openCourse(current.id, t); }
+    if (!session) return;
+    if (!current && $("#view-admin").hidden) renderHome();
+    else if (current && currentTab === "cert") { const t = currentTab; currentTab = null; openCourse(current.id, t); }
   }
   function markSeg(sel, v) { document.querySelectorAll(`${sel} button`).forEach((b) => b.classList.toggle("active", b.dataset.v === v)); }
   $("#settings-btn").onclick = openSettings;
@@ -604,9 +641,8 @@
     }
     resetArmed = 0;
     $("#reset").textContent = "🗑️ Borrar todo mi progreso";
-    state = structuredClone(defaultState);
+    state.progreso = {};
     saveState();
-    applySettings();
     closeSettings();
     location.hash = "#/";
     toast("Progreso borrado");
@@ -633,8 +669,128 @@
     window.addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));
   }
 
+  // ===================================================================
+  // Inicio de sesión
+  // ===================================================================
+  function updateHeader() {
+    const on = !!session;
+    $("#user-btn").hidden = !on;
+    $("#admin-btn").hidden = !isAdmin();
+    $("#points").hidden = !on;
+    if (on) $("#user-name").textContent = session.nombre.split(" ")[0];
+  }
+
+  async function startSession(user) {
+    session = user;
+    try { localStorage.setItem(SESSION_KEY, JSON.stringify({ usuario: user.usuario })); } catch (e) { /* nada */ }
+    let remote = null;
+    try { remote = await Store.getProgress(user.usuario); } catch (e) { /* sin progreso remoto */ }
+    state.progreso = (remote && remote.progreso) || {};
+    updateHeader();
+  }
+
+  function logout() {
+    teardown();
+    clearTimeout(saveTimer);
+    if (session) Store.saveProgress(session.usuario, state.progreso).catch(() => {});
+    session = null;
+    state.progreso = {};
+    try { localStorage.removeItem(SESSION_KEY); } catch (e) { /* nada */ }
+    settings.hidden = true;
+    overlay.hidden = true;
+    updateHeader();
+    if (location.hash && location.hash !== "#/") location.hash = "#/";
+    else route();
+  }
+
+  let setupMode = false;
+  async function renderLogin() {
+    const box = $("#login-box");
+    const fb = $("#login-fb");
+    fb.textContent = "";
+    fb.className = "sim-feedback";
+    let count = 0;
+    try { count = (await Store.listUsers()).length; } catch (e) { fb.className = "sim-feedback bad"; fb.textContent = "No se pudo conectar con la base de usuarios. Recarga la página."; }
+    setupMode = count === 0;
+    box.classList.toggle("setup", setupMode);
+    $("#login-title").textContent = setupMode ? "Configura el administrador" : "Iniciar sesión";
+    $("#login-sub").textContent = setupMode
+      ? "Es la primera vez que se abre el simulador. Crea la cuenta del administrador, que podrá crear los usuarios de cada área."
+      : "Ingresa con el usuario y la contraseña que te entregó tu administrador.";
+    $("#setup-fields").hidden = !setupMode;
+    $("#login-submit").textContent = setupMode ? "Crear administrador e ingresar" : "Ingresar";
+    if (setupMode && !(await Store.canManage())) {
+      $("#login-form").hidden = true;
+      fb.className = "sim-feedback bad";
+      fb.textContent = "El administrador todavía no ha configurado el simulador. Vuelve a intentarlo más tarde.";
+      return;
+    }
+    $("#login-form").hidden = false;
+    $("#login-mode").textContent = Store.mode === "db"
+      ? "🌐 Cuentas en línea: entra desde cualquier dispositivo."
+      : "📱 Cuentas guardadas en este dispositivo.";
+  }
+
+  $("#login-form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const fb = $("#login-fb");
+    const usuario = $("#login-user").value.trim().toLowerCase();
+    const pass = $("#login-pass").value;
+    const bad = (m) => { fb.className = "sim-feedback bad"; fb.textContent = m; };
+    const btn = $("#login-submit");
+    btn.disabled = true;
+    try {
+      if (setupMode) {
+        const nombre = $("#setup-name").value.trim();
+        if (nombre.length < 3) return bad("Escribe tu nombre completo.");
+        if (!Store.validUsername(usuario)) return bad("El usuario debe tener entre 3 y 40 caracteres: minúsculas, números, punto, guion o guion bajo.");
+        if (pass.length < 6) return bad("La contraseña debe tener al menos 6 caracteres.");
+        const now = new Date().toISOString();
+        const admin = { usuario, nombre, documento: $("#setup-doc").value.trim(), rol: "admin", areas: [], cursos: [], activo: true, creado: now, actualizado: now, ...(await Store.hashPassword(pass)) };
+        await Store.saveUser(admin);
+        await startSession(admin);
+        toast(`Administrador creado. ¡Bienvenido/a, ${nombre.split(" ")[0]}!`);
+        location.hash = "#/admin";
+        if (location.hash === "#/admin") route();
+        return;
+      }
+      if (!usuario || !pass) return bad("Escribe tu usuario y contraseña.");
+      const user = Store.validUsername(usuario) ? await Store.getUser(usuario) : null;
+      if (!user || !(await Store.checkPassword(user, pass))) return bad("Usuario o contraseña incorrectos.");
+      if (user.activo === false) return bad("Tu cuenta está desactivada. Comunícate con tu administrador.");
+      await startSession(user);
+      $("#login-pass").value = "";
+      toast(`¡Hola, ${user.nombre.split(" ")[0]}!`);
+      route();
+    } catch (err) {
+      bad(err && err.code === "invalid_argument" ? "No tienes permiso para crear el administrador en esta página." : `No se pudo iniciar sesión: ${(err && err.message) || err}`);
+    } finally {
+      btn.disabled = false;
+    }
+  });
+  $("#login-toggle-pass").onclick = () => {
+    const i = $("#login-pass");
+    i.type = i.type === "password" ? "text" : "password";
+  };
+  $("#logout-btn").onclick = logout;
+  $("#user-btn").onclick = openSettings;
+  $("#admin-btn").onclick = () => { location.hash = "#/admin"; };
+
   // ===== Inicio =====
   $("#year").textContent = new Date().getFullYear();
   applySettings();
-  route();
+  showView("loading");
+  updateHeader();
+  (async () => {
+    await Store.init();
+    let saved = null;
+    try { saved = JSON.parse(localStorage.getItem(SESSION_KEY) || "null"); } catch (e) { /* nada */ }
+    if (saved && saved.usuario) {
+      try {
+        const u = await Store.getUser(saved.usuario);
+        if (u && u.activo !== false) await startSession(u);
+      } catch (e) { /* inicia sin sesión */ }
+    }
+    route();
+  })();
 })();

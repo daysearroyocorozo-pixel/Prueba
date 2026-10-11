@@ -24,7 +24,9 @@
     <span class="brand-text"><strong>MARTIN´S</strong><small>CAPACITACIONES</small></span>
   </a>
   <div class="header-actions">
-    <span class="points" id="points" title="Puntos de experiencia">⭐ 0</span>
+    <span class="points" id="points" title="Puntos de experiencia" hidden>⭐ 0</span>
+    <button class="icon-btn" id="admin-btn" hidden title="Portal del administrador">🛠️<span class="btn-label">Admin</span></button>
+    <button class="icon-btn" id="user-btn" hidden title="Mi cuenta">👤<span class="btn-label" id="user-name"></span></button>
     <button class="icon-btn" id="install-btn" hidden title="Instalar en el dispositivo">📲<span class="btn-label">Instalar</span></button>
     <button class="icon-btn" id="theme-btn" title="Cambiar tema" aria-label="Cambiar tema claro/oscuro">🌓</button>
     <button class="icon-btn" id="settings-btn" title="Ajustes" aria-haspopup="dialog">⚙️<span class="btn-label">Ajustes</span></button>
@@ -33,6 +35,45 @@
 
 <main id="main">
 
+  <!-- ================= CARGANDO ================= -->
+  <section id="view-loading" class="view">
+    <div class="viewer-loading" style="position:relative;min-height:60vh"><div><div class="spinner"></div>Conectando…</div></div>
+  </section>
+
+  <!-- ================= INICIO DE SESIÓN ================= -->
+  <section id="view-login" class="view" hidden aria-labelledby="login-title">
+    <div class="login-wrap">
+      <div class="login-art">
+        <img src="assets/logo.jpg" alt="Martin´s Capacitaciones" class="login-logo" />
+        <p class="eyebrow">Simulador de capacitación en salud</p>
+        <ul class="login-points">
+          <li>18 cursos: enfermería, farmacia, odontología, sutura, geriatría y más</li>
+          <li>Prácticas 2D, modelos 3D, modo cine, VR y AR</li>
+          <li>Evaluación y certificado por curso</li>
+        </ul>
+      </div>
+      <div class="login-box card" id="login-box">
+        <h1 id="login-title">Iniciar sesión</h1>
+        <p class="muted" id="login-sub"></p>
+        <form id="login-form" novalidate>
+          <div id="setup-fields" hidden>
+            <label class="field">Nombre completo<input id="setup-name" type="text" maxlength="80" autocomplete="name" /></label>
+            <label class="field">Cédula / documento (opcional)<input id="setup-doc" type="text" maxlength="20" /></label>
+          </div>
+          <label class="field">Usuario<input id="login-user" type="text" maxlength="40" autocomplete="username" autocapitalize="none" spellcheck="false" /></label>
+          <label class="field">Contraseña
+            <span class="pw-row"><input id="login-pass" type="password" maxlength="60" autocomplete="current-password" /><button type="button" class="btn btn-secondary btn-sm" id="login-toggle-pass" aria-label="Mostrar u ocultar contraseña">👁️</button></span></label>
+          <p class="sim-feedback" id="login-fb" role="status" aria-live="polite"></p>
+          <button class="btn btn-primary btn-large" id="login-submit" type="submit">Ingresar</button>
+          <p class="muted small" id="login-mode"></p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PORTAL ADMINISTRADOR ================= -->
+  <section id="view-admin" class="view" hidden aria-label="Portal del administrador"></section>
+
   <!-- ================= INICIO ================= -->
   <section id="view-home" class="view" aria-labelledby="home-title">
     <div class="hero">
@@ -40,11 +81,7 @@
         <p class="eyebrow">Simulador de capacitación en salud</p>
         <h1 id="home-title">Hola, <span id="hero-name">bienvenido/a</span> 👋</h1>
         <p class="lead">Aprende y practica procedimientos del área de salud con teoría, prácticas interactivas, modelos 3D, recorridos cinematográficos y realidad virtual o aumentada. Desde tu celular o tu computadora.</p>
-        <form id="name-form" class="name-form">
-          <label for="name-input" class="sr-only">Tu nombre completo</label>
-          <input id="name-input" type="text" maxlength="60" placeholder="Escribe tu nombre completo (para tu certificado)" autocomplete="name" />
-          <button class="btn btn-primary" type="submit">Guardar</button>
-        </form>
+        <p class="hero-access" id="hero-access"></p>
         <div class="mode-chips" aria-label="Modos disponibles">
           <span class="mode-chip">✋ 2D</span><span class="mode-chip">🧊 3D</span><span class="mode-chip">🎬 Cine</span><span class="mode-chip">🥽 VR</span><span class="mode-chip">📱 AR</span><span class="mode-chip">📦 Cardboard</span>
         </div>
@@ -110,12 +147,11 @@
     <button class="icon-btn" id="settings-close" aria-label="Cerrar">✕</button>
   </div>
   <div class="settings-body">
-    <label class="field">Nombre completo (aparece en el certificado)
-      <input type="text" id="set-name" maxlength="60" />
-    </label>
-    <label class="field">Cédula / documento (opcional)
-      <input type="text" id="set-doc" maxlength="20" />
-    </label>
+    <div class="acct">
+      <div class="acct-info" id="acct-info"></div>
+      <button class="btn btn-secondary btn-sm" id="logout-btn" type="button">🚪 Cerrar sesión</button>
+    </div>
+    <p class="muted small">Tu nombre y cédula para el certificado los administra tu institución.</p>
     <fieldset class="field">
       <legend>Tema</legend>
       <div class="seg" id="set-theme">
@@ -142,7 +178,9 @@
 <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 
 <script src="js/data.js"></script>
+<script src="js/store.js"></script>
 <script src="js/sims2d.js"></script>
+<script src="js/admin.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>

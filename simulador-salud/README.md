@@ -21,6 +21,26 @@ puede instalar como app (PWA) y usar sin conexión después de la primera visita
 | Rehabilitación | Fisioterapia y rehabilitación |
 | Nutrición | Nutrición clínica y alimentación saludable |
 
+## Inicio de sesión y portal del administrador
+
+- Para entrar, cada persona inicia sesión con **usuario y contraseña**.
+- La **primera vez** que se abre el simulador se crea la cuenta del **administrador**.
+- El **portal del administrador** (botón 🛠️ Admin) permite:
+  - crear, editar, activar/desactivar y eliminar usuarios;
+  - asignar **áreas** (dan acceso a todos los cursos del área) y **cursos individuales**;
+  - **cargar estudiantes por área** pegando una lista (usuario y contraseña se generan solos);
+  - generar nuevas contraseñas y copiar los datos de acceso para enviarlos;
+  - ver el **progreso** de cada estudiante por curso, nota y certificado (copiable a Excel);
+  - exportar e importar una **copia de respaldo**.
+- Cada estudiante solo ve los cursos de sus áreas asignadas.
+- Las contraseñas se guardan cifradas (PBKDF2-SHA256 con sal), nunca en texto plano.
+
+**Dónde se guardan las cuentas:** en la versión publicada en claude.ai, en una base
+de datos compartida (se puede entrar desde cualquier dispositivo). En GitHub Pages
+o un servidor local no hay servidor de datos, así que las cuentas quedan en el
+navegador de ese dispositivo; para usarlas en otro equipo se usa «Respaldo». Para
+cuentas en línea fuera de claude.ai haría falta conectar un servicio como Firebase o Supabase.
+
 ## Cada curso tiene 7 secciones
 
 1. **📘 Teoría** – lecciones cortas con narración en voz alta.
@@ -70,7 +90,9 @@ css/styles.css         Estilos y colores de la marca
 js/data.js             Banco de cursos: lecciones, prácticas, escenas 3D y evaluaciones
 js/sims2d.js           Motores de práctica 2D
 js/scene3d.js          Visor 3D / Cine / VR / AR / Cardboard (Three.js)
-js/app.js              Navegación, progreso, evaluación y certificado
+js/app.js              Navegación, inicio de sesión, progreso, evaluación y certificado
+js/store.js            Usuarios y progreso (base compartida o dispositivo) y cifrado de contraseñas
+js/admin.js            Portal del administrador
 vendor/                Three.js r160 (licencia MIT), incluido para funcionar sin conexión
 assets/                Logo e íconos
 sw.js, manifest.webmanifest   Instalación como app y modo sin conexión

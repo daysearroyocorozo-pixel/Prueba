@@ -523,7 +523,11 @@
         <div class="cert-foot"><div>Dirección Académica<br><strong>Martin´s Capacitaciones</strong></div><div>Fecha de emisión<br><strong>${f}</strong></div></div>
         <p class="cert-code">Código de verificación: ${p.cert.codigo}</p>
       </div>`;
-    panel.querySelector("[data-print]").onclick = () => window.print();
+    const embedded = window.self !== window.top;
+    panel.querySelector("[data-print]").onclick = () => {
+      if (embedded) toast("Para imprimir o guardar en PDF, abre el simulador en su versión web (GitHub Pages).");
+      else window.print();
+    };
     const sh = panel.querySelector("[data-share]");
     if (sh) sh.onclick = () => navigator.share({ title: "Mi certificado · Martin´s Capacitaciones", text: `¡Aprobé el curso «${c.nombre}» en Martin´s Capacitaciones con ${p.cert.nota}%!` }).catch(() => {});
   }
@@ -590,8 +594,16 @@
   $("#set-sfx").onchange = (e) => { state.sfx = e.target.checked; saveState(); applySettings(); };
   $("#set-motion").onchange = (e) => { state.reduceMotion = e.target.checked; saveState(); applySettings(); };
   $("#test-voice").onclick = () => speak("Bienvenido a Martin's Capacitaciones, tu simulador de salud.");
+  let resetArmed = 0;
   $("#reset").onclick = () => {
-    if (!confirm("¿Seguro que quieres borrar todo tu progreso y certificados? Esta acción no se puede deshacer.")) return;
+    if (Date.now() - resetArmed > 4000) {
+      resetArmed = Date.now();
+      $("#reset").textContent = "⚠️ Toca otra vez para confirmar el borrado";
+      setTimeout(() => { $("#reset").textContent = "🗑️ Borrar todo mi progreso"; }, 4000);
+      return;
+    }
+    resetArmed = 0;
+    $("#reset").textContent = "🗑️ Borrar todo mi progreso";
     state = structuredClone(defaultState);
     saveState();
     applySettings();

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Martin´s Capacitaciones · Simulador de Salud</title>
+<meta name="description" content="Simulador interactivo de capacitación en el área de salud: enfermería, farmacia, odontología, sutura, geriatría y más, en 2D, 3D, cine, VR y AR." />
+<meta name="theme-color" content="#223146" />
+<link rel="manifest" href="manifest.webmanifest" />
+<link rel="icon" type="image/png" href="assets/icon-192.png" />
+<link rel="apple-touch-icon" href="assets/icon-192.png" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+<a class="skip-link" href="#main">Saltar al contenido</a>
+
+<header class="app-header">
+  <a href="#/" class="brand" aria-label="Inicio · Martin´s Capacitaciones">
+    <img src="assets/emblema.png" alt="" class="brand-logo" width="44" height="40" />
+    <span class="brand-text"><strong>MARTIN´S</strong><small>CAPACITACIONES</small></span>
+  </a>
+  <div class="header-actions">
+    <span class="points" id="points" title="Puntos de experiencia">⭐ 0</span>
+    <button class="icon-btn" id="install-btn" hidden title="Instalar en el dispositivo">📲<span class="btn-label">Instalar</span></button>
+    <button class="icon-btn" id="theme-btn" title="Cambiar tema" aria-label="Cambiar tema claro/oscuro">🌓</button>
+    <button class="icon-btn" id="settings-btn" title="Ajustes" aria-haspopup="dialog">⚙️<span class="btn-label">Ajustes</span></button>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ================= INICIO ================= -->
+  <section id="view-home" class="view" aria-labelledby="home-title">
+    <div class="hero">
+      <div class="hero-text">
+        <p class="eyebrow">Simulador de capacitación en salud</p>
+        <h1 id="home-title">Hola, <span id="hero-name">bienvenido/a</span> 👋</h1>
+        <p class="lead">Aprende y practica procedimientos del área de salud con teoría, prácticas interactivas, modelos 3D, recorridos cinematográficos y realidad virtual o aumentada. Desde tu celular o tu computadora.</p>
+        <form id="name-form" class="name-form">
+          <label for="name-input" class="sr-only">Tu nombre completo</label>
+          <input id="name-input" type="text" maxlength="60" placeholder="Escribe tu nombre completo (para tu certificado)" autocomplete="name" />
+          <button class="btn btn-primary" type="submit">Guardar</button>
+        </form>
+        <div class="mode-chips" aria-label="Modos disponibles">
+          <span class="mode-chip">✋ 2D</span><span class="mode-chip">🧊 3D</span><span class="mode-chip">🎬 Cine</span><span class="mode-chip">🥽 VR</span><span class="mode-chip">📱 AR</span><span class="mode-chip">📦 Cardboard</span>
+        </div>
+      </div>
+      <div class="hero-art">
+        <img src="assets/logo.jpg" alt="Logotipo de Martin´s Capacitaciones" class="hero-logo" />
+      </div>
+    </div>
+
+    <div class="stats" id="stats"></div>
+
+    <div class="catalog-head">
+      <h2>Cursos disponibles</h2>
+      <div class="search">
+        <span aria-hidden="true">🔎</span>
+        <input id="search" type="search" placeholder="Buscar curso, tema o procedimiento…" aria-label="Buscar cursos" />
+      </div>
+    </div>
+    <div class="cat-chips" id="cat-chips" role="toolbar" aria-label="Filtrar por área"></div>
+    <div class="course-grid" id="course-grid"></div>
+    <p class="empty" id="empty" hidden>No se encontraron cursos con esa búsqueda.</p>
+  </section>
+
+  <!-- ================= CURSO ================= -->
+  <section id="view-course" class="view" hidden aria-labelledby="course-title">
+    <div class="course-head">
+      <a class="btn btn-ghost" href="#/" aria-label="Volver al catálogo">⬅️ <span class="btn-label">Cursos</span></a>
+      <div class="course-id">
+        <span class="course-icon" id="course-icon" aria-hidden="true">🩺</span>
+        <div>
+          <h1 id="course-title">Curso</h1>
+          <p class="course-meta" id="course-meta"></p>
+        </div>
+      </div>
+      <div class="ring" id="course-ring" aria-label="Progreso del curso"><svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="15.9" class="ring-bg"/><circle cx="18" cy="18" r="15.9" class="ring-fg" id="ring-fg"/></svg><span id="ring-txt">0%</span></div>
+    </div>
+
+    <nav class="tabs" id="tabs" role="tablist" aria-label="Secciones del curso">
+      <button role="tab" data-tab="teoria">📘 <span>Teoría</span></button>
+      <button role="tab" data-tab="practica">✋ <span>Práctica 2D</span></button>
+      <button role="tab" data-tab="3d">🧊 <span>3D</span></button>
+      <button role="tab" data-tab="cine">🎬 <span>Cine</span></button>
+      <button role="tab" data-tab="xr">🥽 <span>VR / AR</span></button>
+      <button role="tab" data-tab="quiz">📝 <span>Evaluación</span></button>
+      <button role="tab" data-tab="cert">🎓 <span>Certificado</span></button>
+    </nav>
+
+    <div class="panel" id="panel" role="tabpanel"></div>
+  </section>
+
+</main>
+
+<footer class="app-footer">
+  <img src="assets/emblema.png" alt="" width="28" height="25" />
+  <span>© <span id="year"></span> Martin´s Capacitaciones · Simulador educativo. No reemplaza la práctica clínica supervisada.</span>
+</footer>
+
+<!-- ================= AJUSTES ================= -->
+<div class="overlay" id="overlay" hidden></div>
+<aside class="settings" id="settings" role="dialog" aria-modal="true" aria-labelledby="settings-title" hidden>
+  <div class="settings-head">
+    <h2 id="settings-title">⚙️ Ajustes</h2>
+    <button class="icon-btn" id="settings-close" aria-label="Cerrar">✕</button>
+  </div>
+  <div class="settings-body">
+    <label class="field">Nombre completo (aparece en el certificado)
+      <input type="text" id="set-name" maxlength="60" />
+    </label>
+    <label class="field">Cédula / documento (opcional)
+      <input type="text" id="set-doc" maxlength="20" />
+    </label>
+    <fieldset class="field">
+      <legend>Tema</legend>
+      <div class="seg" id="set-theme">
+        <button data-v="auto">Automático</button><button data-v="light">☀️ Claro</button><button data-v="dark">🌙 Oscuro</button>
+      </div>
+    </fieldset>
+    <fieldset class="field">
+      <legend>Tamaño del texto</legend>
+      <div class="seg" id="set-size">
+        <button data-v="s">A-</button><button data-v="m">A</button><button data-v="l">A+</button><button data-v="xl">A++</button>
+      </div>
+    </fieldset>
+    <label class="field">Velocidad de la narración
+      <input type="range" id="set-rate" min="0.7" max="1.4" step="0.1" />
+    </label>
+    <label class="switch-row"><span>Efectos de sonido</span><input type="checkbox" id="set-sfx" /></label>
+    <label class="switch-row"><span>Reducir animaciones</span><input type="checkbox" id="set-motion" /></label>
+    <button class="btn btn-secondary" id="test-voice" type="button">🔊 Probar voz</button>
+    <hr />
+    <button class="btn btn-danger" id="reset" type="button">🗑️ Borrar todo mi progreso</button>
+  </div>
+</aside>
+
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+<script src="js/data.js"></script>
+<script src="js/sims2d.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

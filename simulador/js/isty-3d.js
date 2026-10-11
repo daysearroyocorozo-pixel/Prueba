@@ -157,7 +157,7 @@ export function makeHuman(g, opts = {}) {
     if (p.role === 'hijab') { const hj = new THREE.Mesh(new THREE.SphereGeometry(0.14, 20, 14, 0, Math.PI * 2, 0, Math.PI * 0.75), cloth); hj.rotation.x = -0.25; hj.position.z = -0.012; headG.add(hj); }
     else if (p.hair !== 'bald') {
       const cap = new THREE.Mesh(G.hair, hair); cap.position.y = 0.012; cap.rotation.x = -0.18; headG.add(cap);
-      if (st.longHair) { const lh = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.26, 0.06), hair); lh.position.set(0, -0.08, -0.085); headG.add(lh); }
+      if (st.longHair && p.hair !== 'curly') { const lh = new THREE.Mesh(new THREE.SphereGeometry(0.125, 18, 12), hair); lh.scale.set(1, 1.25, 0.55); lh.position.set(0, -0.07, -0.07); headG.add(lh); }
       if (p.hair === 'curly') for (let i = 0; i < 8; i++) { const a = i / 8 * Math.PI * 2; const c = new THREE.Mesh(G.ear, hair); c.scale.setScalar(1.8); c.position.set(Math.cos(a) * 0.1, 0.08, Math.sin(a) * 0.1); headG.add(c); }
     }
     if (p.beard) { const bd = new THREE.Mesh(new THREE.SphereGeometry(0.115, 18, 10, 0, Math.PI * 2, Math.PI * 0.55, Math.PI * 0.45), hair); bd.position.y = -0.005; headG.add(bd); }

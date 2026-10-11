@@ -40,3 +40,45 @@ h1 { font-family: "Playfair Display", Georgia, serif; }
 a { color: var(--isty-verde); }
 .form-card { border-top: 5px solid var(--isty-verde); }
 .isty-user b { color: #fff; }
+
+/* ================= Capa visual profesional (isty-ui.js) ================= */
+.isty-ic { display: inline-flex; vertical-align: -0.14em; line-height: 1; }
+.isty-ic .isty-icon-svg { width: 1.05em; height: 1.05em; }
+.isty-av { display: inline-flex; vertical-align: -0.22em; line-height: 1; }
+.isty-av .isty-avatar-svg { width: 1.3em; height: 1.3em; border-radius: 50%; box-shadow: 0 1px 3px rgba(0,0,0,.18); }
+.cv-av .isty-av .isty-avatar-svg, .case-av .isty-av .isty-avatar-svg, .mini-student .av .isty-avatar-svg, .u-av .isty-avatar-svg, .choice .em .isty-avatar-svg, .student .isty-avatar-svg { width: 1em; height: 1em; box-shadow: 0 6px 18px rgba(0,0,0,.18); }
+.cv-av .isty-av .isty-avatar-svg { border: 4px solid #fff; }
+.isty-talking .cv-person .isty-mouth, .isty-talking .case-head .isty-mouth { animation: istyTalk .22s infinite alternate ease-in-out; }
+@keyframes istyTalk { from { transform: scaleY(.4); } to { transform: scaleY(1.6); } }
+.cv-person .isty-av { animation: istyBreath 3.2s infinite ease-in-out; transform-origin: 50% 100%; }
+@keyframes istyBreath { 50% { transform: translateY(-2px) scale(1.012); } }
+
+/* íconos de las tarjetas del menú como insignias */
+.hub-card .em { display: inline-grid; place-items: center; width: 54px; height: 54px; border-radius: 16px; background: linear-gradient(135deg, var(--isty-verde), #7cbf2a); color: #fff; font-size: 28px; box-shadow: 0 8px 18px rgba(46,139,46,.28); }
+.hub-card .em .isty-icon-svg { width: 28px; height: 28px; }
+.hub-card { transition: transform .18s ease, box-shadow .18s ease, border-color .18s; }
+.hub-card:hover { transform: translateY(-4px); box-shadow: 0 14px 30px rgba(27,77,34,.16); }
+.choice .em .isty-ic { color: var(--isty-verde); }
+.icon-btn .isty-icon-svg { width: 20px; height: 20px; }
+.btn .isty-ic, .act .isty-ic, .tab .isty-ic { margin-right: .15em; }
+
+/* interfaz tipo tablero / videojuego */
+.class-bar { background: linear-gradient(90deg, rgba(27,77,34,.07), rgba(242,226,27,.07)); border: 1px solid var(--border); border-radius: 14px; padding: 8px 12px; }
+.clock { font-variant-numeric: tabular-nums; font-weight: 800; background: var(--isty-verde-osc); color: #fff; border-radius: 10px; padding: 6px 12px; }
+.gauge { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 8px 10px; box-shadow: 0 2px 8px rgba(27,77,34,.06); }
+.gauge-bar { height: 8px !important; }
+.gauge-bar i { background-image: linear-gradient(90deg, rgba(255,255,255,.25), rgba(255,255,255,0)) !important; box-shadow: inset 0 0 0 1px rgba(0,0,0,.04); }
+.dialog { box-shadow: 0 10px 28px rgba(27,77,34,.12); }
+.dialog-choices .btn { transition: transform .12s, box-shadow .12s, border-color .12s; text-align: left; }
+.dialog-choices .btn:hover:not(:disabled) { transform: translateX(3px); border-color: var(--primary); box-shadow: 0 4px 12px rgba(27,77,34,.12); }
+.btn:active:not(:disabled) { transform: scale(.98); }
+.score-ring { box-shadow: 0 0 0 6px rgba(242,226,27,.25), 0 10px 26px rgba(27,77,34,.25); }
+.kpi { border-top: 4px solid var(--isty-verde); }
+.report-head { background: linear-gradient(120deg, rgba(46,139,46,.08), rgba(242,226,27,.12)); }
+.toast { background: var(--isty-verde-osc) !important; color: #fff !important; border-left: 5px solid var(--isty-amarillo); }
+.screen.isty-enter { animation: istyEnter .35s ease both; }
+@keyframes istyEnter { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+.cv-stage { box-shadow: inset 0 0 0 1px rgba(0,0,0,.06), 0 12px 30px rgba(0,0,0,.12); }
+.cv-bubble { border: 2px solid rgba(46,139,46,.25); }
+.cv-prop { backdrop-filter: blur(4px); }
+@media (prefers-reduced-motion: reduce) { .screen.isty-enter, .cv-person .isty-av, .isty-talking .isty-mouth { animation: none !important; } }

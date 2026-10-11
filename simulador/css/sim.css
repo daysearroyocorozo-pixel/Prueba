@@ -424,3 +424,10 @@ table.st th, table.st td { padding: 6px; border-bottom: 1px solid var(--border);
 }
 @media (max-width: 520px) { .isty-user { font-size: 0 !important; } .isty-user button { font-size: .8rem; } }
 .asig-pao { margin: 18px 0 8px; }
+.cv-fig { display: block; width: clamp(90px, 14vw, 140px); filter: drop-shadow(0 8px 10px rgba(0,0,0,.18)); animation: istyBreath 3.4s infinite ease-in-out; transform-origin: 50% 100%; }
+.cv-fig svg { width: 100%; height: auto; display: block; }
+.cv-person .cv-mood { top: 4px; right: -6px; }
+.isty-talking .cv-fig .isty-mouth { animation: istyTalk .22s infinite alternate ease-in-out; }
+@media (max-width: 640px) { .cv-fig { width: 70px; } }
+.cv-mood .isty-icon-svg { width: 24px; height: 24px; stroke-width: 2.2; }
+.cv-mood[data-m="😊"] { color: #16a34a; } .cv-mood[data-m="😐"] { color: #ca8a04; } .cv-mood[data-m="😠"] { color: #dc2626; }

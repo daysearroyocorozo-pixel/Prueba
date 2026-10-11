@@ -158,3 +158,13 @@ a { color: inherit; }
 .aviso { background: #fff7d6; color: #6b4e00; border: 1px solid #f0d77a; border-radius: 12px; padding: 12px 16px; margin-bottom: 20px; font-weight: 700; }
 @media (max-width: 860px) { .user-chip small, .user .btn-line:not(#salir) { display: none; } }
 @media (max-width: 480px) { .brand small { display: none; } .user-chip { display: none; } }
+/* íconos y personajes profesionales (isty-ui.js) */
+.isty-ic { display: inline-flex; vertical-align: -0.14em; line-height: 1; }
+.isty-ic svg { width: 1.05em; height: 1.05em; }
+.isty-av { display: inline-flex; vertical-align: -0.22em; }
+.isty-av svg { width: 1.3em; height: 1.3em; border-radius: 50%; }
+.career-icon .isty-ic svg, .module .em .isty-ic svg { width: 1em; height: 1em; }
+.career-icon { color: var(--c, var(--verde)); }
+.module .em { color: var(--c, var(--verde)); }
+.stats-in span .isty-ic { color: var(--verde); }
+.steps h3 .isty-ic, .devices article > span .isty-ic, .eyebrow .isty-ic { color: var(--verde); }

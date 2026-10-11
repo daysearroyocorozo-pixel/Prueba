@@ -172,6 +172,18 @@
     return b;
   }
 
+  // colores del personaje para la escena 3D
+  function personStyle(g) {
+    const p = parsePerson(g); if (!p) return null;
+    const h = hash(g);
+    const st = ROLE_STYLE[p.role] || { top: CASUAL[h % CASUAL.length], acc: '#FFFFFF' };
+    const hair = p.hair === 'red' ? '#A5442A' : p.hair === 'blond' ? '#D9A441' : p.hair === 'white' || p.age === 'old' ? '#D9D9D9' : HAIR[h % HAIR.length];
+    return { p, h, top: st.top, acc: st.acc, skin: p.skin, hair, pants: ['#1F2937', '#374151', '#1E3A5F', '#3F3F46', '#44403C'][h % 5],
+      longHair: p.gender === 'f' && p.hair !== 'bald' && p.role !== 'hijab' && p.age !== 'old' && (h % 4 !== 0),
+      skirt: p.gender === 'f' && h % 3 === 0 && !['worker', 'firefighter', 'police', 'mechanic'].includes(p.role),
+      glasses: p.age === 'old' || p.role === 'scientist' || p.role === 'tech' || (h % 7 === 0 && p.age !== 'child' && p.age !== 'baby') };
+  }
+
   function iconSVG(g) {
     const name = ICONS.map[g] || ICONS.map[g.replace(/️/g, '')] || ICONS.map[g + '️'];
     if (!name || !ICONS.icons[name]) return null;
@@ -352,5 +364,5 @@
     document.body.classList.add('isty-ui');
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
-  window.IstyUI = { avatarSVG, figureSVG, iconSVG, parsePerson, sfx: SFX, ambient, stopAmbient };
+  window.IstyUI = { avatarSVG, figureSVG, iconSVG, parsePerson, personStyle, sfx: SFX, ambient, stopAmbient };
 })();

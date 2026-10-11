@@ -10,6 +10,7 @@
    ========================================================= */
 import * as THREE from '../vendor/three.module.min.js';
 import { createVrBox } from './vrbox.js';
+import { glyphSprite, makeHuman, updateHumans, createWalker } from './isty-3d.js';
 
 const App = window.AulaApp;
 const $ = s => document.querySelector(s);
@@ -49,15 +50,7 @@ function roundRect(ctx, x, y, w, h, r) {
   ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath();
 }
 const EMOJI_FONT = '"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif';
-function emojiSprite(emoji, size = 256, scale = 0.32) {
-  const { ctx, tex } = canvasTex(size, size);
-  ctx.font = `${size * 0.8}px ${EMOJI_FONT}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-  ctx.fillText(emoji, size / 2, size / 2 + size * 0.05);
-  const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true, depthWrite: false }));
-  sp.scale.set(scale, scale, 1);
-  sp.userData.draw = e => { ctx.clearRect(0, 0, size, size); ctx.fillText(e, size / 2, size / 2 + size * 0.05); tex.needsUpdate = true; };
-  return sp;
-}
+function emojiSprite(emoji, size = 256, scale = 0.32) { return glyphSprite(emoji, scale, Math.min(size, 192)); }
 function labelSprite(text, w = 256, h = 64, scale = 0.6) {
   const { ctx, tex } = canvasTex(w, h);
   ctx.fillStyle = 'rgba(255,255,255,.92)'; roundRect(ctx, 4, 4, w - 8, h - 8, 18); ctx.fill();
@@ -117,6 +110,7 @@ function init() {
   const tdesk = new THREE.Mesh(new THREE.BoxGeometry(1.1, 0.75, 0.55), new THREE.MeshStandardMaterial({ color: 0x9a6b3f }));
   tdesk.position.set(-2.1, 0.375, -0.6); classroom.add(tdesk);
   const apple = emojiSprite('🍎', 128, 0.14); apple.position.set(-1.9, 0.83, -0.6); classroom.add(apple);
+  buildWalls();
 
   // reticle para colocar el aula
   reticle = new THREE.Mesh(new THREE.RingGeometry(0.07, 0.09, 32).rotateX(-Math.PI / 2), new THREE.MeshBasicMaterial({ color: 0x4f8bff }));
@@ -144,6 +138,41 @@ function init() {
   App.subscribe(() => { if (mode) sync(); });
   window.addEventListener('resize', resize);
   setupPointer(canvas);
+  walker = createWalker({
+    getCamera: () => camera, canvas, container: $('#view3d'), getWorld: () => classroom.getObjectByName('floor'), eye: 1.6,
+    targets: () => [...studentObjs.values()].map(o => ({ obj: o.g, label: 'Hablar con ' + (App.sim.get(o.g.userData.sid)?.nombre || 'estudiante'), sid: o.g.userData.sid })),
+    interact: t => App.onStudentTap(t.sid)
+  });
+}
+let walker = null;
+
+/* paredes que solo se ven desde dentro (desde fuera la órbita ve el aula completa) */
+function wallTex(kind) {
+  const { ctx, tex } = canvasTex(1024, 512);
+  ctx.fillStyle = '#f4ecd8'; ctx.fillRect(0, 0, 1024, 512);
+  ctx.fillStyle = '#d8c9a6'; ctx.fillRect(0, 430, 1024, 82);
+  ctx.fillStyle = '#2e8b2e'; ctx.fillRect(0, 424, 1024, 8);
+  if (kind === 'ventanas') for (let i = 0; i < 3; i++) {
+    const x = 90 + i * 320; ctx.fillStyle = '#fff'; ctx.fillRect(x - 8, 92, 216, 236);
+    const g = ctx.createLinearGradient(0, 100, 0, 320); g.addColorStop(0, '#8fd0f4'); g.addColorStop(1, '#d9f1ff'); ctx.fillStyle = g; ctx.fillRect(x, 100, 200, 220);
+    ctx.fillStyle = '#4f9d3a'; ctx.beginPath(); ctx.arc(x + 60, 300, 60, Math.PI, 0); ctx.arc(x + 150, 310, 50, Math.PI, 0); ctx.fill();
+    ctx.fillStyle = '#fff'; ctx.fillRect(x + 97, 100, 6, 220); ctx.fillRect(x, 207, 200, 6);
+  }
+  if (kind === 'murales') {
+    [['#F2E21B', 'Normas del aula'], ['#bfe3f7', 'Abecedario'], ['#fcd5ce', 'Nuestros logros']].forEach(([c, t], i) => {
+      const x = 80 + i * 320; ctx.fillStyle = c; ctx.fillRect(x, 110, 220, 160); ctx.fillStyle = '#1B4D22'; ctx.font = 'bold 26px Nunito, sans-serif'; ctx.textAlign = 'center'; ctx.fillText(t, x + 110, 150);
+      ctx.fillStyle = 'rgba(27,77,34,.25)'; for (let k = 0; k < 4; k++) ctx.fillRect(x + 24, 172 + k * 22, 172 - k * 20, 8);
+    });
+  }
+  if (kind === 'puerta') { ctx.fillStyle = '#8a5a2b'; ctx.fillRect(700, 120, 170, 310); ctx.fillStyle = '#FACC15'; ctx.beginPath(); ctx.arc(845, 280, 9, 0, 7); ctx.fill(); ctx.fillStyle = '#1B4D22'; ctx.fillRect(120, 140, 300, 180); ctx.fillStyle = '#fff'; ctx.font = 'bold 34px Nunito, sans-serif'; ctx.textAlign = 'center'; ctx.fillText('ISTY', 270, 220); ctx.font = '22px Nunito, sans-serif'; ctx.fillText('Educación para el mañana', 270, 260); }
+  return tex;
+}
+function buildWalls() {
+  const H = 2.8, mk = (w, kind, x, z, ry) => { const m = new THREE.Mesh(new THREE.PlaneGeometry(w, H), new THREE.MeshStandardMaterial({ map: wallTex(kind), roughness: 0.95 })); m.position.set(x, H / 2 - 0.02, z); m.rotation.y = ry; m.name = 'wall'; classroom.add(m); };
+  mk(5, 'ventanas', -2.6, 0.9, Math.PI / 2);
+  mk(5, 'puerta', 2.6, 0.9, -Math.PI / 2);
+  mk(5.2, 'murales', 0, 3.4, Math.PI);
+  mk(5.2, 'liso', 0, -1.05, 0);
 }
 
 function buildStudents() {
@@ -159,18 +188,15 @@ function buildStudents() {
     // pupitre
     const top = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.05, 0.45), new THREE.MeshStandardMaterial({ color: 0xe9d3b0 }));
     top.position.set(0, 0.68, -0.28); g.add(top);
-    const leg = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.66, 0.04), new THREE.MeshStandardMaterial({ color: 0x9aa4b2 }));
-    leg.position.set(0, 0.33, -0.12); g.add(leg);
+    [[-0.31, -0.46], [0.31, -0.46], [-0.31, -0.1], [0.31, -0.1]].forEach(([lx, lz]) => { const leg = new THREE.Mesh(new THREE.BoxGeometry(0.035, 0.66, 0.035), new THREE.MeshStandardMaterial({ color: 0x9aa4b2 })); leg.position.set(lx, 0.33, lz); g.add(leg); });
     // silla
     const seat = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.04, 0.4), new THREE.MeshStandardMaterial({ color: 0x475569 }));
     seat.position.set(0, 0.42, 0.12); g.add(seat);
     const back = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.42, 0.04), new THREE.MeshStandardMaterial({ color: 0x475569 }));
     back.position.set(0, 0.64, 0.32); g.add(back);
-    // cuerpo
-    const body = new THREE.Mesh(new THREE.CapsuleGeometry(0.15, 0.28, 4, 12), new THREE.MeshStandardMaterial({ color: SHIRTS[i % SHIRTS.length] }));
-    body.position.set(0, 0.76, 0.12); g.add(body);
-    // cabeza (emoji)
-    const head = emojiSprite(s.avatar, 256, 0.42); head.position.set(0, 1.18, 0.1); g.add(head);
+    // estudiante 3D sentado, mirando a la pizarra
+    const head = makeHuman(s.avatar, { height: 1.35, sit: true, shirt: '#' + SHIRTS[i % SHIRTS.length].toString(16).padStart(6, '0') });
+    head.position.set(0, 0.04, 0.14); head.rotation.y = Math.PI; g.add(head);
     const status = emojiSprite('', 128, 0.26); status.position.set(0.22, 1.5, 0.1); g.add(status);
     const name = labelSprite(s.nombre); name.position.set(0, 0.92, -0.52); g.add(name);
     const bubble = bubbleSprite(); bubble.position.set(0, 1.75, 0.1); g.add(bubble);
@@ -345,12 +371,13 @@ function animate(t, frame) {
   const dt = clock.getDelta(), time = clock.elapsedTime;
   studentObjs.forEach(o => {
     o.status.position.y = 1.5 + Math.sin(time * 4 + o.phase) * 0.04;
-    o.head.material.rotation = o.distracted ? 0.35 + Math.sin(time * 1.5 + o.phase) * 0.08 : Math.sin(time * 1.2 + o.phase) * 0.03;
-    const s = o.speaking ? 0.42 * (1 + Math.abs(Math.sin(time * 9)) * 0.08) : 0.42;
-    o.head.scale.set(s, s, 1);
+    o.head.userData.look(o.distracted ? 0.9 + Math.sin(time * 1.5 + o.phase) * 0.25 : null);
+    if (o.speaking) o.head.userData.talk(0.3);
   });
+  updateHumans(classroom, dt);
   if (mode === 'inline' || mode === 'cam') {
     if (gyro.active && gyro.q) { camera.position.set(0, 0, 0); camera.quaternion.copy(gyro.q); }
+    else if (walker && walker.active) walker.update(dt);
     else updateOrbitCamera();
   }
   if (mode === 'xr' && frame) {
@@ -446,6 +473,7 @@ function startInline() {
   renderer.setAnimationLoop(animate);
 }
 function stopInline() {
+  if (walker) walker.disable();
   if (renderer) renderer.setAnimationLoop(null);
   $('#view3d').hidden = true; $('#room').hidden = false; $('#btn-3d').textContent = '🧊 3D';
   mode = null;

@@ -244,6 +244,7 @@ function injectStyle() {
   const s = document.createElement('style'); s.id = STYLE_ID;
   s.textContent = `
   .isty-walk-btn{position:absolute;top:10px;left:10px;z-index:5;border:0;border-radius:999px;padding:8px 14px;font:800 14px Nunito,sans-serif;background:#1B4D22;color:#fff;box-shadow:0 4px 14px rgba(0,0,0,.25);cursor:pointer}
+  .isty-walk-btn.isty-walk-inline{position:static;box-shadow:none;padding:6px 12px;font-size:13px}
   .isty-walk-btn[aria-pressed="true"]{background:#F2E21B;color:#1B4D22}
   .isty-walk-hud{position:absolute;inset:0;pointer-events:none;z-index:4}
   .isty-walk-hud .cross{position:absolute;left:50%;top:50%;width:18px;height:18px;margin:-9px 0 0 -9px;border:2px solid rgba(255,255,255,.9);border-radius:50%;box-shadow:0 0 0 1px rgba(0,0,0,.35)}
@@ -277,7 +278,7 @@ export function createWalker(o) {
   const btn = document.createElement('button');
   btn.type = 'button'; btn.className = 'isty-walk-btn'; btn.setAttribute('aria-pressed', 'false');
   btn.textContent = '👣 Recorrer'; btn.title = 'Caminar por la escena en primera persona';
-  box.appendChild(btn);
+  if (o.buttonParent) { btn.classList.add('isty-walk-inline'); o.buttonParent.appendChild(btn); } else box.appendChild(btn);
   const hud = document.createElement('div'); hud.className = 'isty-walk-hud'; hud.hidden = true;
   hud.innerHTML = '<div class="cross"></div><div class="tip">WASD / flechas para caminar · arrastra para mirar · E para interactuar</div><button type="button" class="act">Interactuar</button><div class="isty-joy" aria-hidden="true"><i></i></div>';
   box.appendChild(hud);
@@ -297,6 +298,9 @@ export function createWalker(o) {
     st.pos.set(cam.position.x, 0, cam.position.z);
     st.pos.x = THREE.MathUtils.clamp(st.pos.x, st.bounds.min.x, st.bounds.max.x);
     st.pos.z = THREE.MathUtils.clamp(st.pos.z, st.bounds.min.z, st.bounds.max.z);
+    // si la cámara está casi encima del centro, retrocede para ver la escena de frente
+    const dx = st.pos.x - c.x, dz = st.pos.z - c.z, dist = Math.hypot(dx, dz), minD = o.minStart || 1.8;
+    if (dist < minD) { const k = dist > 0.01 ? minD / dist : 0; st.pos.x = c.x + (dist > 0.01 ? dx * k : 0); st.pos.z = c.z + (dist > 0.01 ? dz * k : minD); st.pos.x = THREE.MathUtils.clamp(st.pos.x, st.bounds.min.x, st.bounds.max.x); st.pos.z = THREE.MathUtils.clamp(st.pos.z, st.bounds.min.z, st.bounds.max.z); }
     st.yaw = Math.atan2(-(c.x - st.pos.x), -(c.z - st.pos.z)); st.pitch = -0.12;
     st.active = true; hud.hidden = false; box.classList.add('isty-walk-on');
     btn.setAttribute('aria-pressed', 'true'); btn.textContent = '🔄 Girar vista';
@@ -311,15 +315,15 @@ export function createWalker(o) {
   btn.addEventListener('click', e => { e.stopPropagation(); st.active ? disable() : enable(); });
 
   // teclado
-  addEventListener('keydown', e => {
+  const onKey = e => {
     if (!st.active || /INPUT|TEXTAREA|SELECT/.test(document.activeElement?.tagName || '')) return;
     const k = e.key.toLowerCase();
     if (['w', 'a', 's', 'd', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright', 'q', 'e', ' '].includes(k)) e.preventDefault();
     if (k === 'e' || k === 'enter' || k === ' ') { interact(); return; }
     keys.add(k);
-  });
-  addEventListener('keyup', e => keys.delete(e.key.toLowerCase()));
-  addEventListener('blur', () => keys.clear());
+  };
+  const onKeyUp = e => keys.delete(e.key.toLowerCase()), onBlur = () => keys.clear();
+  addEventListener('keydown', onKey); addEventListener('keyup', onKeyUp); addEventListener('blur', onBlur);
 
   // mirar arrastrando (en el lienzo)
   const cv = o.canvas; let look = null;
@@ -405,7 +409,8 @@ export function createWalker(o) {
       tip.textContent = n ? `Pulsa E o «${n.label || 'Interactuar'}»` : 'WASD / flechas para caminar · arrastra para mirar · E para interactuar';
     }
   }
-  const api = { enable, disable, update, get active() { return st.active; }, button: btn, state: st };
+  const destroy = () => { disable(); removeEventListener('keydown', onKey); removeEventListener('keyup', onKeyUp); removeEventListener('blur', onBlur); btn.remove(); hud.remove(); };
+  const api = { enable, disable, update, destroy, get active() { return st.active; }, button: btn, state: st };
   (window.__istyWalkers = window.__istyWalkers || []).push(api);
   return api;
 }

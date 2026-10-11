@@ -106,3 +106,12 @@ sus puntos) y `quiz`. No hace falta tocar el resto del código.
 
 > Simulador con fines educativos. No reemplaza la práctica clínica supervisada
 > ni los protocolos oficiales vigentes de cada institución.
+
+## Cuentas de prueba
+
+`cuentas-prueba.json` contiene cuentas de demostración (importables desde
+Portal → Respaldo). Administrador: `admin.prueba` / `Admin2026`. Estudiantes:
+`<area>.prueba` / `Prueba2026` (enfermeria, emergencias, farmacia, odontologia,
+cirugia, geriatria, laboratorio, bioseguridad, materno, rehabilitacion,
+nutricion), `multi.prueba` (varias áreas) e `inactivo.prueba` (desactivada).
+Elimínalas o cambia sus contraseñas antes de usar el simulador con estudiantes reales.

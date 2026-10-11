@@ -1,0 +1,273 @@
+{
+ "app": "martins-salud",
+ "version": 1,
+ "usuarios": [
+  {
+   "usuario": "admin.prueba",
+   "nombre": "Administrador de Prueba",
+   "documento": "",
+   "rol": "admin",
+   "areas": [],
+   "cursos": [],
+   "activo": true,
+   "creado": "2026-10-11T12:00:00.000Z",
+   "actualizado": "2026-10-11T12:00:00.000Z",
+   "prueba": true,
+   "salt": "km21UQQY3556+nziORqDBQ==",
+   "hash": "3cddd1f49b3028e29b83686941580c57617adfbc0e140f236df21a95cf50bd89"
+  },
+  {
+   "usuario": "enfermeria.prueba",
+   "nombre": "Estudiante Enfermería Prueba",
+   "documento": "0000000001",
+   "rol": "estudiante",
+   "areas": [
+    "Enfermería"
+   ],
+   "cursos": [],
+   "activo": true,
+   "creado": "2026-10-11T12:00:00.000Z",
+   "actualizado": "2026-10-11T12:00:00.000Z",
+   "prueba": true,
+   "salt": "2NIuT2L8rtfwrGFY7Bfr7g==",
+   "hash": "4720887d911145b96891d0b71aae024d7a62cdf88fccefe4bcede879dd11c156"
+  },
+  {
+   "usuario": "emergencias.prueba",
+   "nombre": "Estudiante Emergencias Prueba",
+   "documento": "",
+   "rol": "estudiante",
+   "areas": [
+    "Emergencias"
+   ],
+   "cursos": [],
+   "activo": true,
+   "creado": "2026-10-11T12:00:00.000Z",
+   "actualizado": "2026-10-11T12:00:00.000Z",
+   "prueba": true,
+   "salt": "z0BQ+XiXOcIs/t/DbrnaXQ==",
+   "hash": "aa7c7c40a155c28c80e1749e11f209935767cf230a70271d6d1cca1d29aeed92"
+  },
+  {
+   "usuario": "farmacia.prueba",
+   "nombre": "Estudiante Farmacia Prueba",
+   "documento": "",
+   "rol": "estudiante",
+   "areas": [
+    "Farmacia"
+   ],
+   "cursos": [],
+   "activo": true,
+   "creado": "2026-10-11T12:00:00.000Z",
+   "actualizado": "2026-10-11T12:00:00.000Z",
+   "prueba": true,
+   "salt": "a2A5m7XvxP8ZksGJYzwKmw==",
+   "hash": "a3dcbd1c797794319eb3f58c7c152543eb8b26a7edf9517ca23d17b40d00d87a"
+  },
+  {
+   "usuario": "odontologia.prueba",
+   "nombre": "Estudiante Odontología Prueba",
+   "documento": "",
+   "rol": "estudiante",
+   "areas": [
+    "Odontología"
+   ],
+   "cursos": [],
+   "activo": true,
+   "creado": "2026-10-11T12:00:00.000Z",
+   "actualizado": "2026-10-11T12:00:00.000Z",
+   "prueba": true,
+   "salt": "sClvBxg5fTSL4+OE9aroug==",
+   "hash": "d34f8e561581c96bdd0e02757c1d0739565653e7582227d028551febcb37b248"
+  },
+  {
+   "usuario": "cirugia.prueba",
+   "nombre": "Estudiante Cirugía Menor Prueba",
+   "documento": "",
+   "rol": "estudiante",
+   "areas": [
+    "Cirugía menor"
+   ],
+   "cursos": [],
+   "activo": true,
+   "creado": "2026-10-11T12:00:00.000Z",
+   "actualizado": "2026-10-11T12:00:00.000Z",
+   "prueba": true,
+   "salt": "qZPdptS5BHIo5vJU7UU/6w==",
+   "hash": "223855ad698d84488526e3736d92cdde6ef71740e8812c5a2944c1d4ae343ada"
+  },
+  {
+   "usuario": "geriatria.prueba",
+   "nombre": "Estudiante Geriatría Prueba",
+   "documento": "",
+   "rol": "estudiante",
+   "areas": [
+    "Geriatría"
+   ],
+   "cursos": [],
+   "activo": true,
+   "creado": "2026-10-11T12:00:00.000Z",
+   "actualizado": "2026-10-11T12:00:00.000Z",
+   "prueba": true,
+   "salt": "0XWT9iPa0lddGAAiq4ncmw==",
+   "hash": "13e966e47039dccbce5bba5b9bad5ade73ecd55e463f6fe1e92559fd15900f8d"
+  },
+  {
+   "usuario": "laboratorio.prueba",
+   "nombre": "Estudiante Laboratorio Prueba",
+   "documento": "",
+   "rol": "estudiante",
+   "areas": [
+    "Laboratorio"
+   ],
+   "cursos": [],
+   "activo": true,
+   "creado": "2026-10-11T12:00:00.000Z",
+   "actualizado": "2026-10-11T12:00:00.000Z",
+   "prueba": true,
+   "salt": "SvpGBMICdRqINjyhJ92hbA==",
+   "hash": "a370796c5eada6a313795fe5a2578e48aebc2c55abb00d985daf2e2ee72d231d"
+  },
+  {
+   "usuario": "bioseguridad.prueba",
+   "nombre": "Estudiante Bioseguridad Prueba",
+   "documento": "",
+   "rol": "estudiante",
+   "areas": [
+    "Bioseguridad"
+   ],
+   "cursos": [],
+   "activo": true,
+   "creado": "2026-10-11T12:00:00.000Z",
+   "actualizado": "2026-10-11T12:00:00.000Z",
+   "prueba": true,
+   "salt": "TkkrlJVvJAlgq4Al+Db3RA==",
+   "hash": "7a46cb307878c7e8a304bf5342bf335fad2e5be708e5bed2a709a808a172463b"
+  },
+  {
+   "usuario": "materno.prueba",
+   "nombre": "Estudiante Materno-infantil Prueba",
+   "documento": "",
+   "rol": "estudiante",
+   "areas": [
+    "Materno-infantil"
+   ],
+   "cursos": [],
+   "activo": true,
+   "creado": "2026-10-11T12:00:00.000Z",
+   "actualizado": "2026-10-11T12:00:00.000Z",
+   "prueba": true,
+   "salt": "sZNw89z6ICIm6NEPMKneAQ==",
+   "hash": "b287e1e35961643fe012580ed4b252bfe4191471cb5f58cb57e8d35205ca9dd3"
+  },
+  {
+   "usuario": "rehabilitacion.prueba",
+   "nombre": "Estudiante Rehabilitación Prueba",
+   "documento": "",
+   "rol": "estudiante",
+   "areas": [
+    "Rehabilitación"
+   ],
+   "cursos": [],
+   "activo": true,
+   "creado": "2026-10-11T12:00:00.000Z",
+   "actualizado": "2026-10-11T12:00:00.000Z",
+   "prueba": true,
+   "salt": "HEP2XJvJwYd53EHPDhGOZA==",
+   "hash": "950cf039f4865ef6b9c91c5274fb51df46db570bf8b7a9eb84fe38f9a4fe0166"
+  },
+  {
+   "usuario": "nutricion.prueba",
+   "nombre": "Estudiante Nutrición Prueba",
+   "documento": "",
+   "rol": "estudiante",
+   "areas": [
+    "Nutrición"
+   ],
+   "cursos": [],
+   "activo": true,
+   "creado": "2026-10-11T12:00:00.000Z",
+   "actualizado": "2026-10-11T12:00:00.000Z",
+   "prueba": true,
+   "salt": "+UwmIuJRMmwrftAcLTcIIQ==",
+   "hash": "54f4a2a087650afd3cd4b92bf94b2bf73da8fb90292ed3213ce6818408cde2cb"
+  },
+  {
+   "usuario": "multi.prueba",
+   "nombre": "Estudiante Varias Áreas Prueba",
+   "documento": "",
+   "rol": "estudiante",
+   "areas": [
+    "Enfermería",
+    "Emergencias"
+   ],
+   "cursos": [
+    "sutura"
+   ],
+   "activo": true,
+   "creado": "2026-10-11T12:00:00.000Z",
+   "actualizado": "2026-10-11T12:00:00.000Z",
+   "prueba": true,
+   "salt": "rXxgc4GkSG091CdA27ydJQ==",
+   "hash": "eb4f9873f57357b42e0cd35a8023ec95a1207bf7a1888498ba8f56f39580e0fd"
+  },
+  {
+   "usuario": "inactivo.prueba",
+   "nombre": "Cuenta Desactivada Prueba",
+   "documento": "",
+   "rol": "estudiante",
+   "areas": [
+    "Enfermería"
+   ],
+   "cursos": [],
+   "activo": false,
+   "creado": "2026-10-11T12:00:00.000Z",
+   "actualizado": "2026-10-11T12:00:00.000Z",
+   "prueba": true,
+   "salt": "VAkRnwqXU14DVLvIW4qbJA==",
+   "hash": "b26c61a318487e10cc1945b6402cbf47c663426f5d15b50c77b9c43cabf19444"
+  }
+ ],
+ "progreso": [
+  {
+   "usuario": "enfermeria.prueba",
+   "actualizado": "2026-10-11T12:00:00.000Z",
+   "progreso": {
+    "signos-vitales": {
+     "lecc": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "prac": {
+      "0": 83,
+      "1": 86,
+      "2": 100
+     },
+     "quiz": 86,
+     "reto3d": 75,
+     "cine": true,
+     "cert": {
+      "fecha": "2026-10-11T12:00:00.000Z",
+      "codigo": "MC-SIG-PRUEBA01",
+      "nota": 86
+     }
+    },
+    "inyectables": {
+     "lecc": [
+      0,
+      1
+     ],
+     "prac": {
+      "1": 60
+     },
+     "quiz": 0,
+     "reto3d": 0,
+     "cine": false,
+     "cert": null
+    }
+   }
+  }
+ ]
+}

@@ -1,0 +1,16 @@
+{
+  "name": "Martin´s Capacitaciones · Simulador de Salud",
+  "short_name": "Martin´s Salud",
+  "description": "Simulador de capacitación en salud: teoría, prácticas 2D, 3D, cine, VR y AR.",
+  "lang": "es",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#f8f5f1",
+  "theme_color": "#223146",
+  "icons": [
+    { "src": "assets/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "assets/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

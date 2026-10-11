@@ -49,3 +49,12 @@ js/app.js           Lógica de la aplicación (navegación, voz, progreso)
 Edita `js/stories.js` y agrega un objeto siguiendo la misma estructura: título,
 nivel, emoji, lista de párrafos (cada uno con su propio emoji) y preguntas de
 opción múltiple con el índice de la respuesta correcta.
+
+---
+
+# Martin´s Capacitaciones · Simulador de Salud 🩺
+
+En la carpeta [`simulador-salud/`](simulador-salud/) está el simulador de
+capacitación en el área de salud (enfermería, farmacia, odontología, sutura,
+geriatría, laboratorio, bioseguridad, RCP y más) con teoría, prácticas 2D,
+modelos 3D, modo cine, VR, AR y Cardboard. Ver su [README](simulador-salud/README.md).

@@ -58,3 +58,12 @@ En la carpeta [`simulador-salud/`](simulador-salud/) está el simulador de
 capacitación en el área de salud (enfermería, farmacia, odontología, sutura,
 geriatría, laboratorio, bioseguridad, RCP y más) con teoría, prácticas 2D,
 modelos 3D, modo cine, VR, AR y Cardboard. Ver su [README](simulador-salud/README.md).
+
+---
+
+# Biblioteca ISTY · CIC-Yasuní 📚
+
+En la carpeta [`biblioteca-isty/`](biblioteca-isty/) está el sistema de biblioteca
+del Instituto Superior Tecnológico CIC-Yasuní: inicio de sesión, catálogo organizado
+por carreras vigentes, préstamos y portal de administración. Ver su
+[README](biblioteca-isty/README.md).

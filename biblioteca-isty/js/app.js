@@ -24,6 +24,8 @@
   };
 
   let me = null;
+  const ROLES = { estudiante: "Estudiante", docente: "Docente", admin: "Administrador" };
+  const rolTxt = (r) => ROLES[r] || "Estudiante";
   const isAdmin = () => me && me.rol === "admin";
   const view = $("#view");
 
@@ -486,7 +488,7 @@
           return `<tr>
             <td data-label="Nombre"><strong>${esc(u.nombre)}</strong></td>
             <td data-label="Usuario"><code>${esc(u.usuario)}</code></td>
-            <td data-label="Rol">${u.rol === "admin" ? "Administrador" : "Estudiante"}</td>
+            <td data-label="Rol">${rolTxt(u.rol)}</td>
             <td data-label="Carrera">${esc(c ? c.nombre : "—")}</td>
             <td data-label="Estado"><span class="status ${u.activo ? "st-on" : "st-off"}">${u.activo ? "Activo" : "Inactivo"}</span></td>
             <td class="row-actions"><button class="btn btn-ghost btn-sm" data-edit="${esc(u.usuario)}">✏️ Editar</button>${u.usuario !== me.usuario ? `<button class="btn btn-ghost btn-sm" data-del="${esc(u.usuario)}">🗑️</button>` : ""}</td>
@@ -513,7 +515,7 @@
         <label>Nombre completo <input name="nombre" required maxlength="80" value="${esc(u.nombre)}" /></label>
         <label>Usuario <input name="usuario" required maxlength="40" pattern="[a-z0-9._\\-]{3,40}" title="3 a 40 caracteres: minúsculas, números, punto, guion" autocapitalize="off" value="${esc(u.usuario)}" ${usuario ? "readonly" : ""} /></label>
         <div class="grid2">
-          <label>Rol <select name="rol" ${self ? "disabled" : ""}><option value="estudiante">Estudiante</option><option value="admin" ${u.rol === "admin" ? "selected" : ""}>Administrador</option></select></label>
+          <label>Rol <select name="rol" ${self ? "disabled" : ""}>${Object.entries(ROLES).map(([k, v]) => `<option value="${k}" ${u.rol === k ? "selected" : ""}>${v}</option>`).join("")}</select></label>
           <label>Carrera <select name="carreraId">${carreraOptions(u.carreraId, true)}</select></label>
         </div>
         <label>${usuario ? "Nueva contraseña (déjala vacía para no cambiarla)" : "Contraseña"}
@@ -585,7 +587,6 @@
   const fmtFecha = (iso) => (iso ? new Date(iso).toLocaleDateString("es-EC", { year: "numeric", month: "2-digit", day: "2-digit" }) : "");
   const fmtHora = (iso) => (iso ? new Date(iso).toLocaleTimeString("es-EC", { hour: "2-digit", minute: "2-digit", hour12: false }) : "");
   const nombreCarrera = (id) => { const c = Store.carrera(id); return c ? c.nombre : "Sin carrera"; };
-  const rolTxt = (r) => (r === "admin" ? "Administrador" : "Estudiante");
   // Datos de la persona: los guardados en el registro y, si faltan (registros antiguos), los de su cuenta.
   function persona(reg) {
     const u = Store.data.usuarios[reg.usuario] || {};
@@ -622,37 +623,40 @@
     accesos: {
       titulo: "Ingresos al sistema",
       icono: "🔐",
-      columnas: ["Fecha", "Hora", "Usuario", "Nombre", "Rol", "Carrera", "Movimiento"],
+      columnas: ["Fecha", "Hora", "Usuario", "Nombre", "Tipo de usuario", "Carrera", "Movimiento"],
       registros: () => Store.data.accesos,
       fecha: (r) => r.fecha,
       carrera: (r) => persona(r).carreraId,
+      rol: (r) => persona(r).rol || "estudiante",
       fila: (r) => { const p = persona(r); return [fmtFecha(r.fecha), fmtHora(r.fecha), r.usuario, p.nombre, rolTxt(p.rol), nombreCarrera(p.carreraId), r.tipo]; }
     },
     consultas: {
       titulo: "Libros consultados",
       icono: "📖",
-      columnas: ["Fecha", "Hora", "Usuario", "Nombre", "Carrera del lector", "Libro", "Autor", "Carrera del libro", "Acción"],
+      columnas: ["Fecha", "Hora", "Usuario", "Nombre", "Tipo de lector", "Carrera del lector", "Libro", "Autor", "Carrera del libro", "Acción"],
       registros: () => Store.data.consultas,
       fecha: (r) => r.fecha,
       carrera: (r) => persona(r).carreraId,
+      rol: (r) => persona(r).rol || "estudiante",
       fila: (r) => {
         const p = persona(r);
         const l = Store.libro(r.libroId);
-        return [fmtFecha(r.fecha), fmtHora(r.fecha), r.usuario, p.nombre, nombreCarrera(p.carreraId), l ? l.titulo : r.titulo || "(libro eliminado)", l ? l.autor : "", nombreCarrera(l ? l.carreraId : r.libroCarreraId), r.accion];
+        return [fmtFecha(r.fecha), fmtHora(r.fecha), r.usuario, p.nombre, rolTxt(p.rol), nombreCarrera(p.carreraId), l ? l.titulo : r.titulo || "(libro eliminado)", l ? l.autor : "", nombreCarrera(l ? l.carreraId : r.libroCarreraId), r.accion];
       }
     },
     prestamos: {
       titulo: "Préstamos",
       icono: "🔖",
-      columnas: ["Fecha de solicitud", "Usuario", "Nombre", "Carrera del lector", "Libro", "Autor", "Carrera del libro", "Fecha de entrega", "Devolver hasta", "Fecha de devolución", "Estado"],
+      columnas: ["Fecha de solicitud", "Usuario", "Nombre", "Tipo de lector", "Carrera del lector", "Libro", "Autor", "Carrera del libro", "Fecha de entrega", "Devolver hasta", "Fecha de devolución", "Estado"],
       registros: () => Store.data.prestamos,
       fecha: (r) => r.solicitado,
       carrera: (r) => persona(r).carreraId,
+      rol: (r) => persona(r).rol || "estudiante",
       fila: (r) => {
         const p = persona(r);
         const l = Store.libro(r.libroId);
         const vencido = r.estado === "prestado" && r.limite && new Date(r.limite) < new Date();
-        return [fmtFecha(r.solicitado), r.usuario, p.nombre, nombreCarrera(p.carreraId), l ? l.titulo : r.titulo || "(libro eliminado)", l ? l.autor : "", nombreCarrera(l ? l.carreraId : ""), fmtFecha(r.entregado), fmtFecha(r.limite), fmtFecha(r.devuelto), vencido ? "Vencido" : (ESTADOS[r.estado] || { txt: r.estado }).txt];
+        return [fmtFecha(r.solicitado), r.usuario, p.nombre, rolTxt(p.rol), nombreCarrera(p.carreraId), l ? l.titulo : r.titulo || "(libro eliminado)", l ? l.autor : "", nombreCarrera(l ? l.carreraId : ""), fmtFecha(r.entregado), fmtFecha(r.limite), fmtFecha(r.devuelto), vencido ? "Vencido" : (ESTADOS[r.estado] || { txt: r.estado }).txt];
       }
     }
   };
@@ -671,6 +675,9 @@
       <div class="toolbar rep-filters">
         <label data-fecha>Desde <input type="date" id="rd" value="${inicioMes}" /></label>
         <label data-fecha>Hasta <input type="date" id="rh" value="${iso(hoy)}" /></label>
+        <label data-fecha>Tipo de lector <select id="rr">
+          <option value="lectores">Docentes y estudiantes</option><option value="docente">Solo docentes</option>
+          <option value="estudiante">Solo estudiantes</option><option value="">Todos (incluye administradores)</option></select></label>
         <label>Carrera <select id="rc"><option value="">Todas</option>${carreraOptions("")}<option value="__none">Sin carrera</option></select></label>
         <label>Buscar <input type="search" id="rq" placeholder="Nombre, título, autor…" /></label>
       </div>
@@ -684,7 +691,7 @@
 
     function filtrar(tipo) {
       const R = REPORTES[tipo];
-      const d = $("#rd").value, h = $("#rh").value, c = $("#rc").value, q = norm($("#rq").value).trim();
+      const d = $("#rd").value, h = $("#rh").value, c = $("#rc").value, rr = $("#rr").value, q = norm($("#rq").value).trim();
       const desde = d && !R.sinFecha ? new Date(d + "T00:00:00") : null;
       const hasta = h && !R.sinFecha ? new Date(h + "T23:59:59.999") : null;
       const filas = R.registros()
@@ -694,6 +701,10 @@
           if (hasta && f > hasta) return false;
           const cid = R.carrera(r) || "";
           if (c === "__none" ? cid : c && cid !== c) return false;
+          if (R.rol && rr) {
+            const rol = R.rol(r);
+            if (rr === "lectores" ? rol === "admin" : rol !== rr) return false;
+          }
           return true;
         })
         .sort(R.orden || ((a, b) => String(R.fecha(b)).localeCompare(String(R.fecha(a)))))
@@ -733,10 +744,14 @@
         const porCarrera = {};
         filas.forEach((f) => { porCarrera[f[ci]] = (porCarrera[f[ci]] || 0) + 1; });
         const personas = new Set(filas.map((f) => f[R.columnas.indexOf("Usuario")])).size;
+        const ti = R.columnas.findIndex((c) => c.startsWith("Tipo de"));
+        const deTipo = (t) => filas.filter((f) => f[ti] === t).length;
         $("#rep-summary").innerHTML = `
           <div class="sum-box"><strong>${filas.length}</strong><span>registros</span></div>
           <div class="sum-box"><strong>${personas}</strong><span>personas</span></div>
-          ${Object.entries(porCarrera).sort((a, b) => b[1] - a[1]).slice(0, 4).map(([k, v]) => `<div class="sum-box"><strong>${v}</strong><span>${esc(k)}</span></div>`).join("")}`;
+          <div class="sum-box"><strong>${deTipo("Docente")}</strong><span>de docentes</span></div>
+          <div class="sum-box"><strong>${deTipo("Estudiante")}</strong><span>de estudiantes</span></div>
+          ${Object.entries(porCarrera).sort((a, b) => b[1] - a[1]).slice(0, 3).map(([k, v]) => `<div class="sum-box"><strong>${v}</strong><span>${esc(k)}</span></div>`).join("")}`;
         $("#rep-resumen").innerHTML = "";
       }
       const MAX = 300;
@@ -758,7 +773,7 @@
       $$("[data-rep]", body).forEach((x) => { x.classList.toggle("active", x === b); x.setAttribute("aria-checked", x === b); });
       paint();
     }));
-    ["#rd", "#rh", "#rc"].forEach((s) => $(s).addEventListener("change", paint));
+    ["#rd", "#rh", "#rc", "#rr"].forEach((s) => $(s).addEventListener("change", paint));
     $("#rq").addEventListener("input", paint);
     paint();
   }
@@ -865,6 +880,9 @@
       Store.data.usuarios[usuario] = admin;
       if ($("#setup-demo").checked && usuario !== "estudiante") {
         Store.data.usuarios.estudiante = { usuario: "estudiante", nombre: "Estudiante de Prueba", rol: "estudiante", carreraId: "software", activo: true, creado: now, ...(await Store.hashPassword("isty2026")) };
+      }
+      if ($("#setup-demo").checked && usuario !== "docente") {
+        Store.data.usuarios.docente = { usuario: "docente", nombre: "Docente de Prueba", rol: "docente", carreraId: "enfermeria", activo: true, creado: now, ...(await Store.hashPassword("isty2026")) };
       }
       Store.save();
       enter(admin, true);

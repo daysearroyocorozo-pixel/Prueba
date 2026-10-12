@@ -14,12 +14,12 @@ python3 -m http.server 8080
 ```
 
 1. La **primera vez** se crea la cuenta del **administrador** (opcionalmente también
-   un estudiante de prueba: `estudiante` / `isty2026`).
+   cuentas de prueba `estudiante` y `docente`, contraseña `isty2026`).
 2. Después, cada persona entra con su **usuario y contraseña**.
 
 ## Funciones
 
-**Estudiantes**
+**Estudiantes y docentes**
 - Catálogo por carreras (su carrera aparece primero, marcada como «Mi carrera»).
 - Buscador general por título, autor, ISBN, editorial o tema, sin importar tildes.
 - Dentro de cada carrera: filtro por categoría/materia y «solo disponibles».
@@ -31,18 +31,19 @@ python3 -m http.server 8080
 - **Libros**: agregar, editar y eliminar; asignarlos a una carrera.
 - **Carreras**: crear, editar, eliminar y marcar como **vigente / no vigente**
   (las no vigentes se ocultan a los estudiantes y conservan sus libros).
-- **Usuarios**: crear estudiantes y administradores, asignar carrera, generar
+- **Usuarios**: crear estudiantes, docentes y administradores, asignar carrera, generar
   contraseñas, activar/desactivar cuentas.
 - **Préstamos**: entregar (plazo de 7 días), recibir devoluciones, rechazar
   solicitudes; los préstamos vencidos se marcan en rojo.
-- **Reportes** (descargables en Excel `.xlsx`): filtrables por fechas, carrera
-  y búsqueda, con totales por carrera:
+- **Reportes** (descargables en Excel `.xlsx`): filtrables por fechas, tipo de lector
+  (docentes y estudiantes, solo docentes, solo estudiantes o todos), carrera y búsqueda, con totales por carrera:
   - **Títulos de la biblioteca**: número de títulos, ejemplares y disponibles por
     carrera (con el total) y el listado numerado de cada libro con su carrera,
     autor, editorial, año, ISBN, categoría y ubicación. Se puede filtrar por carrera.
   - **Ingresos al sistema**: quién entró y salió, con rol, carrera, fecha y hora.
   - **Libros consultados**: quién abrió la ficha de qué libro o su versión digital,
-    con la carrera del lector, la carrera del libro, fecha y hora.
+    con el tipo de lector (docente o estudiante), su carrera, la carrera del libro,
+    fecha y hora.
   - **Préstamos**: quién pidió qué libro, su carrera, fechas de solicitud,
     entrega, límite y devolución, y el estado (incluye «Vencido»).
   - Se puede bajar un reporte o todos juntos en un archivo (una hoja por reporte).

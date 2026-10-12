@@ -16,7 +16,9 @@ const Store = (function () {
       carreras: SEED.carreras.map((c) => ({ ...c })),
       libros: SEED.libros.map((l) => ({ id: uid(), descripcion: "", enlace: "", ...l })),
       usuarios: {},
-      prestamos: []
+      prestamos: [],
+      accesos: [],
+      consultas: []
     };
   }
 
@@ -27,7 +29,7 @@ const Store = (function () {
     } catch (e) {
       data = empty();
     }
-    for (const k of ["carreras", "libros", "prestamos"]) if (!Array.isArray(data[k])) data[k] = [];
+    for (const k of ["carreras", "libros", "prestamos", "accesos", "consultas"]) if (!Array.isArray(data[k])) data[k] = [];
     if (!data.usuarios || typeof data.usuarios !== "object") data.usuarios = {};
     return data;
   }
@@ -65,6 +67,13 @@ const Store = (function () {
       return Math.max(0, (Number(libro.ejemplares) || 0) - ocupados);
     },
 
+    // ----- Registro de actividad (para reportes) -----
+    // Guarda nombre y carrera del momento, para que el reporte no cambie si luego se edita o elimina la cuenta.
+    registrar(lista, user, extra) {
+      api.data[lista].push({ id: uid(), fecha: new Date().toISOString(), usuario: user.usuario, nombre: user.nombre, rol: user.rol, carreraId: user.carreraId || "", ...extra });
+      save();
+    },
+
     // ----- Respaldo -----
     exportAll() {
       return JSON.stringify({ app: "biblioteca-isty", version: 1, exportado: new Date().toISOString(), ...api.data }, null, 2);
@@ -72,7 +81,7 @@ const Store = (function () {
     importAll(text) {
       const d = JSON.parse(text);
       if (d.app !== "biblioteca-isty" || !Array.isArray(d.libros) || !Array.isArray(d.carreras)) throw new Error("El archivo no es una copia de la Biblioteca ISTY.");
-      data = { carreras: d.carreras, libros: d.libros, usuarios: d.usuarios || {}, prestamos: d.prestamos || [] };
+      data = { carreras: d.carreras, libros: d.libros, usuarios: d.usuarios || {}, prestamos: d.prestamos || [], accesos: d.accesos || [], consultas: d.consultas || [] };
       save();
     },
 

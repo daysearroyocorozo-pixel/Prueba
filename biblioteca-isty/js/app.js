@@ -234,16 +234,19 @@
             <dt>Disponibles</dt><dd>${disp} de ${esc(l.ejemplares)}</dd>
           </dl>
           ${l.descripcion ? `<p class="desc">${esc(l.descripcion)}</p>` : ""}
-          ${l.enlace && /^https?:\/\//i.test(l.enlace) ? `<p><a class="btn btn-light" href="${esc(l.enlace)}" target="_blank" rel="noopener">🌐 Versión digital</a></p>` : ""}
+          ${l.enlace && /^https?:\/\//i.test(l.enlace) ? `<p><a class="btn btn-light" id="digital" href="${esc(l.enlace)}" target="_blank" rel="noopener">🌐 Abrir / descargar versión digital</a></p>` : ""}
           <div class="modal-actions">
             ${isAdmin() ? `<button class="btn btn-ghost" id="edit-book">✏️ Editar</button>` : ""}
             ${action}
           </div>
         </div>
       </div>`);
+    Store.registrar("consultas", me, { libroId: l.id, titulo: l.titulo, libroCarreraId: l.carreraId, accion: "Consulta de ficha" });
+    const dig = $("#digital");
+    if (dig) dig.addEventListener("click", () => Store.registrar("consultas", me, { libroId: l.id, titulo: l.titulo, libroCarreraId: l.carreraId, accion: "Versión digital" }));
     const req = $("#req");
     if (req) req.onclick = () => {
-      Store.data.prestamos.push({ id: Store.uid(), libroId: l.id, usuario: me.usuario, estado: "solicitado", solicitado: new Date().toISOString() });
+      Store.data.prestamos.push({ id: Store.uid(), libroId: l.id, titulo: l.titulo, usuario: me.usuario, nombre: me.nombre, carreraId: me.carreraId || "", estado: "solicitado", solicitado: new Date().toISOString() });
       Store.save();
       closeModal();
       toast("Solicitud enviada. Retira el libro en la biblioteca.");
@@ -309,7 +312,7 @@
 
   // ---------- Administración ----------
   const ADMIN_TABS = [
-    ["libros", "📚 Libros"], ["carreras", "🎓 Carreras"], ["usuarios", "👥 Usuarios"], ["prestamos", "🔖 Préstamos"], ["respaldo", "💾 Respaldo"]
+    ["libros", "📚 Libros"], ["carreras", "🎓 Carreras"], ["usuarios", "👥 Usuarios"], ["prestamos", "🔖 Préstamos"], ["reportes", "📥 Reportes"], ["respaldo", "💾 Respaldo"]
   ];
 
   function renderAdmin(tab) {
@@ -320,7 +323,7 @@
       <div class="tabs" role="tablist">${ADMIN_TABS.map(([t, n]) => `<a role="tab" href="#/admin/${t}" class="tab ${t === tab ? "active" : ""}" aria-selected="${t === tab}">${n}${t === "prestamos" && pend ? ` <span class="pill">${pend}</span>` : ""}</a>`).join("")}</div>
       <div id="admin-body"></div>`;
     const body = $("#admin-body");
-    ({ libros: adminLibros, carreras: adminCarreras, usuarios: adminUsuarios, prestamos: adminPrestamos, respaldo: adminRespaldo })[tab](body);
+    ({ libros: adminLibros, carreras: adminCarreras, usuarios: adminUsuarios, prestamos: adminPrestamos, reportes: adminReportes, respaldo: adminRespaldo })[tab](body);
   }
 
   function carreraOptions(sel, includeEmpty) {
@@ -578,6 +581,139 @@
     paint();
   }
 
+  // ---------- Reportes descargables ----------
+  const fmtFecha = (iso) => (iso ? new Date(iso).toLocaleDateString("es-EC", { year: "numeric", month: "2-digit", day: "2-digit" }) : "");
+  const fmtHora = (iso) => (iso ? new Date(iso).toLocaleTimeString("es-EC", { hour: "2-digit", minute: "2-digit", hour12: false }) : "");
+  const nombreCarrera = (id) => { const c = Store.carrera(id); return c ? c.nombre : "Sin carrera"; };
+  const rolTxt = (r) => (r === "admin" ? "Administrador" : "Estudiante");
+  // Datos de la persona: los guardados en el registro y, si faltan (registros antiguos), los de su cuenta.
+  function persona(reg) {
+    const u = Store.data.usuarios[reg.usuario] || {};
+    return { nombre: reg.nombre || u.nombre || reg.usuario, carreraId: reg.carreraId != null ? reg.carreraId : u.carreraId, rol: reg.rol || u.rol };
+  }
+
+  const REPORTES = {
+    accesos: {
+      titulo: "Ingresos al sistema",
+      icono: "🔐",
+      columnas: ["Fecha", "Hora", "Usuario", "Nombre", "Rol", "Carrera", "Movimiento"],
+      registros: () => Store.data.accesos,
+      fecha: (r) => r.fecha,
+      carrera: (r) => persona(r).carreraId,
+      fila: (r) => { const p = persona(r); return [fmtFecha(r.fecha), fmtHora(r.fecha), r.usuario, p.nombre, rolTxt(p.rol), nombreCarrera(p.carreraId), r.tipo]; }
+    },
+    consultas: {
+      titulo: "Libros consultados",
+      icono: "📖",
+      columnas: ["Fecha", "Hora", "Usuario", "Nombre", "Carrera del lector", "Libro", "Autor", "Carrera del libro", "Acción"],
+      registros: () => Store.data.consultas,
+      fecha: (r) => r.fecha,
+      carrera: (r) => persona(r).carreraId,
+      fila: (r) => {
+        const p = persona(r);
+        const l = Store.libro(r.libroId);
+        return [fmtFecha(r.fecha), fmtHora(r.fecha), r.usuario, p.nombre, nombreCarrera(p.carreraId), l ? l.titulo : r.titulo || "(libro eliminado)", l ? l.autor : "", nombreCarrera(l ? l.carreraId : r.libroCarreraId), r.accion];
+      }
+    },
+    prestamos: {
+      titulo: "Préstamos",
+      icono: "🔖",
+      columnas: ["Fecha de solicitud", "Usuario", "Nombre", "Carrera del lector", "Libro", "Autor", "Carrera del libro", "Fecha de entrega", "Devolver hasta", "Fecha de devolución", "Estado"],
+      registros: () => Store.data.prestamos,
+      fecha: (r) => r.solicitado,
+      carrera: (r) => persona(r).carreraId,
+      fila: (r) => {
+        const p = persona(r);
+        const l = Store.libro(r.libroId);
+        const vencido = r.estado === "prestado" && r.limite && new Date(r.limite) < new Date();
+        return [fmtFecha(r.solicitado), r.usuario, p.nombre, nombreCarrera(p.carreraId), l ? l.titulo : r.titulo || "(libro eliminado)", l ? l.autor : "", nombreCarrera(l ? l.carreraId : ""), fmtFecha(r.entregado), fmtFecha(r.limite), fmtFecha(r.devuelto), vencido ? "Vencido" : (ESTADOS[r.estado] || { txt: r.estado }).txt];
+      }
+    }
+  };
+
+  let repTipo = "accesos";
+  function adminReportes(body) {
+    const hoy = new Date();
+    const iso = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+    const inicioMes = iso(new Date(hoy.getFullYear(), hoy.getMonth(), 1));
+    body.innerHTML = `
+      <p class="muted">Cada ingreso, libro consultado y préstamo queda registrado con el nombre, la carrera y la fecha. Filtra y descarga el reporte en Excel.</p>
+      <div class="rep-types" role="radiogroup" aria-label="Tipo de reporte">
+        ${Object.entries(REPORTES).map(([k, r]) => `<button class="rep-type ${k === repTipo ? "active" : ""}" role="radio" aria-checked="${k === repTipo}" data-rep="${k}">
+          <span aria-hidden="true">${r.icono}</span><strong>${r.titulo}</strong><small>${r.registros().length} registros</small></button>`).join("")}
+      </div>
+      <div class="toolbar rep-filters">
+        <label>Desde <input type="date" id="rd" value="${inicioMes}" /></label>
+        <label>Hasta <input type="date" id="rh" value="${iso(hoy)}" /></label>
+        <label>Carrera <select id="rc"><option value="">Todas</option>${carreraOptions("")}<option value="__none">Sin carrera</option></select></label>
+        <label>Buscar <input type="search" id="rq" placeholder="Nombre, usuario o libro" /></label>
+      </div>
+      <div class="toolbar">
+        <button class="btn btn-primary" id="dl-one">📥 Descargar este reporte (Excel)</button>
+        <button class="btn btn-light" id="dl-all">📥 Descargar los 3 reportes en un archivo</button>
+      </div>
+      <div id="rep-summary" class="rep-summary"></div>
+      <div id="rep-list"></div>`;
+
+    function filtrar(tipo) {
+      const R = REPORTES[tipo];
+      const d = $("#rd").value, h = $("#rh").value, c = $("#rc").value, q = norm($("#rq").value).trim();
+      const desde = d ? new Date(d + "T00:00:00") : null;
+      const hasta = h ? new Date(h + "T23:59:59.999") : null;
+      return R.registros()
+        .filter((r) => {
+          const f = new Date(R.fecha(r));
+          if (desde && f < desde) return false;
+          if (hasta && f > hasta) return false;
+          const cid = R.carrera(r) || "";
+          if (c === "__none" ? cid : c && cid !== c) return false;
+          return true;
+        })
+        .sort((a, b) => String(R.fecha(b)).localeCompare(String(R.fecha(a))))
+        .map((r) => R.fila(r))
+        .filter((fila) => !q || words(q).every((w) => norm(fila.join(" ")).includes(w)));
+    }
+    const words = (q) => q.split(/\s+/);
+
+    function paint() {
+      const R = REPORTES[repTipo];
+      const filas = filtrar(repTipo);
+      const ci = R.columnas.findIndex((c) => c.startsWith("Carrera"));
+      const porCarrera = {};
+      filas.forEach((f) => { porCarrera[f[ci]] = (porCarrera[f[ci]] || 0) + 1; });
+      const personas = new Set(filas.map((f) => f[R.columnas.indexOf("Usuario")])).size;
+      $("#rep-summary").innerHTML = `
+        <div class="sum-box"><strong>${filas.length}</strong><span>registros</span></div>
+        <div class="sum-box"><strong>${personas}</strong><span>personas</span></div>
+        ${Object.entries(porCarrera).sort((a, b) => b[1] - a[1]).slice(0, 4).map(([k, v]) => `<div class="sum-box"><strong>${v}</strong><span>${esc(k)}</span></div>`).join("")}`;
+      const MAX = 300;
+      $("#rep-list").innerHTML = filas.length ? `<div class="table-wrap table-scroll"><table class="table">
+        <thead><tr>${R.columnas.map((c) => `<th>${esc(c)}</th>`).join("")}</tr></thead>
+        <tbody>${filas.slice(0, MAX).map((f) => `<tr>${f.map((v, i) => `<td data-label="${esc(R.columnas[i])}">${esc(v || "—")}</td>`).join("")}</tr>`).join("")}</tbody></table></div>
+        ${filas.length > MAX ? `<p class="muted">Se muestran ${MAX} de ${filas.length}; el archivo de Excel incluye todos.</p>` : ""}`
+        : `<p class="empty">No hay registros con estos filtros.</p>`;
+    }
+
+    const sufijo = () => `${$("#rd").value || "inicio"}_a_${$("#rh").value || "hoy"}`;
+    $("#dl-one").onclick = () => {
+      const R = REPORTES[repTipo];
+      const filas = filtrar(repTipo);
+      if (!filas.length) { toast("No hay registros para descargar."); return; }
+      XLSX.download(`ISTY-biblioteca-${repTipo}-${sufijo()}.xlsx`, [{ nombre: R.titulo, columnas: R.columnas, filas }]);
+    };
+    $("#dl-all").onclick = () => {
+      XLSX.download(`ISTY-biblioteca-reportes-${sufijo()}.xlsx`, Object.entries(REPORTES).map(([k, R]) => ({ nombre: R.titulo, columnas: R.columnas, filas: filtrar(k) })));
+    };
+    $$("[data-rep]", body).forEach((b) => (b.onclick = () => {
+      repTipo = b.dataset.rep;
+      $$("[data-rep]", body).forEach((x) => { x.classList.toggle("active", x === b); x.setAttribute("aria-checked", x === b); });
+      paint();
+    }));
+    ["#rd", "#rh", "#rc"].forEach((s) => $(s).addEventListener("change", paint));
+    $("#rq").addEventListener("input", paint);
+    paint();
+  }
+
   function adminRespaldo(body) {
     body.innerHTML = `
       <div class="card">
@@ -644,11 +780,13 @@
     $("#screen-app").hidden = false;
     $("#user-name").textContent = me.nombre;
     $("#nav-admin").hidden = !isAdmin();
+    if (fromLogin) Store.registrar("accesos", me, { tipo: "Ingreso" });
     if (fromLogin && location.hash && location.hash !== "#/") location.hash = "#/";
     else route();
   }
 
   function logout() {
+    if (me) Store.registrar("accesos", me, { tipo: "Salida" });
     Store.setSession(null);
     me = null;
     $("#login-form").reset();

@@ -35,6 +35,14 @@ python3 -m http.server 8080
   contraseñas, activar/desactivar cuentas.
 - **Préstamos**: entregar (plazo de 7 días), recibir devoluciones, rechazar
   solicitudes; los préstamos vencidos se marcan en rojo.
+- **Reportes** (descargables en Excel `.xlsx`): filtrables por fechas, carrera
+  y búsqueda, con totales por carrera:
+  - **Ingresos al sistema**: quién entró y salió, con rol, carrera, fecha y hora.
+  - **Libros consultados**: quién abrió la ficha de qué libro o su versión digital,
+    con la carrera del lector, la carrera del libro, fecha y hora.
+  - **Préstamos**: quién pidió qué libro, su carrera, fechas de solicitud,
+    entrega, límite y devolución, y el estado (incluye «Vencido»).
+  - Se puede bajar un reporte o los tres juntos en un archivo (una hoja por reporte).
 - **Respaldo**: descargar y restaurar todos los datos en un archivo JSON.
 
 ## Datos
@@ -53,7 +61,8 @@ python3 -m http.server 8080
 index.html        Pantallas de acceso y estructura de la aplicación
 css/styles.css    Estilos con los colores institucionales (modo claro y oscuro)
 js/data.js        Carreras y libros iniciales
-js/store.js       Almacenamiento, sesión y cifrado de contraseñas
+js/store.js       Almacenamiento, sesión, registro de actividad y cifrado de contraseñas
+js/xlsx.js        Generador de archivos Excel para los reportes
 js/app.js         Catálogo, préstamos y portal de administración
 assets/           Logo institucional
 ```

@@ -1,4 +1,4 @@
-# Biblioteca ISTY · Instituto Superior Tecnológico CIC-Yasuní 📚
+# Biblioteca ISTY · Instituto Superior Tecnológico CIC-Yasuní
 
 Sistema web de biblioteca con **inicio de sesión** y catálogo de libros
 **organizado por carreras vigentes**, con el logo y los colores institucionales
@@ -27,7 +27,7 @@ python3 -m http.server 8080
   disponibles y enlace a la versión digital si existe.
 - **Solicitar préstamo** y ver/cancelar sus préstamos en «Mis préstamos».
 
-**Administrador** (menú 🛠️ Administración)
+**Administrador** (menú Administración)
 - **Libros**: agregar, editar y eliminar; asignarlos a una carrera.
 - **Carreras**: crear, editar, eliminar y marcar como **vigente / no vigente**
   (las no vigentes se ocultan a los estudiantes y conservan sus libros).
@@ -51,8 +51,12 @@ python3 -m http.server 8080
 
 ## Datos
 
-- Las carreras y libros iniciales están en `js/data.js`. **Ajusta esa lista a la
-  oferta académica vigente del instituto** (o edítala desde Administración).
+- Carreras vigentes cargadas (`js/data.js`): Educación Básica, Inteligencia Artificial,
+  Control de Incendios y Operaciones de Rescate, Construcción, Administración de
+  Instituciones Públicas, Administración de Sistemas de Salud, Gestión de Operaciones
+  Turísticas y Vigilancia y Seguridad Ciudadana. Cada una trae libros de ejemplo que se
+  editan o reemplazan desde Administración.
+- La interfaz usa íconos vectoriales propios (`js/icons.js`), sin emojis.
 - Los datos se guardan en el navegador (`localStorage`) del equipo donde se usa la
   biblioteca; usa «Respaldo» para copiarlos a otro equipo. Para compartir cuentas
   entre varios dispositivos haría falta un servidor (por ejemplo Firebase o Supabase).
@@ -67,6 +71,7 @@ css/styles.css    Estilos con los colores institucionales (modo claro y oscuro)
 js/data.js        Carreras y libros iniciales
 js/store.js       Almacenamiento, sesión, registro de actividad y cifrado de contraseñas
 js/xlsx.js        Generador de archivos Excel para los reportes
+js/icons.js       Íconos de la interfaz y de las carreras
 js/app.js         Catálogo, préstamos y portal de administración
 assets/           Logo institucional
 ```

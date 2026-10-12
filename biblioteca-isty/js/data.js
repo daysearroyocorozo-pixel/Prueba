@@ -1,56 +1,61 @@
 /* Biblioteca ISTY · Datos iniciales.
-   Se cargan solo la primera vez; después el administrador edita carreras y libros
-   desde el portal de Administración. Ajusta esta lista a la oferta académica vigente. */
+   Carreras vigentes del Instituto Superior Tecnológico CIC-Yasuní y un catálogo de ejemplo.
+   Se cargan la primera vez; después el administrador edita carreras y libros desde Administración.
+   "icono" es el nombre de un ícono de js/icons.js. */
+
+const SEED_VERSION = 2;
 
 const SEED = {
   carreras: [
-    { id: "software", nombre: "Desarrollo de Software", icono: "💻", vigente: true },
-    { id: "contabilidad", nombre: "Contabilidad", icono: "📊", vigente: true },
-    { id: "administracion", nombre: "Administración", icono: "🏢", vigente: true },
-    { id: "enfermeria", nombre: "Enfermería", icono: "🩺", vigente: true },
-    { id: "educacion-inicial", nombre: "Educación Inicial", icono: "🧸", vigente: true },
-    { id: "turismo", nombre: "Turismo", icono: "🧭", vigente: true },
-    { id: "ambiental", nombre: "Gestión Ambiental", icono: "🌿", vigente: true },
-    { id: "agropecuaria", nombre: "Producción Agropecuaria", icono: "🌱", vigente: true },
-    { id: "general", nombre: "Formación General", icono: "📖", vigente: true }
+    { id: "educacion-basica", nombre: "Educación Básica", icono: "escuela", vigente: true },
+    { id: "inteligencia-artificial", nombre: "Inteligencia Artificial", icono: "chip", vigente: true },
+    { id: "incendios-rescate", nombre: "Control de Incendios y Operaciones de Rescate", icono: "llama", vigente: true },
+    { id: "construccion", nombre: "Construcción", icono: "casco", vigente: true },
+    { id: "instituciones-publicas", nombre: "Administración de Instituciones Públicas", icono: "institucion", vigente: true },
+    { id: "sistemas-salud", nombre: "Administración de Sistemas de Salud", icono: "salud", vigente: true },
+    { id: "operaciones-turisticas", nombre: "Gestión de Operaciones Turísticas", icono: "brujula", vigente: true },
+    { id: "seguridad-ciudadana", nombre: "Vigilancia y Seguridad Ciudadana", icono: "escudo", vigente: true }
   ],
   libros: [
-    // Desarrollo de Software
-    { titulo: "Código limpio", autor: "Robert C. Martin", anio: 2012, editorial: "Anaya Multimedia", isbn: "9788441532106", carreraId: "software", categoria: "Programación", ejemplares: 3, ubicacion: "Estante S-01" },
-    { titulo: "Fundamentos de bases de datos", autor: "A. Silberschatz, H. Korth, S. Sudarshan", anio: 2014, editorial: "McGraw-Hill", isbn: "9788448190330", carreraId: "software", categoria: "Bases de datos", ejemplares: 2, ubicacion: "Estante S-02" },
-    { titulo: "Ingeniería del software: un enfoque práctico", autor: "Roger S. Pressman", anio: 2010, editorial: "McGraw-Hill", isbn: "9786071503145", carreraId: "software", categoria: "Ingeniería de software", ejemplares: 2, ubicacion: "Estante S-02" },
-    { titulo: "Redes de computadoras", autor: "Andrew S. Tanenbaum", anio: 2012, editorial: "Pearson", isbn: "9786073208178", carreraId: "software", categoria: "Redes", ejemplares: 1, ubicacion: "Estante S-03" },
-    // Contabilidad
-    { titulo: "Contabilidad general", autor: "Pedro Zapata Sánchez", anio: 2017, editorial: "Alfaomega", isbn: "9789587784180", carreraId: "contabilidad", categoria: "Contabilidad financiera", ejemplares: 4, ubicacion: "Estante C-01" },
-    { titulo: "Contabilidad de costos", autor: "Charles T. Horngren", anio: 2012, editorial: "Pearson", isbn: "9786073210249", carreraId: "contabilidad", categoria: "Costos", ejemplares: 2, ubicacion: "Estante C-01" },
-    { titulo: "Auditoría: un enfoque integral", autor: "O. Ray Whittington, Kurt Pany", anio: 2005, editorial: "McGraw-Hill", isbn: "9789701049068", carreraId: "contabilidad", categoria: "Auditoría", ejemplares: 1, ubicacion: "Estante C-02" },
-    // Administración
-    { titulo: "Administración", autor: "Stephen P. Robbins, Mary Coulter", anio: 2014, editorial: "Pearson", isbn: "9786073224252", carreraId: "administracion", categoria: "Gestión", ejemplares: 3, ubicacion: "Estante A-01" },
-    { titulo: "Fundamentos de marketing", autor: "Philip Kotler, Gary Armstrong", anio: 2013, editorial: "Pearson", isbn: "9786073217217", carreraId: "administracion", categoria: "Marketing", ejemplares: 2, ubicacion: "Estante A-02" },
-    { titulo: "Introducción a la teoría general de la administración", autor: "Idalberto Chiavenato", anio: 2006, editorial: "McGraw-Hill", isbn: "9789701055006", carreraId: "administracion", categoria: "Teoría administrativa", ejemplares: 2, ubicacion: "Estante A-01" },
-    // Enfermería
-    { titulo: "Fundamentos de enfermería", autor: "Patricia A. Potter, Anne G. Perry", anio: 2019, editorial: "Elsevier", isbn: "9788491134770", carreraId: "enfermeria", categoria: "Fundamentos", ejemplares: 3, ubicacion: "Estante E-01" },
-    { titulo: "Anatomía y fisiología", autor: "Kevin T. Patton, Gary A. Thibodeau", anio: 2019, editorial: "Elsevier", isbn: "9788491134282", carreraId: "enfermeria", categoria: "Ciencias básicas", ejemplares: 2, ubicacion: "Estante E-02" },
-    { titulo: "Farmacología en enfermería", autor: "Mario Castells, Silvia Hernández", anio: 2012, editorial: "Elsevier", isbn: "9788480868501", carreraId: "enfermeria", categoria: "Farmacología", ejemplares: 2, ubicacion: "Estante E-02" },
-    // Educación Inicial
-    { titulo: "La educación de la primera infancia", autor: "María Montessori", anio: 2014, editorial: "Ediciones Octaedro", isbn: "9788499216003", carreraId: "educacion-inicial", categoria: "Pedagogía", ejemplares: 2, ubicacion: "Estante I-01" },
-    { titulo: "Psicología del desarrollo: infancia y adolescencia", autor: "David R. Shaffer", anio: 2007, editorial: "Cengage", isbn: "9789706866424", carreraId: "educacion-inicial", categoria: "Desarrollo infantil", ejemplares: 2, ubicacion: "Estante I-01" },
-    { titulo: "Currículo de Educación Inicial", autor: "Ministerio de Educación del Ecuador", anio: 2014, editorial: "MinEduc", isbn: "", carreraId: "educacion-inicial", categoria: "Normativa", ejemplares: 5, ubicacion: "Estante I-02" },
-    // Turismo
-    { titulo: "Introducción al turismo", autor: "Organización Mundial del Turismo", anio: 1998, editorial: "OMT", isbn: "9789284402540", carreraId: "turismo", categoria: "Fundamentos", ejemplares: 2, ubicacion: "Estante T-01" },
-    { titulo: "Marketing turístico", autor: "Philip Kotler, John Bowen, James Makens", anio: 2011, editorial: "Pearson", isbn: "9788483227060", carreraId: "turismo", categoria: "Marketing", ejemplares: 2, ubicacion: "Estante T-01" },
-    { titulo: "Ecoturismo: nuevas formas de turismo en el espacio rural", autor: "Arturo Crosby (coord.)", anio: 2009, editorial: "Bosch", isbn: "9788497905008", carreraId: "turismo", categoria: "Turismo sostenible", ejemplares: 1, ubicacion: "Estante T-02" },
-    // Gestión Ambiental
-    { titulo: "Ciencia ambiental: desarrollo sostenible", autor: "G. Tyler Miller", anio: 2007, editorial: "Cengage", isbn: "9789706866899", carreraId: "ambiental", categoria: "Ecología", ejemplares: 3, ubicacion: "Estante G-01" },
-    { titulo: "Evaluación de impacto ambiental", autor: "Vicente Conesa Fernández-Vítora", anio: 2010, editorial: "Mundi-Prensa", isbn: "9788484763840", carreraId: "ambiental", categoria: "Impacto ambiental", ejemplares: 2, ubicacion: "Estante G-01" },
-    { titulo: "Amazonía: biodiversidad y conservación", autor: "Varios autores", anio: 2015, editorial: "Abya-Yala", isbn: "", carreraId: "ambiental", categoria: "Biodiversidad", ejemplares: 2, ubicacion: "Estante G-02" },
-    // Producción Agropecuaria
-    { titulo: "Edafología para la agricultura y el medio ambiente", autor: "Jaime Porta, Marta López-Acevedo", anio: 2003, editorial: "Mundi-Prensa", isbn: "9788484761488", carreraId: "agropecuaria", categoria: "Suelos", ejemplares: 2, ubicacion: "Estante P-01" },
-    { titulo: "Manual de agricultura orgánica sostenible", autor: "FAO", anio: 2013, editorial: "FAO", isbn: "", carreraId: "agropecuaria", categoria: "Agricultura", ejemplares: 3, ubicacion: "Estante P-01" },
-    { titulo: "Producción animal e higiene veterinaria", autor: "Carlos Buxadé Carbó", anio: 1995, editorial: "Mundi-Prensa", isbn: "9788471145925", carreraId: "agropecuaria", categoria: "Producción animal", ejemplares: 1, ubicacion: "Estante P-02" },
-    // Formación General
-    { titulo: "Metodología de la investigación", autor: "Roberto Hernández Sampieri", anio: 2014, editorial: "McGraw-Hill", isbn: "9781456223960", carreraId: "general", categoria: "Investigación", ejemplares: 5, ubicacion: "Estante F-01" },
-    { titulo: "Normas APA, 7.ª edición: guía de citación", autor: "American Psychological Association", anio: 2020, editorial: "APA", isbn: "", carreraId: "general", categoria: "Redacción académica", ejemplares: 3, ubicacion: "Estante F-01" },
-    { titulo: "Constitución de la República del Ecuador", autor: "Asamblea Constituyente", anio: 2008, editorial: "Registro Oficial", isbn: "", carreraId: "general", categoria: "Normativa", ejemplares: 4, ubicacion: "Estante F-02" }
+    // Educación Básica
+    { titulo: "Pedagogía de la autonomía", autor: "Paulo Freire", anio: 1997, editorial: "Siglo XXI Editores", isbn: "", carreraId: "educacion-basica", categoria: "Pedagogía", ejemplares: 3, ubicacion: "Estante EB-01" },
+    { titulo: "Didáctica general", autor: "Antonio Medina Rivilla, Francisco Salvador Mata", anio: 2009, editorial: "Pearson", isbn: "", carreraId: "educacion-basica", categoria: "Didáctica", ejemplares: 2, ubicacion: "Estante EB-01" },
+    { titulo: "Currículo de los niveles de educación obligatoria", autor: "Ministerio de Educación del Ecuador", anio: 2016, editorial: "MinEduc", isbn: "", carreraId: "educacion-basica", categoria: "Normativa", ejemplares: 4, ubicacion: "Estante EB-02" },
+    { titulo: "Metodología de la investigación", autor: "Roberto Hernández Sampieri", anio: 2014, editorial: "McGraw-Hill", isbn: "", carreraId: "educacion-basica", categoria: "Investigación", ejemplares: 5, ubicacion: "Estante EB-02" },
+    // Inteligencia Artificial
+    { titulo: "Inteligencia artificial: un enfoque moderno", autor: "Stuart Russell, Peter Norvig", anio: 2004, editorial: "Pearson", isbn: "", carreraId: "inteligencia-artificial", categoria: "Fundamentos de IA", ejemplares: 3, ubicacion: "Estante IA-01" },
+    { titulo: "Aprende Machine Learning con Scikit-Learn, Keras y TensorFlow", autor: "Aurélien Géron", anio: 2023, editorial: "Anaya Multimedia", isbn: "", carreraId: "inteligencia-artificial", categoria: "Aprendizaje automático", ejemplares: 2, ubicacion: "Estante IA-01" },
+    { titulo: "Deep Learning", autor: "Ian Goodfellow, Yoshua Bengio, Aaron Courville", anio: 2016, editorial: "MIT Press", isbn: "", carreraId: "inteligencia-artificial", categoria: "Aprendizaje profundo", ejemplares: 1, ubicacion: "Estante IA-02" },
+    { titulo: "Código limpio", autor: "Robert C. Martin", anio: 2012, editorial: "Anaya Multimedia", isbn: "", carreraId: "inteligencia-artificial", categoria: "Programación", ejemplares: 2, ubicacion: "Estante IA-02" },
+    // Control de Incendios y Operaciones de Rescate
+    { titulo: "Manual de protección contra incendios", autor: "National Fire Protection Association (NFPA)", anio: 2009, editorial: "Editorial MAPFRE", isbn: "", carreraId: "incendios-rescate", categoria: "Prevención de incendios", ejemplares: 2, ubicacion: "Estante CI-01" },
+    { titulo: "Fundamentos de la lucha contra incendios", autor: "IFSTA", anio: 2013, editorial: "Fire Protection Publications", isbn: "", carreraId: "incendios-rescate", categoria: "Combate de incendios", ejemplares: 2, ubicacion: "Estante CI-01" },
+    { titulo: "Sistema de Comando de Incidentes: manual de referencia", autor: "USAID / OFDA", anio: 2012, editorial: "USAID", isbn: "", carreraId: "incendios-rescate", categoria: "Gestión de emergencias", ejemplares: 3, ubicacion: "Estante CI-02" },
+    { titulo: "Primeros auxilios y soporte vital básico", autor: "Cruz Roja Ecuatoriana", anio: 2018, editorial: "Cruz Roja Ecuatoriana", isbn: "", carreraId: "incendios-rescate", categoria: "Atención prehospitalaria", ejemplares: 3, ubicacion: "Estante CI-02" },
+    // Construcción
+    { titulo: "Diseño de estructuras de concreto", autor: "Arthur H. Nilson", anio: 2001, editorial: "McGraw-Hill", isbn: "", carreraId: "construccion", categoria: "Estructuras", ejemplares: 2, ubicacion: "Estante CO-01" },
+    { titulo: "Mecánica de suelos", autor: "Eulalio Juárez Badillo, Alfonso Rico Rodríguez", anio: 2005, editorial: "Limusa", isbn: "", carreraId: "construccion", categoria: "Geotecnia", ejemplares: 2, ubicacion: "Estante CO-01" },
+    { titulo: "Norma Ecuatoriana de la Construcción (NEC)", autor: "Ministerio de Desarrollo Urbano y Vivienda", anio: 2015, editorial: "MIDUVI", isbn: "", carreraId: "construccion", categoria: "Normativa", ejemplares: 4, ubicacion: "Estante CO-02" },
+    { titulo: "Costo y tiempo en edificación", autor: "Carlos Suárez Salazar", anio: 2002, editorial: "Limusa", isbn: "", carreraId: "construccion", categoria: "Presupuestos", ejemplares: 2, ubicacion: "Estante CO-02" },
+    // Administración de Instituciones Públicas
+    { titulo: "Administración", autor: "Stephen P. Robbins, Mary Coulter", anio: 2014, editorial: "Pearson", isbn: "", carreraId: "instituciones-publicas", categoria: "Gestión", ejemplares: 3, ubicacion: "Estante AP-01" },
+    { titulo: "Introducción a la teoría general de la administración", autor: "Idalberto Chiavenato", anio: 2006, editorial: "McGraw-Hill", isbn: "", carreraId: "instituciones-publicas", categoria: "Teoría administrativa", ejemplares: 2, ubicacion: "Estante AP-01" },
+    { titulo: "Constitución de la República del Ecuador", autor: "Asamblea Constituyente", anio: 2008, editorial: "Registro Oficial", isbn: "", carreraId: "instituciones-publicas", categoria: "Normativa", ejemplares: 4, ubicacion: "Estante AP-02" },
+    { titulo: "Código Orgánico Administrativo (COA)", autor: "Asamblea Nacional del Ecuador", anio: 2017, editorial: "Registro Oficial", isbn: "", carreraId: "instituciones-publicas", categoria: "Normativa", ejemplares: 3, ubicacion: "Estante AP-02" },
+    // Administración de Sistemas de Salud
+    { titulo: "Medicina preventiva y salud pública", autor: "Gil Piédrola", anio: 2015, editorial: "Elsevier", isbn: "", carreraId: "sistemas-salud", categoria: "Salud pública", ejemplares: 2, ubicacion: "Estante SS-01" },
+    { titulo: "Gestión hospitalaria", autor: "José Luis Temes, Manuel Mengíbar", anio: 2007, editorial: "McGraw-Hill", isbn: "", carreraId: "sistemas-salud", categoria: "Gestión de servicios de salud", ejemplares: 2, ubicacion: "Estante SS-01" },
+    { titulo: "Manual del Modelo de Atención Integral de Salud (MAIS)", autor: "Ministerio de Salud Pública del Ecuador", anio: 2012, editorial: "MSP", isbn: "", carreraId: "sistemas-salud", categoria: "Normativa", ejemplares: 3, ubicacion: "Estante SS-02" },
+    { titulo: "Epidemiología", autor: "Leon Gordis", anio: 2014, editorial: "Elsevier", isbn: "", carreraId: "sistemas-salud", categoria: "Epidemiología", ejemplares: 2, ubicacion: "Estante SS-02" },
+    // Gestión de Operaciones Turísticas
+    { titulo: "Introducción al turismo", autor: "Organización Mundial del Turismo", anio: 1998, editorial: "OMT", isbn: "", carreraId: "operaciones-turisticas", categoria: "Fundamentos", ejemplares: 2, ubicacion: "Estante OT-01" },
+    { titulo: "Marketing turístico", autor: "Philip Kotler, John Bowen, James Makens", anio: 2011, editorial: "Pearson", isbn: "", carreraId: "operaciones-turisticas", categoria: "Marketing", ejemplares: 2, ubicacion: "Estante OT-01" },
+    { titulo: "Ecoturismo: nuevas formas de turismo en el espacio rural", autor: "Arturo Crosby (coord.)", anio: 2009, editorial: "Bosch", isbn: "", carreraId: "operaciones-turisticas", categoria: "Turismo sostenible", ejemplares: 1, ubicacion: "Estante OT-02" },
+    { titulo: "Ley de Turismo del Ecuador", autor: "Congreso Nacional del Ecuador", anio: 2002, editorial: "Registro Oficial", isbn: "", carreraId: "operaciones-turisticas", categoria: "Normativa", ejemplares: 3, ubicacion: "Estante OT-02" },
+    // Vigilancia y Seguridad Ciudadana
+    { titulo: "Tratado de criminología", autor: "Antonio García-Pablos de Molina", anio: 2014, editorial: "Tirant lo Blanch", isbn: "", carreraId: "seguridad-ciudadana", categoria: "Criminología", ejemplares: 2, ubicacion: "Estante VS-01" },
+    { titulo: "Código Orgánico Integral Penal (COIP)", autor: "Asamblea Nacional del Ecuador", anio: 2014, editorial: "Registro Oficial", isbn: "", carreraId: "seguridad-ciudadana", categoria: "Normativa", ejemplares: 4, ubicacion: "Estante VS-01" },
+    { titulo: "Ley de Seguridad Pública y del Estado", autor: "Asamblea Nacional del Ecuador", anio: 2009, editorial: "Registro Oficial", isbn: "", carreraId: "seguridad-ciudadana", categoria: "Normativa", ejemplares: 3, ubicacion: "Estante VS-02" },
+    { titulo: "Seguridad ciudadana y derechos humanos", autor: "Comisión Interamericana de Derechos Humanos", anio: 2009, editorial: "OEA / CIDH", isbn: "", carreraId: "seguridad-ciudadana", categoria: "Derechos humanos", ejemplares: 2, ubicacion: "Estante VS-02" }
   ]
 };

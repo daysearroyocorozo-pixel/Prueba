@@ -11,10 +11,14 @@ const Store = (function () {
 
   const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
 
+  const seedCarreras = () => SEED.carreras.map((c) => ({ ...c }));
+  const seedLibros = () => SEED.libros.map((l) => ({ id: uid(), descripcion: "", enlace: "", ...l }));
+
   function empty() {
     return {
-      carreras: SEED.carreras.map((c) => ({ ...c })),
-      libros: SEED.libros.map((l) => ({ id: uid(), descripcion: "", enlace: "", ...l })),
+      version: SEED_VERSION,
+      carreras: seedCarreras(),
+      libros: seedLibros(),
       usuarios: {},
       prestamos: [],
       accesos: [],
@@ -31,6 +35,15 @@ const Store = (function () {
     }
     for (const k of ["carreras", "libros", "prestamos", "accesos", "consultas"]) if (!Array.isArray(data[k])) data[k] = [];
     if (!data.usuarios || typeof data.usuarios !== "object") data.usuarios = {};
+    // Versión 2: catálogo con las carreras vigentes del instituto. Reemplaza el catálogo de
+    // ejemplo anterior y conserva usuarios, préstamos y registros de actividad.
+    if ((data.version || 1) < SEED_VERSION) {
+      data.carreras = seedCarreras();
+      data.libros = seedLibros();
+      Object.values(data.usuarios).forEach((u) => { if (!data.carreras.some((c) => c.id === u.carreraId)) u.carreraId = ""; });
+      data.version = SEED_VERSION;
+      save();
+    }
     return data;
   }
 
@@ -81,7 +94,7 @@ const Store = (function () {
     importAll(text) {
       const d = JSON.parse(text);
       if (d.app !== "biblioteca-isty" || !Array.isArray(d.libros) || !Array.isArray(d.carreras)) throw new Error("El archivo no es una copia de la Biblioteca ISTY.");
-      data = { carreras: d.carreras, libros: d.libros, usuarios: d.usuarios || {}, prestamos: d.prestamos || [], accesos: d.accesos || [], consultas: d.consultas || [] };
+      data = { version: SEED_VERSION, carreras: d.carreras, libros: d.libros, usuarios: d.usuarios || {}, prestamos: d.prestamos || [], accesos: d.accesos || [], consultas: d.consultas || [] };
       save();
     },
 

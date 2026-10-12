@@ -28,6 +28,7 @@
   const rolTxt = (r) => ROLES[r] || "Estudiante";
   const isAdmin = () => me && me.rol === "admin";
   const view = $("#view");
+  const ico = (n, cls) => Icon.svg(n, cls);
 
   // ---------- Utilidades de interfaz ----------
   let toastTimer;
@@ -70,15 +71,15 @@
 
   // Portada generada: degradado con los colores institucionales según la carrera.
   const PORTADAS = [
-    ["#1a4d22", "#3a8f3a"], ["#2e7d32", "#99b928"], ["#3a8f3a", "#c9d72a"], ["#1f5f2a", "#52b066"],
-    ["#14401c", "#6fa83a"], ["#52b066", "#e7dd2b"], ["#245c2c", "#9bc53d"], ["#0f3516", "#3a8f3a"], ["#3f7f2f", "#f2e21b"]
+    ["#1a4d22", "#2f7a35"], ["#133a19", "#3a8f3a"], ["#1f5f2a", "#4f9a3c"], ["#16431d", "#52b066"],
+    ["#245c2c", "#6a9f2e"], ["#0f3516", "#2f7a35"], ["#1a4d22", "#5c8f2a"], ["#14401c", "#3f8a44"]
   ];
   function portada(libro) {
     const idx = Math.max(0, Store.data.carreras.findIndex((c) => c.id === libro.carreraId)) % PORTADAS.length;
     const [a, b] = PORTADAS[idx];
     const c = Store.carrera(libro.carreraId);
     return `<div class="cover" style="--c1:${a};--c2:${b}" aria-hidden="true">
-      <span class="cover-icon">${esc(c ? c.icono : "📘")}</span>
+      <span class="cover-icon">${ico(c ? c.icono : "libro")}</span>
       <span class="cover-title">${esc(libro.titulo)}</span>
       <span class="cover-author">${esc(libro.autor)}</span>
     </div>`;
@@ -130,8 +131,9 @@
     view.innerHTML = `
       <section class="hero">
         <div>
-          <h1>Hola, ${esc(me.nombre.split(" ")[0])} 👋</h1>
-          <p>Explora el catálogo de la biblioteca organizado por las carreras vigentes del instituto.</p>
+          <p class="hero-kicker">Biblioteca institucional</p>
+          <h1>Catálogo bibliográfico</h1>
+          <p>Bienvenido(a), ${esc(me.nombre)}. Consulte los títulos disponibles organizados por las carreras vigentes del instituto.</p>
         </div>
         <div class="hero-stats">
           <div><strong>${libros.length}</strong><span>títulos</span></div>
@@ -140,7 +142,7 @@
         </div>
       </section>
       <div class="search big-search">
-        <span aria-hidden="true">🔎</span>
+        ${ico("buscar")}
         <input id="q" type="search" placeholder="Buscar por título, autor, ISBN o tema en todo el catálogo" value="${esc(q)}" aria-label="Buscar en el catálogo" />
       </div>
       <div id="cat-body"></div>`;
@@ -156,11 +158,11 @@
         return;
       }
       const ordered = mia ? [mia, ...carreras.filter((c) => c.id !== mia.id)] : carreras;
-      body.innerHTML = `<h2 class="section-title">Carreras</h2>
+      body.innerHTML = `<h2 class="section-title">Carreras vigentes</h2>
         <div class="careers">${ordered.map((c) => {
           const n = Store.data.libros.filter((l) => l.carreraId === c.id).length;
           return `<a class="career ${mia && c.id === mia.id ? "career-mine" : ""} ${c.vigente ? "" : "career-off"}" href="#/carrera/${encodeURIComponent(c.id)}">
-            <span class="career-icon" aria-hidden="true">${esc(c.icono)}</span>
+            <span class="career-icon">${ico(c.icono)}</span>
             <span class="career-name">${esc(c.nombre)}</span>
             <span class="career-count">${n} título${n === 1 ? "" : "s"}</span>
             ${mia && c.id === mia.id ? `<span class="badge">Mi carrera</span>` : ""}
@@ -178,17 +180,17 @@
     const libros = Store.data.libros.filter((l) => l.carreraId === id);
     const cats = [...new Set(libros.map((l) => l.categoria).filter(Boolean))].sort((a, b) => a.localeCompare(b, "es"));
     view.innerHTML = `
-      <nav class="crumbs"><a href="#/">Catálogo</a> › <span>${esc(c.nombre)}</span></nav>
+      <nav class="crumbs"><a href="#/">Catálogo</a> <span class="sep">/</span> <span>${esc(c.nombre)}</span></nav>
       <section class="career-head">
-        <span class="career-icon big" aria-hidden="true">${esc(c.icono)}</span>
+        <span class="career-icon big">${ico(c.icono)}</span>
         <div>
           <h1>${esc(c.nombre)}</h1>
           <p>${libros.length} título${libros.length === 1 ? "" : "s"} · ${libros.reduce((s, l) => s + (Number(l.ejemplares) || 0), 0)} ejemplares ${c.vigente ? "" : "· <strong>Carrera no vigente</strong>"}</p>
         </div>
-        ${isAdmin() ? `<button class="btn btn-primary" id="add-here">＋ Agregar libro</button>` : ""}
+        ${isAdmin() ? `<button class="btn btn-primary" id="add-here">${ico("mas")} Agregar libro</button>` : ""}
       </section>
       <div class="toolbar">
-        <div class="search"><span aria-hidden="true">🔎</span><input id="q" type="search" placeholder="Buscar en ${esc(c.nombre)}" aria-label="Buscar en esta carrera" /></div>
+        <div class="search">${ico("buscar")}<input id="q" type="search" placeholder="Buscar en ${esc(c.nombre)}" aria-label="Buscar en esta carrera" /></div>
         <select id="cat" aria-label="Filtrar por categoría"><option value="">Todas las categorías</option>${cats.map((k) => `<option>${esc(k)}</option>`).join("")}</select>
         <label class="check"><input type="checkbox" id="only-av" /> Solo disponibles</label>
       </div>
@@ -217,14 +219,14 @@
     const activo = Store.data.prestamos.find((p) => p.libroId === l.id && p.usuario === me.usuario && (p.estado === "solicitado" || p.estado === "prestado"));
     let action = "";
     if (activo) action = `<p class="note">Ya tienes este libro: <strong>${ESTADOS[activo.estado].txt.toLowerCase()}</strong>.</p>`;
-    else if (disp > 0) action = `<button class="btn btn-primary" id="req">🔖 Solicitar préstamo</button>`;
+    else if (disp > 0) action = `<button class="btn btn-primary" id="req">${ico("marcador")} Solicitar préstamo</button>`;
     else action = `<p class="note">No hay ejemplares disponibles por ahora.</p>`;
     openModal(`
       <div class="book-detail">
         ${portada(l)}
         <div class="modal-pad">
-          <button class="close-x" data-close aria-label="Cerrar">✕</button>
-          <p class="eyebrow">${esc(c ? c.icono + " " + c.nombre : "Sin carrera")}</p>
+          <button class="close-x" data-close aria-label="Cerrar">${ico("cerrar")}</button>
+          <p class="eyebrow">${esc(c ? c.nombre : "Sin carrera")}</p>
           <h2>${esc(l.titulo)}</h2>
           <p class="muted">${esc(l.autor)}</p>
           <dl class="meta">
@@ -236,9 +238,9 @@
             <dt>Disponibles</dt><dd>${disp} de ${esc(l.ejemplares)}</dd>
           </dl>
           ${l.descripcion ? `<p class="desc">${esc(l.descripcion)}</p>` : ""}
-          ${l.enlace && /^https?:\/\//i.test(l.enlace) ? `<p><a class="btn btn-light" id="digital" href="${esc(l.enlace)}" target="_blank" rel="noopener">🌐 Abrir / descargar versión digital</a></p>` : ""}
+          ${l.enlace && /^https?:\/\//i.test(l.enlace) ? `<p><a class="btn btn-light" id="digital" href="${esc(l.enlace)}" target="_blank" rel="noopener">${ico("enlace")} Abrir versión digital</a></p>` : ""}
           <div class="modal-actions">
-            ${isAdmin() ? `<button class="btn btn-ghost" id="edit-book">✏️ Editar</button>` : ""}
+            ${isAdmin() ? `<button class="btn btn-ghost" id="edit-book">${ico("editar")} Editar</button>` : ""}
             ${action}
           </div>
         </div>
@@ -303,7 +305,7 @@
   function renderMisPrestamos() {
     const mine = Store.data.prestamos.filter((p) => p.usuario === me.usuario).sort((a, b) => (b.solicitado || "").localeCompare(a.solicitado || ""));
     view.innerHTML = `
-      <h1 class="page-title">🔖 Mis préstamos</h1>
+      <h1 class="page-title">Mis préstamos</h1>
       <p class="muted">Los préstamos duran ${DIAS_PRESTAMO} días desde que retiras el libro en la biblioteca.</p>
       ${mine.length ? `<div class="table-wrap"><table class="table">
         <thead><tr><th>Libro</th><th>Solicitado</th><th>Devolver hasta</th><th>Estado</th><th></th></tr></thead>
@@ -314,15 +316,15 @@
 
   // ---------- Administración ----------
   const ADMIN_TABS = [
-    ["libros", "📚 Libros"], ["carreras", "🎓 Carreras"], ["usuarios", "👥 Usuarios"], ["prestamos", "🔖 Préstamos"], ["reportes", "📥 Reportes"], ["respaldo", "💾 Respaldo"]
+    ["libros", "Libros", "libro"], ["carreras", "Carreras", "carreras"], ["usuarios", "Usuarios", "usuarios"], ["prestamos", "Préstamos", "marcador"], ["reportes", "Reportes", "reporte"], ["respaldo", "Respaldo", "respaldo"]
   ];
 
   function renderAdmin(tab) {
     if (!ADMIN_TABS.some(([t]) => t === tab)) tab = "libros";
     const pend = Store.data.prestamos.filter((p) => p.estado === "solicitado").length;
     view.innerHTML = `
-      <h1 class="page-title">🛠️ Administración</h1>
-      <div class="tabs" role="tablist">${ADMIN_TABS.map(([t, n]) => `<a role="tab" href="#/admin/${t}" class="tab ${t === tab ? "active" : ""}" aria-selected="${t === tab}">${n}${t === "prestamos" && pend ? ` <span class="pill">${pend}</span>` : ""}</a>`).join("")}</div>
+      <h1 class="page-title">Administración</h1>
+      <div class="tabs" role="tablist">${ADMIN_TABS.map(([t, n, i]) => `<a role="tab" href="#/admin/${t}" class="tab ${t === tab ? "active" : ""}" aria-selected="${t === tab}">${ico(i)}${n}${t === "prestamos" && pend ? ` <span class="pill">${pend}</span>` : ""}</a>`).join("")}</div>
       <div id="admin-body"></div>`;
     const body = $("#admin-body");
     ({ libros: adminLibros, carreras: adminCarreras, usuarios: adminUsuarios, prestamos: adminPrestamos, reportes: adminReportes, respaldo: adminRespaldo })[tab](body);
@@ -330,15 +332,15 @@
 
   function carreraOptions(sel, includeEmpty) {
     return (includeEmpty ? `<option value="">— Sin carrera —</option>` : "") +
-      Store.data.carreras.map((c) => `<option value="${esc(c.id)}" ${c.id === sel ? "selected" : ""}>${esc(c.icono + " " + c.nombre)}${c.vigente ? "" : " (no vigente)"}</option>`).join("");
+      Store.data.carreras.map((c) => `<option value="${esc(c.id)}" ${c.id === sel ? "selected" : ""}>${esc(c.nombre)}${c.vigente ? "" : " (no vigente)"}</option>`).join("");
   }
 
   function adminLibros(body) {
     body.innerHTML = `
       <div class="toolbar">
-        <div class="search"><span aria-hidden="true">🔎</span><input id="aq" type="search" placeholder="Buscar libros" aria-label="Buscar libros" /></div>
+        <div class="search">${ico("buscar")}<input id="aq" type="search" placeholder="Buscar libros" aria-label="Buscar libros" /></div>
         <select id="ac" aria-label="Filtrar por carrera"><option value="">Todas las carreras</option>${carreraOptions("")}</select>
-        <button class="btn btn-primary" id="new-book">＋ Nuevo libro</button>
+        <button class="btn btn-primary" id="new-book">${ico("mas")} Nuevo libro</button>
       </div>
       <div id="alist"></div>`;
     function paint() {
@@ -351,10 +353,10 @@
           const c = Store.carrera(l.carreraId);
           return `<tr>
             <td data-label="Título"><strong>${esc(l.titulo)}</strong><br><small class="muted">${esc(l.autor)}</small></td>
-            <td data-label="Carrera">${esc(c ? c.icono + " " + c.nombre : "—")}</td>
+            <td data-label="Carrera">${esc(c ? c.nombre : "—")}</td>
             <td data-label="Ejemplares">${Store.disponibles(l)} / ${esc(l.ejemplares)}</td>
             <td data-label="Ubicación">${esc(l.ubicacion || "—")}</td>
-            <td class="row-actions"><button class="btn btn-ghost btn-sm" data-edit="${esc(l.id)}">✏️ Editar</button><button class="btn btn-ghost btn-sm" data-del="${esc(l.id)}">🗑️</button></td>
+            <td class="row-actions"><button class="btn btn-ghost btn-sm" data-edit="${esc(l.id)}">${ico("editar")} Editar</button><button class="btn btn-ghost btn-sm" data-del="${esc(l.id)}" aria-label="Eliminar" title="Eliminar">${ico("eliminar")}</button></td>
           </tr>`;
         }).join("")}</tbody></table></div>` : `<p class="empty">No hay libros.</p>`;
       $$("[data-edit]", body).forEach((b) => (b.onclick = () => editBook(b.dataset.edit)));
@@ -380,7 +382,7 @@
     if (!l) return;
     openModal(`
       <form class="modal-pad form" id="book-form">
-        <button type="button" class="close-x" data-close aria-label="Cerrar">✕</button>
+        <button type="button" class="close-x" data-close aria-label="Cerrar">${ico("cerrar")}</button>
         <h2>${id ? "Editar libro" : "Nuevo libro"}</h2>
         <label>Título <input name="titulo" required maxlength="200" value="${esc(l.titulo)}" /></label>
         <label>Autor(es) <input name="autor" required maxlength="200" value="${esc(l.autor)}" /></label>
@@ -416,14 +418,14 @@
   function adminCarreras(body) {
     body.innerHTML = `
       <p class="muted">Solo las carreras <strong>vigentes</strong> se muestran a los estudiantes. Una carrera no vigente conserva sus libros.</p>
-      <div class="toolbar"><button class="btn btn-primary" id="new-car">＋ Nueva carrera</button></div>
+      <div class="toolbar"><button class="btn btn-primary" id="new-car">${ico("mas")} Nueva carrera</button></div>
       <div class="table-wrap"><table class="table">
         <thead><tr><th>Carrera</th><th>Libros</th><th>Vigente</th><th></th></tr></thead>
         <tbody>${Store.data.carreras.map((c) => `<tr>
-          <td data-label="Carrera"><span class="emoji">${esc(c.icono)}</span> <strong>${esc(c.nombre)}</strong></td>
+          <td data-label="Carrera"><span class="cell-icon">${ico(c.icono)}</span> <strong>${esc(c.nombre)}</strong></td>
           <td data-label="Libros">${Store.data.libros.filter((l) => l.carreraId === c.id).length}</td>
           <td data-label="Vigente"><label class="switch"><input type="checkbox" data-vig="${esc(c.id)}" ${c.vigente ? "checked" : ""} aria-label="Vigente: ${esc(c.nombre)}" /><span></span></label></td>
-          <td class="row-actions"><button class="btn btn-ghost btn-sm" data-edit="${esc(c.id)}">✏️ Editar</button><button class="btn btn-ghost btn-sm" data-del="${esc(c.id)}">🗑️</button></td>
+          <td class="row-actions"><button class="btn btn-ghost btn-sm" data-edit="${esc(c.id)}">${ico("editar")} Editar</button><button class="btn btn-ghost btn-sm" data-del="${esc(c.id)}" aria-label="Eliminar" title="Eliminar">${ico("eliminar")}</button></td>
         </tr>`).join("")}</tbody></table></div>`;
     $$("[data-vig]", body).forEach((i) => (i.onchange = () => {
       Store.carrera(i.dataset.vig).vigente = i.checked;
@@ -444,15 +446,15 @@
   }
 
   function editCarrera(id) {
-    const c = id ? Store.carrera(id) : { nombre: "", icono: "🎓", vigente: true };
+    const c = id ? Store.carrera(id) : { nombre: "", icono: "carreras", vigente: true };
     openModal(`
       <form class="modal-pad form" id="car-form">
-        <button type="button" class="close-x" data-close aria-label="Cerrar">✕</button>
+        <button type="button" class="close-x" data-close aria-label="Cerrar">${ico("cerrar")}</button>
         <h2>${id ? "Editar carrera" : "Nueva carrera"}</h2>
-        <div class="grid2 grid-icon">
-          <label>Ícono <input name="icono" maxlength="4" value="${esc(c.icono)}" /></label>
-          <label>Nombre <input name="nombre" required maxlength="100" value="${esc(c.nombre)}" /></label>
-        </div>
+        <label>Nombre de la carrera <input name="nombre" required maxlength="100" value="${esc(c.nombre)}" /></label>
+        <fieldset class="icon-pick"><legend>Ícono</legend>
+          ${Object.entries(Icon.CARRERAS).map(([k, n]) => `<label title="${esc(n)}"><input type="radio" name="icono" value="${k}" ${k === c.icono ? "checked" : ""} /><span>${ico(k)}</span><small>${esc(n)}</small></label>`).join("")}
+        </fieldset>
         <label class="check"><input type="checkbox" name="vigente" ${c.vigente ? "checked" : ""} /> Carrera vigente</label>
         <div class="modal-actions">
           <button type="button" class="btn btn-ghost" data-close>Cancelar</button>
@@ -462,7 +464,7 @@
     $("#car-form").onsubmit = (e) => {
       e.preventDefault();
       const f = new FormData(e.target);
-      const obj = { nombre: f.get("nombre").trim(), icono: f.get("icono").trim() || "🎓", vigente: f.get("vigente") === "on" };
+      const obj = { nombre: f.get("nombre").trim(), icono: f.get("icono") || "carreras", vigente: f.get("vigente") === "on" };
       if (id) Object.assign(c, obj);
       else {
         let base = norm(obj.nombre).replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "carrera";
@@ -480,7 +482,7 @@
   function adminUsuarios(body) {
     const users = Object.values(Store.data.usuarios).sort((a, b) => a.nombre.localeCompare(b.nombre, "es"));
     body.innerHTML = `
-      <div class="toolbar"><button class="btn btn-primary" id="new-user">＋ Nuevo usuario</button></div>
+      <div class="toolbar"><button class="btn btn-primary" id="new-user">${ico("mas")} Nuevo usuario</button></div>
       <div class="table-wrap"><table class="table">
         <thead><tr><th>Nombre</th><th>Usuario</th><th>Rol</th><th>Carrera</th><th>Estado</th><th></th></tr></thead>
         <tbody>${users.map((u) => {
@@ -491,7 +493,7 @@
             <td data-label="Rol">${rolTxt(u.rol)}</td>
             <td data-label="Carrera">${esc(c ? c.nombre : "—")}</td>
             <td data-label="Estado"><span class="status ${u.activo ? "st-on" : "st-off"}">${u.activo ? "Activo" : "Inactivo"}</span></td>
-            <td class="row-actions"><button class="btn btn-ghost btn-sm" data-edit="${esc(u.usuario)}">✏️ Editar</button>${u.usuario !== me.usuario ? `<button class="btn btn-ghost btn-sm" data-del="${esc(u.usuario)}">🗑️</button>` : ""}</td>
+            <td class="row-actions"><button class="btn btn-ghost btn-sm" data-edit="${esc(u.usuario)}">${ico("editar")} Editar</button>${u.usuario !== me.usuario ? `<button class="btn btn-ghost btn-sm" data-del="${esc(u.usuario)}" aria-label="Eliminar" title="Eliminar">${ico("eliminar")}</button>` : ""}</td>
           </tr>`;
         }).join("")}</tbody></table></div>`;
     $("#new-user").onclick = () => editUser(null);
@@ -510,7 +512,7 @@
     const self = usuario === me.usuario;
     openModal(`
       <form class="modal-pad form" id="user-form">
-        <button type="button" class="close-x" data-close aria-label="Cerrar">✕</button>
+        <button type="button" class="close-x" data-close aria-label="Cerrar">${ico("cerrar")}</button>
         <h2>${usuario ? "Editar usuario" : "Nuevo usuario"}</h2>
         <label>Nombre completo <input name="nombre" required maxlength="80" value="${esc(u.nombre)}" /></label>
         <label>Usuario <input name="usuario" required maxlength="40" pattern="[a-z0-9._\\-]{3,40}" title="3 a 40 caracteres: minúsculas, números, punto, guion" autocapitalize="off" value="${esc(u.usuario)}" ${usuario ? "readonly" : ""} /></label>
@@ -520,7 +522,7 @@
         </div>
         <label>${usuario ? "Nueva contraseña (déjala vacía para no cambiarla)" : "Contraseña"}
           <span class="pw-row"><input name="pass" type="text" minlength="6" maxlength="60" autocomplete="new-password" ${usuario ? "" : `required value="${Store.generatePassword()}"`} />
-          <button type="button" class="btn btn-ghost btn-sm" id="gen-pw">🎲 Generar</button></span>
+          <button type="button" class="btn btn-ghost btn-sm" id="gen-pw">${ico("generar")} Generar</button></span>
         </label>
         ${self ? "" : `<label class="check"><input type="checkbox" name="activo" ${u.activo ? "checked" : ""} /> Cuenta activa</label>`}
         <p class="form-msg" id="user-msg" role="alert"></p>
@@ -599,7 +601,7 @@
   const REPORTES = {
     libros: {
       titulo: "Títulos de la biblioteca",
-      icono: "📚",
+      icono: "catalogo",
       sinFecha: true,
       columnas: ["N.º", "Carrera", "Título", "Autor", "Editorial", "Año", "ISBN", "Categoría", "Ejemplares", "Disponibles", "Ubicación"],
       registros: () => Store.data.libros,
@@ -622,7 +624,7 @@
     },
     accesos: {
       titulo: "Ingresos al sistema",
-      icono: "🔐",
+      icono: "ingresar",
       columnas: ["Fecha", "Hora", "Usuario", "Nombre", "Tipo de usuario", "Carrera", "Movimiento"],
       registros: () => Store.data.accesos,
       fecha: (r) => r.fecha,
@@ -632,7 +634,7 @@
     },
     consultas: {
       titulo: "Libros consultados",
-      icono: "📖",
+      icono: "ver",
       columnas: ["Fecha", "Hora", "Usuario", "Nombre", "Tipo de lector", "Carrera del lector", "Libro", "Autor", "Carrera del libro", "Acción"],
       registros: () => Store.data.consultas,
       fecha: (r) => r.fecha,
@@ -646,7 +648,7 @@
     },
     prestamos: {
       titulo: "Préstamos",
-      icono: "🔖",
+      icono: "marcador",
       columnas: ["Fecha de solicitud", "Usuario", "Nombre", "Tipo de lector", "Carrera del lector", "Libro", "Autor", "Carrera del libro", "Fecha de entrega", "Devolver hasta", "Fecha de devolución", "Estado"],
       registros: () => Store.data.prestamos,
       fecha: (r) => r.solicitado,
@@ -670,7 +672,7 @@
       <p class="muted">Descarga en Excel los títulos de la biblioteca por carrera, y los registros de ingresos, libros consultados y préstamos (con nombre, carrera y fecha).</p>
       <div class="rep-types" role="radiogroup" aria-label="Tipo de reporte">
         ${Object.entries(REPORTES).map(([k, r]) => `<button class="rep-type ${k === repTipo ? "active" : ""}" role="radio" aria-checked="${k === repTipo}" data-rep="${k}">
-          <span aria-hidden="true">${r.icono}</span><strong>${r.titulo}</strong><small>${r.registros().length} ${r.sinFecha ? "títulos" : "registros"}</small></button>`).join("")}
+          <span class="rep-ico">${ico(r.icono)}</span><strong>${r.titulo}</strong><small>${((n) => `${n} ${r.sinFecha ? "título" : "registro"}${n === 1 ? "" : "s"}`)(r.registros().length)}</small></button>`).join("")}
       </div>
       <div class="toolbar rep-filters">
         <label data-fecha>Desde <input type="date" id="rd" value="${inicioMes}" /></label>
@@ -682,8 +684,8 @@
         <label>Buscar <input type="search" id="rq" placeholder="Nombre, título, autor…" /></label>
       </div>
       <div class="toolbar">
-        <button class="btn btn-primary" id="dl-one">📥 Descargar este reporte (Excel)</button>
-        <button class="btn btn-light" id="dl-all">📥 Descargar todos los reportes en un archivo</button>
+        <button class="btn btn-primary" id="dl-one">${ico("excel")} Descargar este reporte (Excel)</button>
+        <button class="btn btn-light" id="dl-all">${ico("descargar")} Descargar todos los reportes en un archivo</button>
       </div>
       <div id="rep-summary" class="rep-summary"></div>
       <div id="rep-resumen"></div>
@@ -781,11 +783,11 @@
   function adminRespaldo(body) {
     body.innerHTML = `
       <div class="card">
-        <h2>💾 Copia de respaldo</h2>
+        <h2>Copia de respaldo</h2>
         <p class="muted">Los datos se guardan en este navegador. Descarga una copia para no perderlos o para pasarlos a otro equipo.</p>
         <div class="modal-actions left">
-          <button class="btn btn-primary" id="exp">⬇️ Descargar respaldo</button>
-          <label class="btn btn-light">⬆️ Restaurar respaldo<input type="file" id="imp" accept="application/json,.json" hidden /></label>
+          <button class="btn btn-primary" id="exp">${ico("descargar")} Descargar respaldo</button>
+          <label class="btn btn-light">${ico("subir")} Restaurar respaldo<input type="file" id="imp" accept="application/json,.json" hidden /></label>
         </div>
       </div>`;
     $("#exp").onclick = () => {
@@ -879,10 +881,10 @@
       const admin = { usuario, nombre: $("#setup-name").value.trim(), rol: "admin", carreraId: "", activo: true, creado: now, ...(await Store.hashPassword($("#setup-pass").value)) };
       Store.data.usuarios[usuario] = admin;
       if ($("#setup-demo").checked && usuario !== "estudiante") {
-        Store.data.usuarios.estudiante = { usuario: "estudiante", nombre: "Estudiante de Prueba", rol: "estudiante", carreraId: "software", activo: true, creado: now, ...(await Store.hashPassword("isty2026")) };
+        Store.data.usuarios.estudiante = { usuario: "estudiante", nombre: "Estudiante de Prueba", rol: "estudiante", carreraId: "inteligencia-artificial", activo: true, creado: now, ...(await Store.hashPassword("isty2026")) };
       }
       if ($("#setup-demo").checked && usuario !== "docente") {
-        Store.data.usuarios.docente = { usuario: "docente", nombre: "Docente de Prueba", rol: "docente", carreraId: "enfermeria", activo: true, creado: now, ...(await Store.hashPassword("isty2026")) };
+        Store.data.usuarios.docente = { usuario: "docente", nombre: "Docente de Prueba", rol: "docente", carreraId: "sistemas-salud", activo: true, creado: now, ...(await Store.hashPassword("isty2026")) };
       }
       Store.save();
       enter(admin, true);
@@ -893,6 +895,7 @@
     const i = document.getElementById(b.dataset.togglePw);
     i.type = i.type === "password" ? "text" : "password";
   }));
+  $$("[data-icon]").forEach((el) => el.insertAdjacentHTML("afterbegin", ico(el.dataset.icon)));
   $("#logout-btn").onclick = logout;
   window.addEventListener("hashchange", route);
 

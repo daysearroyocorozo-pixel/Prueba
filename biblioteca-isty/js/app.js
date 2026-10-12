@@ -592,7 +592,33 @@
     return { nombre: reg.nombre || u.nombre || reg.usuario, carreraId: reg.carreraId != null ? reg.carreraId : u.carreraId, rol: reg.rol || u.rol };
   }
 
+  // Orden de las carreras tal como están en Administración → Carreras.
+  const ordenCarrera = (id) => { const i = Store.data.carreras.findIndex((c) => c.id === id); return i < 0 ? 9999 : i; };
+
   const REPORTES = {
+    libros: {
+      titulo: "Títulos de la biblioteca",
+      icono: "📚",
+      sinFecha: true,
+      columnas: ["N.º", "Carrera", "Título", "Autor", "Editorial", "Año", "ISBN", "Categoría", "Ejemplares", "Disponibles", "Ubicación"],
+      registros: () => Store.data.libros,
+      carrera: (r) => r.carreraId,
+      orden: (a, b) => ordenCarrera(a.carreraId) - ordenCarrera(b.carreraId) || a.titulo.localeCompare(b.titulo, "es"),
+      fila: (l) => [0, nombreCarrera(l.carreraId), l.titulo, l.autor, l.editorial || "", l.anio ? Number(l.anio) : "", l.isbn || "", l.categoria || "", Number(l.ejemplares) || 0, Store.disponibles(l), l.ubicacion || ""],
+      // Hoja adicional con el número de títulos por carrera.
+      resumen: (filas) => {
+        const por = new Map();
+        filas.forEach((f) => {
+          const r = por.get(f[1]) || [0, 0, 0];
+          r[0]++; r[1] += f[8]; r[2] += f[9];
+          por.set(f[1], r);
+        });
+        const rows = Store.data.carreras.filter((c) => por.has(c.nombre)).map((c) => [c.nombre, c.vigente ? "Sí" : "No", ...por.get(c.nombre)]);
+        if (por.has("Sin carrera")) rows.push(["Sin carrera", "—", ...por.get("Sin carrera")]);
+        const tot = rows.reduce((t, r) => [t[0] + r[2], t[1] + r[3], t[2] + r[4]], [0, 0, 0]);
+        return { nombre: "Títulos por carrera", columnas: ["Carrera", "Vigente", "N.º de títulos", "Ejemplares", "Disponibles"], filas: [...rows, ["TOTAL", "", ...tot]] };
+      }
+    },
     accesos: {
       titulo: "Ingresos al sistema",
       icono: "🔐",
@@ -631,78 +657,101 @@
     }
   };
 
-  let repTipo = "accesos";
+  let repTipo = "libros";
   function adminReportes(body) {
     const hoy = new Date();
     const iso = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
     const inicioMes = iso(new Date(hoy.getFullYear(), hoy.getMonth(), 1));
     body.innerHTML = `
-      <p class="muted">Cada ingreso, libro consultado y préstamo queda registrado con el nombre, la carrera y la fecha. Filtra y descarga el reporte en Excel.</p>
+      <p class="muted">Descarga en Excel los títulos de la biblioteca por carrera, y los registros de ingresos, libros consultados y préstamos (con nombre, carrera y fecha).</p>
       <div class="rep-types" role="radiogroup" aria-label="Tipo de reporte">
         ${Object.entries(REPORTES).map(([k, r]) => `<button class="rep-type ${k === repTipo ? "active" : ""}" role="radio" aria-checked="${k === repTipo}" data-rep="${k}">
-          <span aria-hidden="true">${r.icono}</span><strong>${r.titulo}</strong><small>${r.registros().length} registros</small></button>`).join("")}
+          <span aria-hidden="true">${r.icono}</span><strong>${r.titulo}</strong><small>${r.registros().length} ${r.sinFecha ? "títulos" : "registros"}</small></button>`).join("")}
       </div>
       <div class="toolbar rep-filters">
-        <label>Desde <input type="date" id="rd" value="${inicioMes}" /></label>
-        <label>Hasta <input type="date" id="rh" value="${iso(hoy)}" /></label>
+        <label data-fecha>Desde <input type="date" id="rd" value="${inicioMes}" /></label>
+        <label data-fecha>Hasta <input type="date" id="rh" value="${iso(hoy)}" /></label>
         <label>Carrera <select id="rc"><option value="">Todas</option>${carreraOptions("")}<option value="__none">Sin carrera</option></select></label>
-        <label>Buscar <input type="search" id="rq" placeholder="Nombre, usuario o libro" /></label>
+        <label>Buscar <input type="search" id="rq" placeholder="Nombre, título, autor…" /></label>
       </div>
       <div class="toolbar">
         <button class="btn btn-primary" id="dl-one">📥 Descargar este reporte (Excel)</button>
-        <button class="btn btn-light" id="dl-all">📥 Descargar los 3 reportes en un archivo</button>
+        <button class="btn btn-light" id="dl-all">📥 Descargar todos los reportes en un archivo</button>
       </div>
       <div id="rep-summary" class="rep-summary"></div>
+      <div id="rep-resumen"></div>
       <div id="rep-list"></div>`;
 
     function filtrar(tipo) {
       const R = REPORTES[tipo];
       const d = $("#rd").value, h = $("#rh").value, c = $("#rc").value, q = norm($("#rq").value).trim();
-      const desde = d ? new Date(d + "T00:00:00") : null;
-      const hasta = h ? new Date(h + "T23:59:59.999") : null;
-      return R.registros()
+      const desde = d && !R.sinFecha ? new Date(d + "T00:00:00") : null;
+      const hasta = h && !R.sinFecha ? new Date(h + "T23:59:59.999") : null;
+      const filas = R.registros()
         .filter((r) => {
-          const f = new Date(R.fecha(r));
+          const f = R.sinFecha ? null : new Date(R.fecha(r));
           if (desde && f < desde) return false;
           if (hasta && f > hasta) return false;
           const cid = R.carrera(r) || "";
           if (c === "__none" ? cid : c && cid !== c) return false;
           return true;
         })
-        .sort((a, b) => String(R.fecha(b)).localeCompare(String(R.fecha(a))))
+        .sort(R.orden || ((a, b) => String(R.fecha(b)).localeCompare(String(R.fecha(a)))))
         .map((r) => R.fila(r))
         .filter((fila) => !q || words(q).every((w) => norm(fila.join(" ")).includes(w)));
+      if (R.sinFecha) filas.forEach((f, i) => { f[0] = i + 1; });
+      return filas;
     }
+    // Hojas del archivo de Excel para un reporte (el de títulos lleva además el resumen por carrera).
+    function hojas(tipo) {
+      const R = REPORTES[tipo];
+      const filas = filtrar(tipo);
+      const h = [{ nombre: R.titulo, columnas: R.columnas, filas }];
+      if (R.resumen) h.unshift(R.resumen(filas));
+      return h;
+    }
+    const tabla = (columnas, filas) => `<div class="table-wrap table-scroll"><table class="table">
+        <thead><tr>${columnas.map((c) => `<th>${esc(c)}</th>`).join("")}</tr></thead>
+        <tbody>${filas.map((f) => `<tr>${f.map((v, i) => `<td data-label="${esc(columnas[i])}">${esc(v === "" || v == null ? "—" : v)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
     const words = (q) => q.split(/\s+/);
 
     function paint() {
       const R = REPORTES[repTipo];
       const filas = filtrar(repTipo);
-      const ci = R.columnas.findIndex((c) => c.startsWith("Carrera"));
-      const porCarrera = {};
-      filas.forEach((f) => { porCarrera[f[ci]] = (porCarrera[f[ci]] || 0) + 1; });
-      const personas = new Set(filas.map((f) => f[R.columnas.indexOf("Usuario")])).size;
-      $("#rep-summary").innerHTML = `
-        <div class="sum-box"><strong>${filas.length}</strong><span>registros</span></div>
-        <div class="sum-box"><strong>${personas}</strong><span>personas</span></div>
-        ${Object.entries(porCarrera).sort((a, b) => b[1] - a[1]).slice(0, 4).map(([k, v]) => `<div class="sum-box"><strong>${v}</strong><span>${esc(k)}</span></div>`).join("")}`;
+      $$("[data-fecha]", body).forEach((l) => (l.hidden = !!R.sinFecha));
+      if (R.sinFecha) {
+        const res = R.resumen(filas);
+        const tot = res.filas[res.filas.length - 1];
+        $("#rep-summary").innerHTML = `
+          <div class="sum-box"><strong>${tot[2]}</strong><span>títulos</span></div>
+          <div class="sum-box"><strong>${tot[3]}</strong><span>ejemplares</span></div>
+          <div class="sum-box"><strong>${tot[4]}</strong><span>disponibles</span></div>
+          <div class="sum-box"><strong>${res.filas.length - 1}</strong><span>carreras</span></div>`;
+        $("#rep-resumen").innerHTML = filas.length ? `<h3 class="rep-sub">Títulos por carrera</h3>${tabla(res.columnas, res.filas)}<h3 class="rep-sub">Listado de títulos</h3>` : "";
+      } else {
+        const ci = R.columnas.findIndex((c) => c.startsWith("Carrera"));
+        const porCarrera = {};
+        filas.forEach((f) => { porCarrera[f[ci]] = (porCarrera[f[ci]] || 0) + 1; });
+        const personas = new Set(filas.map((f) => f[R.columnas.indexOf("Usuario")])).size;
+        $("#rep-summary").innerHTML = `
+          <div class="sum-box"><strong>${filas.length}</strong><span>registros</span></div>
+          <div class="sum-box"><strong>${personas}</strong><span>personas</span></div>
+          ${Object.entries(porCarrera).sort((a, b) => b[1] - a[1]).slice(0, 4).map(([k, v]) => `<div class="sum-box"><strong>${v}</strong><span>${esc(k)}</span></div>`).join("")}`;
+        $("#rep-resumen").innerHTML = "";
+      }
       const MAX = 300;
-      $("#rep-list").innerHTML = filas.length ? `<div class="table-wrap table-scroll"><table class="table">
-        <thead><tr>${R.columnas.map((c) => `<th>${esc(c)}</th>`).join("")}</tr></thead>
-        <tbody>${filas.slice(0, MAX).map((f) => `<tr>${f.map((v, i) => `<td data-label="${esc(R.columnas[i])}">${esc(v || "—")}</td>`).join("")}</tr>`).join("")}</tbody></table></div>
+      $("#rep-list").innerHTML = filas.length ? `${tabla(R.columnas, filas.slice(0, MAX))}
         ${filas.length > MAX ? `<p class="muted">Se muestran ${MAX} de ${filas.length}; el archivo de Excel incluye todos.</p>` : ""}`
         : `<p class="empty">No hay registros con estos filtros.</p>`;
     }
 
-    const sufijo = () => `${$("#rd").value || "inicio"}_a_${$("#rh").value || "hoy"}`;
+    const sufijo = () => (REPORTES[repTipo].sinFecha ? new Date().toISOString().slice(0, 10) : `${$("#rd").value || "inicio"}_a_${$("#rh").value || "hoy"}`);
     $("#dl-one").onclick = () => {
-      const R = REPORTES[repTipo];
-      const filas = filtrar(repTipo);
-      if (!filas.length) { toast("No hay registros para descargar."); return; }
-      XLSX.download(`ISTY-biblioteca-${repTipo}-${sufijo()}.xlsx`, [{ nombre: R.titulo, columnas: R.columnas, filas }]);
+      if (!filtrar(repTipo).length) { toast("No hay registros para descargar."); return; }
+      XLSX.download(`ISTY-biblioteca-${repTipo}-${sufijo()}.xlsx`, hojas(repTipo));
     };
     $("#dl-all").onclick = () => {
-      XLSX.download(`ISTY-biblioteca-reportes-${sufijo()}.xlsx`, Object.entries(REPORTES).map(([k, R]) => ({ nombre: R.titulo, columnas: R.columnas, filas: filtrar(k) })));
+      XLSX.download(`ISTY-biblioteca-reportes-${$("#rd").value || "inicio"}_a_${$("#rh").value || "hoy"}.xlsx`, Object.keys(REPORTES).flatMap(hojas));
     };
     $$("[data-rep]", body).forEach((b) => (b.onclick = () => {
       repTipo = b.dataset.rep;

@@ -37,12 +37,15 @@ python3 -m http.server 8080
   solicitudes; los préstamos vencidos se marcan en rojo.
 - **Reportes** (descargables en Excel `.xlsx`): filtrables por fechas, carrera
   y búsqueda, con totales por carrera:
+  - **Títulos de la biblioteca**: número de títulos, ejemplares y disponibles por
+    carrera (con el total) y el listado numerado de cada libro con su carrera,
+    autor, editorial, año, ISBN, categoría y ubicación. Se puede filtrar por carrera.
   - **Ingresos al sistema**: quién entró y salió, con rol, carrera, fecha y hora.
   - **Libros consultados**: quién abrió la ficha de qué libro o su versión digital,
     con la carrera del lector, la carrera del libro, fecha y hora.
   - **Préstamos**: quién pidió qué libro, su carrera, fechas de solicitud,
     entrega, límite y devolución, y el estado (incluye «Vencido»).
-  - Se puede bajar un reporte o los tres juntos en un archivo (una hoja por reporte).
+  - Se puede bajar un reporte o todos juntos en un archivo (una hoja por reporte).
 - **Respaldo**: descargar y restaurar todos los datos en un archivo JSON.
 
 ## Datos

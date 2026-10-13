@@ -44,7 +44,41 @@ const Store = (function () {
       data.version = SEED_VERSION;
       save();
     }
+    normalizar();
     return data;
+  }
+
+  // Completa campos agregados en versiones nuevas: prefijo de carrera, formato y código de cada libro.
+  function normalizar() {
+    let cambio = false;
+    data.carreras.forEach((c) => {
+      if (!c.prefijo) { c.prefijo = prefijoDe(c.nombre, data.carreras); cambio = true; }
+    });
+    data.libros.forEach((l) => {
+      if (!FORMATOS[l.formato]) { l.formato = "fisico"; cambio = true; }
+    });
+    data.libros.forEach((l) => {
+      if (!l.codigo) { l.codigo = siguienteCodigo(l.carreraId); cambio = true; }
+    });
+    if (cambio) save();
+  }
+
+  // Iniciales de las palabras importantes: "Gestión de Operaciones Turísticas" → "GOT".
+  function prefijoDe(nombre, carreras) {
+    const sin = (t) => t.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
+    const palabras = sin(nombre || "").split(/[^A-Z0-9]+/).filter((w) => w && !["DE", "DEL", "LA", "LAS", "LOS", "Y", "EN", "E"].includes(w));
+    let base = palabras.length > 1 ? palabras.map((w) => w[0]).join("").slice(0, 4) : (palabras[0] || "LIB").slice(0, 3);
+    let pref = base, i = 2;
+    while (carreras.some((c) => c.prefijo === pref)) pref = base + i++;
+    return pref;
+  }
+
+  function siguienteCodigo(carreraId) {
+    const c = data.carreras.find((x) => x.id === carreraId);
+    const pref = c ? c.prefijo : "LIB";
+    const re = new RegExp("^" + pref.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "-(\\d+)$");
+    const max = data.libros.reduce((m, l) => { const k = re.exec(l.codigo || ""); return k ? Math.max(m, Number(k[1])) : m; }, 0);
+    return `${pref}-${String(max + 1).padStart(3, "0")}`;
   }
 
   function save() {
@@ -52,8 +86,15 @@ const Store = (function () {
     try { localStorage.setItem(KEY, JSON.stringify(data)); } catch (e) { /* sin almacenamiento */ }
   }
 
+  const FORMATOS = { fisico: "Físico", virtual: "Virtual", ambos: "Físico y virtual" };
+
   const api = {
     uid,
+    FORMATOS,
+    prefijoDe: (nombre) => prefijoDe(nombre, api.data.carreras),
+    siguienteCodigo: (carreraId) => { api.data; return siguienteCodigo(carreraId); },
+    tieneFisico: (l) => l.formato !== "virtual",
+    tieneVirtual: (l) => l.formato === "virtual" || l.formato === "ambos",
     get data() { return data || load(); },
     save,
 
@@ -76,6 +117,7 @@ const Store = (function () {
     libro(id) { return api.data.libros.find((l) => l.id === id); },
     // Ejemplares ocupados = préstamos activos o solicitudes pendientes.
     disponibles(libro) {
+      if (libro.formato === "virtual") return 0;
       const ocupados = api.data.prestamos.filter((p) => p.libroId === libro.id && (p.estado === "prestado" || p.estado === "solicitado")).length;
       return Math.max(0, (Number(libro.ejemplares) || 0) - ocupados);
     },
@@ -95,6 +137,7 @@ const Store = (function () {
       const d = JSON.parse(text);
       if (d.app !== "biblioteca-isty" || !Array.isArray(d.libros) || !Array.isArray(d.carreras)) throw new Error("El archivo no es una copia de la Biblioteca ISTY.");
       data = { version: SEED_VERSION, carreras: d.carreras, libros: d.libros, usuarios: d.usuarios || {}, prestamos: d.prestamos || [], accesos: d.accesos || [], consultas: d.consultas || [] };
+      normalizar();
       save();
     },
 

@@ -85,16 +85,29 @@
     </div>`;
   }
 
-  function libroCard(l) {
+  // Insignia de formato: físico, virtual o ambos.
+  function formatoChip(l) {
+    const cls = { fisico: "fmt-fis", virtual: "fmt-vir", ambos: "fmt-amb" }[l.formato] || "fmt-fis";
+    return `<span class="chip fmt ${cls}">${ico(l.formato === "virtual" ? "pantalla" : "libro")}${esc(Store.FORMATOS[l.formato] || "Físico")}</span>`;
+  }
+  function disponibilidadChip(l) {
+    if (!Store.tieneFisico(l)) return `<span class="chip chip-ok">Acceso digital</span>`;
     const disp = Store.disponibles(l);
+    return `<span class="chip ${disp ? "chip-ok" : "chip-no"}">${disp ? `${disp} disponible${disp > 1 ? "s" : ""}` : "Sin ejemplares"}</span>`;
+  }
+  const enlaceValido = (l) => l.enlace && /^https?:\/\//i.test(l.enlace);
+
+  function libroCard(l) {
     return `<button class="book" data-book="${esc(l.id)}">
       ${portada(l)}
       <span class="book-info">
+        <span class="book-code">${esc(l.codigo || "")}</span>
         <span class="book-title">${esc(l.titulo)}</span>
         <span class="book-author">${esc(l.autor)}${l.anio ? " · " + esc(l.anio) : ""}</span>
         <span class="chips">
+          ${formatoChip(l)}
+          ${disponibilidadChip(l)}
           ${l.categoria ? `<span class="chip">${esc(l.categoria)}</span>` : ""}
-          <span class="chip ${disp ? "chip-ok" : "chip-no"}">${disp ? `${disp} disponible${disp > 1 ? "s" : ""}` : "Sin ejemplares"}</span>
         </span>
       </span>
     </button>`;
@@ -118,7 +131,7 @@
     if (!t) return libros;
     const words = t.split(/\s+/);
     return libros.filter((l) => {
-      const hay = norm([l.titulo, l.autor, l.editorial, l.isbn, l.categoria, l.anio].join(" "));
+      const hay = norm([l.codigo, l.titulo, l.autor, l.editorial, l.isbn, l.categoria, l.anio, Store.FORMATOS[l.formato]].join(" "));
       return words.every((w) => hay.includes(w));
     });
   }
@@ -143,7 +156,7 @@
       </section>
       <div class="search big-search">
         ${ico("buscar")}
-        <input id="q" type="search" placeholder="Buscar por título, autor, ISBN o tema en todo el catálogo" value="${esc(q)}" aria-label="Buscar en el catálogo" />
+        <input id="q" type="search" placeholder="Buscar por código, título, autor, ISBN o tema en todo el catálogo" value="${esc(q)}" aria-label="Buscar en el catálogo" />
       </div>
       <div id="cat-body"></div>`;
 
@@ -192,6 +205,7 @@
       <div class="toolbar">
         <div class="search">${ico("buscar")}<input id="q" type="search" placeholder="Buscar en ${esc(c.nombre)}" aria-label="Buscar en esta carrera" /></div>
         <select id="cat" aria-label="Filtrar por categoría"><option value="">Todas las categorías</option>${cats.map((k) => `<option>${esc(k)}</option>`).join("")}</select>
+        <select id="fmt" aria-label="Filtrar por formato"><option value="">Físicos y virtuales</option><option value="fisico">Solo en físico</option><option value="virtual">Solo virtuales</option></select>
         <label class="check"><input type="checkbox" id="only-av" /> Solo disponibles</label>
       </div>
       <div id="list"></div>`;
@@ -199,14 +213,18 @@
       let res = buscar(libros, $("#q").value);
       const cat = $("#cat").value;
       if (cat) res = res.filter((l) => l.categoria === cat);
-      if ($("#only-av").checked) res = res.filter((l) => Store.disponibles(l) > 0);
-      res.sort((a, b) => a.titulo.localeCompare(b.titulo, "es"));
+      const fmt = $("#fmt").value;
+      if (fmt === "fisico") res = res.filter(Store.tieneFisico);
+      if (fmt === "virtual") res = res.filter(Store.tieneVirtual);
+      if ($("#only-av").checked) res = res.filter((l) => Store.disponibles(l) > 0 || (Store.tieneVirtual(l) && enlaceValido(l)));
+      res.sort((a, b) => (a.codigo || "").localeCompare(b.codigo || "", "es", { numeric: true }));
       $("#list").innerHTML = res.length ? `<div class="books">${res.map(libroCard).join("")}</div>` : `<p class="empty">No hay libros que coincidan.</p>`;
       bindBookCards($("#list"));
     }
     $("#q").addEventListener("input", paint);
     $("#cat").addEventListener("change", paint);
     $("#only-av").addEventListener("change", paint);
+    $("#fmt").addEventListener("change", paint);
     if (isAdmin()) $("#add-here").onclick = () => editBook(null, id);
     paint();
   }
@@ -218,9 +236,16 @@
     const disp = Store.disponibles(l);
     const activo = Store.data.prestamos.find((p) => p.libroId === l.id && p.usuario === me.usuario && (p.estado === "solicitado" || p.estado === "prestado"));
     let action = "";
-    if (activo) action = `<p class="note">Ya tienes este libro: <strong>${ESTADOS[activo.estado].txt.toLowerCase()}</strong>.</p>`;
+    if (!Store.tieneFisico(l)) action = "";
+    else if (activo) action = `<p class="note">Ya tienes este libro: <strong>${ESTADOS[activo.estado].txt.toLowerCase()}</strong>.</p>`;
     else if (disp > 0) action = `<button class="btn btn-primary" id="req">${ico("marcador")} Solicitar préstamo</button>`;
-    else action = `<p class="note">No hay ejemplares disponibles por ahora.</p>`;
+    else action = `<p class="note">No hay ejemplares físicos disponibles por ahora.</p>`;
+    let digital = "";
+    if (Store.tieneVirtual(l)) {
+      digital = enlaceValido(l)
+        ? `<a class="btn ${Store.tieneFisico(l) ? "btn-light" : "btn-primary"}" id="digital" href="${esc(l.enlace)}" target="_blank" rel="noopener">${ico("pantalla")} Abrir versión virtual</a>`
+        : `<p class="note">La versión virtual aún no tiene enlace registrado${isAdmin() ? "; agréguelo en Editar" : ". Consulte en la biblioteca"}.</p>`;
+    }
     openModal(`
       <div class="book-detail">
         ${portada(l)}
@@ -229,25 +254,27 @@
           <p class="eyebrow">${esc(c ? c.nombre : "Sin carrera")}</p>
           <h2>${esc(l.titulo)}</h2>
           <p class="muted">${esc(l.autor)}</p>
+          <div class="chips detail-chips">${formatoChip(l)}${disponibilidadChip(l)}</div>
           <dl class="meta">
+            <dt>Código</dt><dd><strong class="code">${esc(l.codigo || "—")}</strong></dd>
             ${l.editorial ? `<dt>Editorial</dt><dd>${esc(l.editorial)}</dd>` : ""}
             ${l.anio ? `<dt>Año</dt><dd>${esc(l.anio)}</dd>` : ""}
             ${l.isbn ? `<dt>ISBN</dt><dd>${esc(l.isbn)}</dd>` : ""}
             ${l.categoria ? `<dt>Categoría</dt><dd>${esc(l.categoria)}</dd>` : ""}
-            ${l.ubicacion ? `<dt>Ubicación</dt><dd>${esc(l.ubicacion)}</dd>` : ""}
-            <dt>Disponibles</dt><dd>${disp} de ${esc(l.ejemplares)}</dd>
+            ${Store.tieneFisico(l) && l.ubicacion ? `<dt>Ubicación</dt><dd>${esc(l.ubicacion)}</dd>` : ""}
+            ${Store.tieneFisico(l) ? `<dt>Ejemplares físicos</dt><dd>${disp} disponibles de ${esc(l.ejemplares)}</dd>` : ""}
           </dl>
           ${l.descripcion ? `<p class="desc">${esc(l.descripcion)}</p>` : ""}
-          ${l.enlace && /^https?:\/\//i.test(l.enlace) ? `<p><a class="btn btn-light" id="digital" href="${esc(l.enlace)}" target="_blank" rel="noopener">${ico("enlace")} Abrir versión digital</a></p>` : ""}
           <div class="modal-actions">
             ${isAdmin() ? `<button class="btn btn-ghost" id="edit-book">${ico("editar")} Editar</button>` : ""}
+            ${digital}
             ${action}
           </div>
         </div>
       </div>`);
     Store.registrar("consultas", me, { libroId: l.id, titulo: l.titulo, libroCarreraId: l.carreraId, accion: "Consulta de ficha" });
     const dig = $("#digital");
-    if (dig) dig.addEventListener("click", () => Store.registrar("consultas", me, { libroId: l.id, titulo: l.titulo, libroCarreraId: l.carreraId, accion: "Versión digital" }));
+    if (dig) dig.addEventListener("click", () => Store.registrar("consultas", me, { libroId: l.id, titulo: l.titulo, libroCarreraId: l.carreraId, accion: "Versión virtual" }));
     const req = $("#req");
     if (req) req.onclick = () => {
       Store.data.prestamos.push({ id: Store.uid(), libroId: l.id, titulo: l.titulo, usuario: me.usuario, nombre: me.nombre, carreraId: me.carreraId || "", estado: "solicitado", solicitado: new Date().toISOString() });
@@ -340,22 +367,26 @@
       <div class="toolbar">
         <div class="search">${ico("buscar")}<input id="aq" type="search" placeholder="Buscar libros" aria-label="Buscar libros" /></div>
         <select id="ac" aria-label="Filtrar por carrera"><option value="">Todas las carreras</option>${carreraOptions("")}</select>
+        <select id="af" aria-label="Filtrar por formato"><option value="">Todos los formatos</option>${Object.entries(Store.FORMATOS).map(([k, v]) => `<option value="${k}">${v}</option>`).join("")}</select>
         <button class="btn btn-primary" id="new-book">${ico("mas")} Nuevo libro</button>
       </div>
       <div id="alist"></div>`;
     function paint() {
       let res = buscar(Store.data.libros, $("#aq").value);
       if ($("#ac").value) res = res.filter((l) => l.carreraId === $("#ac").value);
-      res = [...res].sort((a, b) => a.titulo.localeCompare(b.titulo, "es"));
+      if ($("#af").value) res = res.filter((l) => l.formato === $("#af").value);
+      res = [...res].sort((a, b) => (a.codigo || "").localeCompare(b.codigo || "", "es", { numeric: true }));
       $("#alist").innerHTML = res.length ? `<div class="table-wrap"><table class="table">
-        <thead><tr><th>Título</th><th>Carrera</th><th>Ejemplares</th><th>Ubicación</th><th></th></tr></thead>
+        <thead><tr><th>Código</th><th>Título</th><th>Carrera</th><th>Formato</th><th>Ejemplares</th><th>Ubicación</th><th></th></tr></thead>
         <tbody>${res.map((l) => {
           const c = Store.carrera(l.carreraId);
           return `<tr>
+            <td data-label="Código"><strong class="code">${esc(l.codigo || "—")}</strong></td>
             <td data-label="Título"><strong>${esc(l.titulo)}</strong><br><small class="muted">${esc(l.autor)}</small></td>
             <td data-label="Carrera">${esc(c ? c.nombre : "—")}</td>
-            <td data-label="Ejemplares">${Store.disponibles(l)} / ${esc(l.ejemplares)}</td>
-            <td data-label="Ubicación">${esc(l.ubicacion || "—")}</td>
+            <td data-label="Formato">${formatoChip(l)}</td>
+            <td data-label="Ejemplares">${Store.tieneFisico(l) ? `${Store.disponibles(l)} / ${esc(l.ejemplares)}` : "—"}</td>
+            <td data-label="Ubicación">${esc(Store.tieneFisico(l) ? l.ubicacion || "—" : "—")}</td>
             <td class="row-actions"><button class="btn btn-ghost btn-sm" data-edit="${esc(l.id)}">${ico("editar")} Editar</button><button class="btn btn-ghost btn-sm" data-del="${esc(l.id)}" aria-label="Eliminar" title="Eliminar">${ico("eliminar")}</button></td>
           </tr>`;
         }).join("")}</tbody></table></div>` : `<p class="empty">No hay libros.</p>`;
@@ -373,17 +404,26 @@
     }
     $("#aq").addEventListener("input", paint);
     $("#ac").addEventListener("change", paint);
+    $("#af").addEventListener("change", paint);
     $("#new-book").onclick = () => editBook(null, $("#ac").value);
     paint();
   }
 
   function editBook(id, carreraId) {
-    const l = id ? Store.libro(id) : { titulo: "", autor: "", anio: "", editorial: "", isbn: "", carreraId: carreraId || (Store.data.carreras[0] || {}).id, categoria: "", ejemplares: 1, ubicacion: "", descripcion: "", enlace: "" };
+    const l = id ? Store.libro(id) : { codigo: "", formato: "fisico", titulo: "", autor: "", anio: "", editorial: "", isbn: "", carreraId: carreraId || (Store.data.carreras[0] || {}).id, categoria: "", ejemplares: 1, ubicacion: "", descripcion: "", enlace: "" };
     if (!l) return;
+    if (!id) l.codigo = Store.siguienteCodigo(l.carreraId);
     openModal(`
       <form class="modal-pad form" id="book-form">
         <button type="button" class="close-x" data-close aria-label="Cerrar">${ico("cerrar")}</button>
         <h2>${id ? "Editar libro" : "Nuevo libro"}</h2>
+        <div class="grid2">
+          <label>Código del libro
+            <span class="pw-row"><input name="codigo" required maxlength="20" pattern="[A-Za-z0-9._\\-]+" title="Letras, números, punto o guion" value="${esc(l.codigo)}" />
+            <button type="button" class="btn btn-ghost btn-sm" id="gen-code" title="Asignar el siguiente código de la carrera">${ico("generar")} Siguiente</button></span>
+          </label>
+          <label>Formato <select name="formato" id="f-formato">${Object.entries(Store.FORMATOS).map(([k, v]) => `<option value="${k}" ${l.formato === k ? "selected" : ""}>${v}</option>`).join("")}</select></label>
+        </div>
         <label>Título <input name="titulo" required maxlength="200" value="${esc(l.titulo)}" /></label>
         <label>Autor(es) <input name="autor" required maxlength="200" value="${esc(l.autor)}" /></label>
         <div class="grid2">
@@ -392,20 +432,35 @@
           <label>Editorial <input name="editorial" maxlength="120" value="${esc(l.editorial)}" /></label>
           <label>Año <input name="anio" type="number" min="1400" max="2100" value="${esc(l.anio)}" /></label>
           <label>ISBN <input name="isbn" maxlength="20" value="${esc(l.isbn)}" /></label>
-          <label>Ejemplares <input name="ejemplares" type="number" min="0" max="999" required value="${esc(l.ejemplares)}" /></label>
+          <label data-fis>Ejemplares físicos <input name="ejemplares" type="number" min="0" max="999" value="${esc(l.ejemplares)}" /></label>
         </div>
-        <label>Ubicación (estante) <input name="ubicacion" maxlength="60" value="${esc(l.ubicacion)}" /></label>
-        <label>Enlace a versión digital (opcional) <input name="enlace" type="url" maxlength="400" placeholder="https://" value="${esc(l.enlace)}" /></label>
+        <label data-fis>Ubicación (estante) <input name="ubicacion" maxlength="60" value="${esc(l.ubicacion)}" /></label>
+        <label data-vir>Enlace de la versión virtual (PDF, repositorio o biblioteca digital) <input name="enlace" type="url" maxlength="400" placeholder="https://" value="${esc(l.enlace)}" /></label>
+        <p class="form-msg" id="book-msg" role="alert"></p>
         <label>Descripción <textarea name="descripcion" rows="3" maxlength="1000">${esc(l.descripcion)}</textarea></label>
         <div class="modal-actions">
           <button type="button" class="btn btn-ghost" data-close>Cancelar</button>
           <button class="btn btn-primary">Guardar</button>
         </div>
       </form>`);
-    $("#book-form").onsubmit = (e) => {
+    const form = $("#book-form");
+    const syncFormato = () => {
+      const fmt = $("#f-formato").value;
+      $$("[data-fis]", form).forEach((el) => (el.hidden = fmt === "virtual"));
+      $$("[data-vir]", form).forEach((el) => (el.hidden = fmt === "fisico"));
+    };
+    $("#f-formato").addEventListener("change", syncFormato);
+    syncFormato();
+    // Al cambiar de carrera en un libro nuevo se propone el código de esa carrera.
+    form.carreraId.addEventListener("change", () => { if (!id) form.codigo.value = Store.siguienteCodigo(form.carreraId.value); });
+    $("#gen-code").onclick = () => { form.codigo.value = Store.siguienteCodigo(form.carreraId.value); };
+    form.onsubmit = (e) => {
       e.preventDefault();
       const f = Object.fromEntries(new FormData(e.target));
-      const obj = { ...f, titulo: f.titulo.trim(), autor: f.autor.trim(), anio: f.anio ? Number(f.anio) : "", ejemplares: Math.max(0, Number(f.ejemplares) || 0) };
+      const codigo = f.codigo.trim().toUpperCase();
+      if (Store.data.libros.some((x) => x.id !== id && (x.codigo || "").toUpperCase() === codigo)) { $("#book-msg").textContent = `El código ${codigo} ya está asignado a otro libro.`; return; }
+      const fisico = f.formato !== "virtual";
+      const obj = { ...f, codigo, titulo: f.titulo.trim(), autor: f.autor.trim(), anio: f.anio ? Number(f.anio) : "", ejemplares: fisico ? Math.max(0, Number(f.ejemplares) || 0) : 0, ubicacion: fisico ? f.ubicacion : "", enlace: f.formato === "fisico" ? "" : f.enlace };
       if (id) Object.assign(l, obj);
       else Store.data.libros.push({ id: Store.uid(), ...obj });
       Store.save();
@@ -420,9 +475,10 @@
       <p class="muted">Solo las carreras <strong>vigentes</strong> se muestran a los estudiantes. Una carrera no vigente conserva sus libros.</p>
       <div class="toolbar"><button class="btn btn-primary" id="new-car">${ico("mas")} Nueva carrera</button></div>
       <div class="table-wrap"><table class="table">
-        <thead><tr><th>Carrera</th><th>Libros</th><th>Vigente</th><th></th></tr></thead>
+        <thead><tr><th>Carrera</th><th>Prefijo</th><th>Libros</th><th>Vigente</th><th></th></tr></thead>
         <tbody>${Store.data.carreras.map((c) => `<tr>
           <td data-label="Carrera"><span class="cell-icon">${ico(c.icono)}</span> <strong>${esc(c.nombre)}</strong></td>
+          <td data-label="Prefijo"><span class="code">${esc(c.prefijo || "—")}</span></td>
           <td data-label="Libros">${Store.data.libros.filter((l) => l.carreraId === c.id).length}</td>
           <td data-label="Vigente"><label class="switch"><input type="checkbox" data-vig="${esc(c.id)}" ${c.vigente ? "checked" : ""} aria-label="Vigente: ${esc(c.nombre)}" /><span></span></label></td>
           <td class="row-actions"><button class="btn btn-ghost btn-sm" data-edit="${esc(c.id)}">${ico("editar")} Editar</button><button class="btn btn-ghost btn-sm" data-del="${esc(c.id)}" aria-label="Eliminar" title="Eliminar">${ico("eliminar")}</button></td>
@@ -451,7 +507,11 @@
       <form class="modal-pad form" id="car-form">
         <button type="button" class="close-x" data-close aria-label="Cerrar">${ico("cerrar")}</button>
         <h2>${id ? "Editar carrera" : "Nueva carrera"}</h2>
-        <label>Nombre de la carrera <input name="nombre" required maxlength="100" value="${esc(c.nombre)}" /></label>
+        <div class="grid2 grid-pref">
+          <label>Nombre de la carrera <input name="nombre" required maxlength="100" value="${esc(c.nombre)}" /></label>
+          <label>Prefijo de códigos <input name="prefijo" required maxlength="5" pattern="[A-Za-z0-9]{1,5}" title="1 a 5 letras o números" value="${esc(c.prefijo || "")}" placeholder="IA" /></label>
+        </div>
+        <p class="muted small">Los libros de la carrera se codifican con este prefijo: ${esc(c.prefijo || "IA")}-001, ${esc(c.prefijo || "IA")}-002…</p>
         <fieldset class="icon-pick"><legend>Ícono</legend>
           ${Object.entries(Icon.CARRERAS).map(([k, n]) => `<label title="${esc(n)}"><input type="radio" name="icono" value="${k}" ${k === c.icono ? "checked" : ""} /><span>${ico(k)}</span><small>${esc(n)}</small></label>`).join("")}
         </fieldset>
@@ -464,7 +524,9 @@
     $("#car-form").onsubmit = (e) => {
       e.preventDefault();
       const f = new FormData(e.target);
-      const obj = { nombre: f.get("nombre").trim(), icono: f.get("icono") || "carreras", vigente: f.get("vigente") === "on" };
+      const prefijo = (f.get("prefijo").trim() || Store.prefijoDe(f.get("nombre"))).toUpperCase();
+      if (Store.data.carreras.some((x) => x.id !== id && x.prefijo === prefijo)) { toast(`El prefijo ${prefijo} ya lo usa otra carrera.`); return; }
+      const obj = { nombre: f.get("nombre").trim(), prefijo, icono: f.get("icono") || "carreras", vigente: f.get("vigente") === "on" };
       if (id) Object.assign(c, obj);
       else {
         let base = norm(obj.nombre).replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "carrera";
@@ -603,23 +665,28 @@
       titulo: "Títulos de la biblioteca",
       icono: "catalogo",
       sinFecha: true,
-      columnas: ["N.º", "Carrera", "Título", "Autor", "Editorial", "Año", "ISBN", "Categoría", "Ejemplares", "Disponibles", "Ubicación"],
+      columnas: ["N.º", "Código", "Carrera", "Título", "Autor", "Formato", "Editorial", "Año", "ISBN", "Categoría", "Ejemplares físicos", "Disponibles", "Ubicación", "Enlace virtual"],
       registros: () => Store.data.libros,
       carrera: (r) => r.carreraId,
-      orden: (a, b) => ordenCarrera(a.carreraId) - ordenCarrera(b.carreraId) || a.titulo.localeCompare(b.titulo, "es"),
-      fila: (l) => [0, nombreCarrera(l.carreraId), l.titulo, l.autor, l.editorial || "", l.anio ? Number(l.anio) : "", l.isbn || "", l.categoria || "", Number(l.ejemplares) || 0, Store.disponibles(l), l.ubicacion || ""],
+      orden: (a, b) => ordenCarrera(a.carreraId) - ordenCarrera(b.carreraId) || (a.codigo || "").localeCompare(b.codigo || "", "es", { numeric: true }),
+      fila: (l) => [0, l.codigo || "", nombreCarrera(l.carreraId), l.titulo, l.autor, Store.FORMATOS[l.formato] || "Físico", l.editorial || "", l.anio ? Number(l.anio) : "", l.isbn || "", l.categoria || "",
+        Store.tieneFisico(l) ? Number(l.ejemplares) || 0 : 0, Store.disponibles(l), Store.tieneFisico(l) ? l.ubicacion || "" : "", Store.tieneVirtual(l) ? l.enlace || "Pendiente" : ""],
       // Hoja adicional con el número de títulos por carrera.
       resumen: (filas) => {
+        // Columnas de la fila: 2 carrera, 5 formato, 10 ejemplares físicos, 11 disponibles.
         const por = new Map();
         filas.forEach((f) => {
-          const r = por.get(f[1]) || [0, 0, 0];
-          r[0]++; r[1] += f[8]; r[2] += f[9];
-          por.set(f[1], r);
+          const r = por.get(f[2]) || [0, 0, 0, 0, 0];
+          r[0]++;
+          if (f[5] !== Store.FORMATOS.virtual) r[1]++;
+          if (f[5] !== Store.FORMATOS.fisico) r[2]++;
+          r[3] += f[10]; r[4] += f[11];
+          por.set(f[2], r);
         });
         const rows = Store.data.carreras.filter((c) => por.has(c.nombre)).map((c) => [c.nombre, c.vigente ? "Sí" : "No", ...por.get(c.nombre)]);
         if (por.has("Sin carrera")) rows.push(["Sin carrera", "—", ...por.get("Sin carrera")]);
-        const tot = rows.reduce((t, r) => [t[0] + r[2], t[1] + r[3], t[2] + r[4]], [0, 0, 0]);
-        return { nombre: "Títulos por carrera", columnas: ["Carrera", "Vigente", "N.º de títulos", "Ejemplares", "Disponibles"], filas: [...rows, ["TOTAL", "", ...tot]] };
+        const tot = rows.reduce((t, r) => t.map((v, i) => v + r[i + 2]), [0, 0, 0, 0, 0]);
+        return { nombre: "Títulos por carrera", columnas: ["Carrera", "Vigente", "N.º de títulos", "En físico", "Virtuales", "Ejemplares físicos", "Disponibles"], filas: [...rows, ["TOTAL", "", ...tot]] };
       }
     },
     accesos: {
@@ -635,7 +702,7 @@
     consultas: {
       titulo: "Libros consultados",
       icono: "ver",
-      columnas: ["Fecha", "Hora", "Usuario", "Nombre", "Tipo de lector", "Carrera del lector", "Libro", "Autor", "Carrera del libro", "Acción"],
+      columnas: ["Fecha", "Hora", "Usuario", "Nombre", "Tipo de lector", "Carrera del lector", "Código", "Libro", "Autor", "Formato", "Carrera del libro", "Acción"],
       registros: () => Store.data.consultas,
       fecha: (r) => r.fecha,
       carrera: (r) => persona(r).carreraId,
@@ -643,13 +710,13 @@
       fila: (r) => {
         const p = persona(r);
         const l = Store.libro(r.libroId);
-        return [fmtFecha(r.fecha), fmtHora(r.fecha), r.usuario, p.nombre, rolTxt(p.rol), nombreCarrera(p.carreraId), l ? l.titulo : r.titulo || "(libro eliminado)", l ? l.autor : "", nombreCarrera(l ? l.carreraId : r.libroCarreraId), r.accion];
+        return [fmtFecha(r.fecha), fmtHora(r.fecha), r.usuario, p.nombre, rolTxt(p.rol), nombreCarrera(p.carreraId), l ? l.codigo || "" : "", l ? l.titulo : r.titulo || "(libro eliminado)", l ? l.autor : "", l ? Store.FORMATOS[l.formato] || "" : "", nombreCarrera(l ? l.carreraId : r.libroCarreraId), r.accion];
       }
     },
     prestamos: {
       titulo: "Préstamos",
       icono: "marcador",
-      columnas: ["Fecha de solicitud", "Usuario", "Nombre", "Tipo de lector", "Carrera del lector", "Libro", "Autor", "Carrera del libro", "Fecha de entrega", "Devolver hasta", "Fecha de devolución", "Estado"],
+      columnas: ["Fecha de solicitud", "Usuario", "Nombre", "Tipo de lector", "Carrera del lector", "Código", "Libro", "Autor", "Carrera del libro", "Fecha de entrega", "Devolver hasta", "Fecha de devolución", "Estado"],
       registros: () => Store.data.prestamos,
       fecha: (r) => r.solicitado,
       carrera: (r) => persona(r).carreraId,
@@ -658,7 +725,7 @@
         const p = persona(r);
         const l = Store.libro(r.libroId);
         const vencido = r.estado === "prestado" && r.limite && new Date(r.limite) < new Date();
-        return [fmtFecha(r.solicitado), r.usuario, p.nombre, rolTxt(p.rol), nombreCarrera(p.carreraId), l ? l.titulo : r.titulo || "(libro eliminado)", l ? l.autor : "", nombreCarrera(l ? l.carreraId : ""), fmtFecha(r.entregado), fmtFecha(r.limite), fmtFecha(r.devuelto), vencido ? "Vencido" : (ESTADOS[r.estado] || { txt: r.estado }).txt];
+        return [fmtFecha(r.solicitado), r.usuario, p.nombre, rolTxt(p.rol), nombreCarrera(p.carreraId), l ? l.codigo || "" : "", l ? l.titulo : r.titulo || "(libro eliminado)", l ? l.autor : "", nombreCarrera(l ? l.carreraId : ""), fmtFecha(r.entregado), fmtFecha(r.limite), fmtFecha(r.devuelto), vencido ? "Vencido" : (ESTADOS[r.estado] || { txt: r.estado }).txt];
       }
     }
   };
@@ -737,8 +804,9 @@
         const tot = res.filas[res.filas.length - 1];
         $("#rep-summary").innerHTML = `
           <div class="sum-box"><strong>${tot[2]}</strong><span>títulos</span></div>
-          <div class="sum-box"><strong>${tot[3]}</strong><span>ejemplares</span></div>
-          <div class="sum-box"><strong>${tot[4]}</strong><span>disponibles</span></div>
+          <div class="sum-box"><strong>${tot[3]}</strong><span>en físico</span></div>
+          <div class="sum-box"><strong>${tot[4]}</strong><span>virtuales</span></div>
+          <div class="sum-box"><strong>${tot[5]}</strong><span>ejemplares físicos</span></div>
           <div class="sum-box"><strong>${res.filas.length - 1}</strong><span>carreras</span></div>`;
         $("#rep-resumen").innerHTML = filas.length ? `<h3 class="rep-sub">Títulos por carrera</h3>${tabla(res.columnas, res.filas)}<h3 class="rep-sub">Listado de títulos</h3>` : "";
       } else {

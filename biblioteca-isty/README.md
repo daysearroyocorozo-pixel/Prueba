@@ -27,6 +27,18 @@ python3 -m http.server 8080
   disponibles y enlace a la versión digital si existe.
 - **Solicitar préstamo** y ver/cancelar sus préstamos en «Mis préstamos».
 
+**Código y formato de cada libro**
+- Cada libro tiene un **código** único formado por el prefijo de su carrera y un número
+  (`IA-001`, `CI-002`…). Al crear un libro se propone el siguiente código de la carrera;
+  se puede cambiar y el sistema no permite códigos repetidos. El prefijo de cada carrera
+  se edita en Administración → Carreras.
+- Cada libro se marca como **Físico**, **Virtual** o **Físico y virtual**:
+  - físico: ejemplares, estante y préstamo;
+  - virtual: enlace a la versión digital (PDF, repositorio o biblioteca digital), que
+    se abre desde la ficha del libro sin préstamo.
+- El catálogo y la administración se pueden filtrar por formato, y el buscador
+  encuentra libros por su código.
+
 **Administrador** (menú Administración)
 - **Libros**: agregar, editar y eliminar; asignarlos a una carrera.
 - **Carreras**: crear, editar, eliminar y marcar como **vigente / no vigente**
@@ -37,9 +49,10 @@ python3 -m http.server 8080
   solicitudes; los préstamos vencidos se marcan en rojo.
 - **Reportes** (descargables en Excel `.xlsx`): filtrables por fechas, tipo de lector
   (docentes y estudiantes, solo docentes, solo estudiantes o todos), carrera y búsqueda, con totales por carrera:
-  - **Títulos de la biblioteca**: número de títulos, ejemplares y disponibles por
-    carrera (con el total) y el listado numerado de cada libro con su carrera,
-    autor, editorial, año, ISBN, categoría y ubicación. Se puede filtrar por carrera.
+  - **Títulos de la biblioteca**: por carrera, número de títulos, cuántos están en
+    físico y cuántos son virtuales, ejemplares y disponibles (con el total), y el
+    listado de cada libro con su código, formato, carrera, autor, editorial, año, ISBN,
+    categoría, ubicación y enlace virtual. Se puede filtrar por carrera.
   - **Ingresos al sistema**: quién entró y salió, con rol, carrera, fecha y hora.
   - **Libros consultados**: quién abrió la ficha de qué libro o su versión digital,
     con el tipo de lector (docente o estudiante), su carrera, la carrera del libro,

@@ -24,7 +24,7 @@
   };
 
   let me = null;
-  const ROLES = { estudiante: "Estudiante", docente: "Docente", admin: "Administrador" };
+  const ROLES = { estudiante: "Estudiante", docente: "Docente", administrativo: "Administrativo", admin: "Administrador" };
   const rolTxt = (r) => ROLES[r] || "Estudiante";
   const isAdmin = () => me && me.rol === "admin";
   const view = $("#view");
@@ -681,7 +681,7 @@
       };
       const pw = f.get("pass");
       try {
-        if (pw) Object.assign(obj, await Store.hashPassword(pw));
+        if (pw) await Store.aplicarClave(obj, pw);
       } catch (err) { msg.textContent = err.message; return; }
       Store.data.usuarios[obj.usuario] = { ...(usuario ? u : { creado: new Date().toISOString() }), ...obj };
       Store.save();
@@ -814,7 +814,7 @@
         <label data-fecha>Desde <input type="date" id="rd" value="${inicioMes}" /></label>
         <label data-fecha>Hasta <input type="date" id="rh" value="${iso(hoy)}" /></label>
         <label data-fecha>Tipo de lector <select id="rr">
-          <option value="lectores">Docentes y estudiantes</option><option value="docente">Solo docentes</option>
+          <option value="lectores">Docentes, estudiantes y administrativos</option><option value="docente">Solo docentes</option><option value="administrativo">Solo administrativos</option>
           <option value="estudiante">Solo estudiantes</option><option value="">Todos (incluye administradores)</option></select></label>
         <label>Carrera <select id="rc"><option value="">Todas</option>${carreraOptions("")}<option value="__none">Sin carrera</option></select></label>
         <label>Buscar <input type="search" id="rq" placeholder="Nombre, título, autor…" /></label>
@@ -890,6 +890,7 @@
           <div class="sum-box"><strong>${personas}</strong><span>personas</span></div>
           <div class="sum-box"><strong>${deTipo("Docente")}</strong><span>de docentes</span></div>
           <div class="sum-box"><strong>${deTipo("Estudiante")}</strong><span>de estudiantes</span></div>
+          <div class="sum-box"><strong>${deTipo("Administrativo")}</strong><span>de administrativos</span></div>
           ${Object.entries(porCarrera).sort((a, b) => b[1] - a[1]).slice(0, 3).map(([k, v]) => `<div class="sum-box"><strong>${v}</strong><span>${esc(k)}</span></div>`).join("")}`;
         $("#rep-resumen").innerHTML = "";
       }
@@ -922,7 +923,7 @@
       <div class="card">
         <h2>Copia de respaldo</h2>
         <p class="muted">Los datos se guardan en este navegador. Descarga una copia para no perderlos o para pasarlos a otro equipo.</p>
-        <p class="muted">Espacio usado: <strong>${(Store.tamanoKB() / 1024).toFixed(2)} MB</strong> de aproximadamente 5 MB que permite el navegador. Las portadas subidas como imagen ocupan unos 30–60 KB cada una; las portadas por enlace casi no ocupan espacio.</p>
+        ${Store.modo === "servidor" ? `<p class="muted">La biblioteca está conectada a la <strong>base de datos del servidor</strong>: todo se guarda allí. La copia descargada no incluye contraseñas; al restaurarla, las cuentas nuevas necesitan que se les asigne una contraseña.</p>` : `<p class="muted">Espacio usado: <strong>${(Store.tamanoKB() / 1024).toFixed(2)} MB</strong> de aproximadamente 5 MB que permite el navegador. Las portadas subidas como imagen ocupan unos 30–60 KB cada una; las portadas por enlace casi no ocupan espacio.</p>`}
         <div class="modal-actions left">
           <button class="btn btn-primary" id="exp">${ico("descargar")} Descargar respaldo</button>
           <label class="btn btn-light">${ico("subir")} Restaurar respaldo<input type="file" id="imp" accept="application/json,.json" hidden /></label>
@@ -971,7 +972,9 @@
   function showAuth() {
     $("#screen-app").hidden = true;
     $("#screen-auth").hidden = false;
-    const first = Object.keys(Store.data.usuarios).length === 0;
+    const first = Store.necesitaSetup();
+    // En el servidor real las cuentas de prueba quedan desmarcadas por defecto.
+    if (first && Store.modo === "servidor") $("#setup-demo").checked = false;
     $("#setup-form").hidden = !first;
     $("#login-form").hidden = first;
     (first ? $("#setup-name") : $("#login-user")).focus();
@@ -984,15 +987,14 @@
     $("#screen-app").hidden = false;
     $("#user-name").textContent = me.nombre;
     $("#nav-admin").hidden = !isAdmin();
-    if (fromLogin) Store.registrar("accesos", me, { tipo: "Ingreso" });
     if (fromLogin && location.hash && location.hash !== "#/") location.hash = "#/";
     else route();
   }
 
-  function logout() {
-    if (me) Store.registrar("accesos", me, { tipo: "Salida" });
-    Store.setSession(null);
+  async function logout() {
+    const u = me;
     me = null;
+    await Store.logout(u);
     $("#login-form").reset();
     showAuth();
   }
@@ -1001,12 +1003,13 @@
     e.preventDefault();
     const msg = $("#login-msg");
     msg.textContent = "";
-    const u = Store.data.usuarios[$("#login-user").value.trim().toLowerCase()];
+    const btn = e.submitter;
+    if (btn) btn.disabled = true;
     try {
-      if (!u || !(await Store.checkPassword(u, $("#login-pass").value))) { msg.textContent = "Usuario o contraseña incorrectos."; return; }
-    } catch (err) { msg.textContent = err.message; return; }
-    if (!u.activo) { msg.textContent = "Tu cuenta está desactivada. Consulta con la biblioteca."; return; }
-    enter(u, true);
+      const u = await Store.login($("#login-user").value.trim().toLowerCase(), $("#login-pass").value);
+      enter(u, true);
+    } catch (err) { msg.textContent = err.message; }
+    finally { if (btn) btn.disabled = false; }
   };
 
   $("#setup-form").onsubmit = async (e) => {
@@ -1014,17 +1017,8 @@
     const msg = $("#setup-msg");
     const usuario = $("#setup-user").value.trim().toLowerCase();
     if (!Store.validUsername(usuario)) { msg.textContent = "Usuario no válido: usa minúsculas, números, punto o guion."; return; }
-    const now = new Date().toISOString();
     try {
-      const admin = { usuario, nombre: $("#setup-name").value.trim(), rol: "admin", carreraId: "", activo: true, creado: now, ...(await Store.hashPassword($("#setup-pass").value)) };
-      Store.data.usuarios[usuario] = admin;
-      if ($("#setup-demo").checked && usuario !== "estudiante") {
-        Store.data.usuarios.estudiante = { usuario: "estudiante", nombre: "Estudiante de Prueba", rol: "estudiante", carreraId: "inteligencia-artificial", activo: true, creado: now, ...(await Store.hashPassword("isty2026")) };
-      }
-      if ($("#setup-demo").checked && usuario !== "docente") {
-        Store.data.usuarios.docente = { usuario: "docente", nombre: "Docente de Prueba", rol: "docente", carreraId: "sistemas-salud", activo: true, creado: now, ...(await Store.hashPassword("isty2026")) };
-      }
-      Store.save();
+      const admin = await Store.setup({ nombre: $("#setup-name").value.trim(), usuario, clave: $("#setup-pass").value, demo: $("#setup-demo").checked });
       enter(admin, true);
     } catch (err) { msg.textContent = err.message; }
   };
@@ -1035,11 +1029,36 @@
   }));
   $$("[data-icon]").forEach((el) => el.insertAdjacentHTML("afterbegin", ico(el.dataset.icon)));
   $("#logout-btn").onclick = logout;
-  window.addEventListener("hashchange", route);
 
-  // Inicio
-  Store.save(); // guarda los datos iniciales la primera vez
-  me = Store.sessionUser;
-  if (me) enter(me);
-  else showAuth();
+  // Con servidor, al cambiar de sección se vuelven a leer los datos (como mucho cada 20 s)
+  // para ver préstamos y cambios hechos por otras personas.
+  let ultimaLectura = Date.now();
+  window.addEventListener("hashchange", async () => {
+    if (Store.modo === "servidor" && me && Date.now() - ultimaLectura > 20000) {
+      ultimaLectura = Date.now();
+      try { await Store.recargar(); } catch (e) { /* se muestra lo que ya hay */ }
+    }
+    route();
+  });
+
+  Store.alFallar = (mensaje, codigo) => {
+    toast(mensaje);
+    if (codigo === 401) { me = null; Store.logout(null).then(showAuth); }
+    else setTimeout(route, 300);
+  };
+
+  // Inicio: detecta si hay servidor con base de datos o se trabaja en el navegador.
+  Store.iniciar().then((estado) => {
+    if (estado.error) {
+      $("#screen-auth").hidden = false;
+      $("#login-form").hidden = true;
+      $("#setup-form").hidden = true;
+      $(".auth-card").insertAdjacentHTML("beforeend", `<p class="form-msg">${esc(estado.error)}</p>`);
+      return;
+    }
+    if (Store.modo === "local") Store.save(); // guarda los datos iniciales la primera vez
+    me = Store.sessionUser;
+    if (me) enter(me);
+    else showAuth();
+  });
 })();

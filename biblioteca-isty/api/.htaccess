@@ -1,0 +1,5 @@
+# Biblioteca ISTY · protección de la API (servidores Apache)
+<Files "config.php">
+  Require all denied
+</Files>
+Options -Indexes

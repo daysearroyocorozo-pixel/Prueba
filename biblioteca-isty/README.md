@@ -67,6 +67,20 @@ python3 -m http.server 8080
   - Se puede bajar un reporte o todos juntos en un archivo (una hoja por reporte).
 - **Respaldo**: descargar y restaurar todos los datos en un archivo JSON.
 
+## Base de datos MySQL (servidor)
+
+La biblioteca puede guardar todo en una base de datos **MySQL / MariaDB** usando la API PHP
+incluida (`api/`). Roles: **Administrador, Docente, Estudiante y Administrativo**.
+
+- `servidor/biblioteca.sql`: archivo para importar en phpMyAdmin (tablas, roles, carreras y
+  catálogo inicial).
+- `api/config.php`: datos de conexión a la base (completar en el servidor).
+- `servidor/INSTALACION.md`: guía paso a paso.
+
+Si la página encuentra la API, trabaja con la base de datos y el inicio de sesión lo valida el
+servidor. Si no la encuentra (GitHub Pages, sin PHP), sigue funcionando en modo local con los
+datos guardados en el navegador.
+
 ## Datos
 
 - Carreras vigentes cargadas (`js/data.js`): Educación Básica, Inteligencia Artificial,
@@ -87,9 +101,12 @@ python3 -m http.server 8080
 index.html        Pantallas de acceso y estructura de la aplicación
 css/styles.css    Estilos con los colores institucionales (modo claro y oscuro)
 js/data.js        Carreras y libros iniciales
-js/store.js       Almacenamiento, sesión, registro de actividad y cifrado de contraseñas
+js/config.js      Dirección de la API del servidor
+js/store.js       Almacenamiento (servidor o navegador), sesión, registro de actividad y contraseñas
 js/xlsx.js        Generador de archivos Excel para los reportes
 js/icons.js       Íconos de la interfaz y de las carreras
 js/app.js         Catálogo, préstamos y portal de administración
 assets/           Logo institucional
+api/              API PHP conectada a MySQL (index.php, config.php)
+servidor/         biblioteca.sql, guía de instalación y generador del .sql
 ```

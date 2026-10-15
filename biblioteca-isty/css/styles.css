@@ -367,3 +367,21 @@ dialog::backdrop { background: rgba(10, 30, 12, .55); backdrop-filter: blur(2px)
 .grid-pref { grid-template-columns: 1fr 150px; }
 .small { font-size: .82rem; margin: -6px 0 0; }
 @media (max-width: 720px) { .grid-pref { grid-template-columns: 1fr; } }
+
+/* ---------- Portada con imagen ---------- */
+.cover-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 2; background: #fff; }
+.cover.has-img::before, .cover.has-img::after { z-index: 3; }
+.cover.has-img::before { display: none; }
+.book-detail > .cover.has-img .cover-img { object-fit: contain; background: var(--surface-2); }
+.cover-field { display: grid; grid-template-columns: 120px 1fr; gap: 16px; align-items: start; padding: 12px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface-2); }
+.cover-prev .cover { width: 120px; padding: 10px 8px; }
+.cover-prev .cover-title { font-size: .72rem; -webkit-line-clamp: 4; }
+.cover-prev .cover-author { font-size: .62rem; }
+.cover-prev .cover-icon { top: 10px; left: 14px; }
+.cover-prev .cover-icon .ico { width: 20px; height: 20px; }
+.cover-ctrl { display: flex; flex-direction: column; gap: 8px; }
+.field-title { font-weight: 700; font-size: .9rem; }
+.small-note { font-size: .82rem; margin: 0; }
+.cover-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+@media (max-width: 720px) { .cover-field { grid-template-columns: 96px 1fr; gap: 12px; } .cover-prev .cover { width: 96px; } }
+.form .cover-btns label.btn { flex-direction: row; gap: 6px; font-size: .85rem; }

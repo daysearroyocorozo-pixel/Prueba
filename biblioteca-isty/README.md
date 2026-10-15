@@ -36,6 +36,11 @@ python3 -m http.server 8080
   - físico: ejemplares, estante y préstamo;
   - virtual: enlace a la versión digital (PDF, repositorio o biblioteca digital), que
     se abre desde la ficha del libro sin préstamo.
+- **Portada con imagen**: al crear o editar un libro se puede subir una foto o imagen de
+  la portada (se reduce sola a tamaño de portada) o pegar el enlace de una imagen. Si no
+  hay imagen, o el enlace no carga, se muestra la portada institucional generada.
+  Las imágenes subidas ocupan espacio del navegador (unos 30–60 KB cada una); el
+  espacio usado se ve en Administración → Respaldo.
 - El catálogo y la administración se pueden filtrar por formato, y el buscador
   encuentra libros por su código.
 

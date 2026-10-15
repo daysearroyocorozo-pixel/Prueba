@@ -81,9 +81,10 @@ const Store = (function () {
     return `${pref}-${String(max + 1).padStart(3, "0")}`;
   }
 
+  // Devuelve false si el navegador no pudo guardar (por ejemplo, espacio lleno por imágenes).
   function save() {
     if (!data) load();
-    try { localStorage.setItem(KEY, JSON.stringify(data)); } catch (e) { /* sin almacenamiento */ }
+    try { localStorage.setItem(KEY, JSON.stringify(data)); return true; } catch (e) { return false; }
   }
 
   const FORMATOS = { fisico: "Físico", virtual: "Virtual", ambos: "Físico y virtual" };
@@ -140,6 +141,9 @@ const Store = (function () {
       normalizar();
       save();
     },
+
+    // Espacio aproximado que ocupan los datos guardados (en KB).
+    tamanoKB() { try { return Math.round((localStorage.getItem(KEY) || "").length / 1024); } catch (e) { return 0; } },
 
     // ----- Contraseñas -----
     validUsername(u) { return /^[a-z0-9._-]{3,40}$/.test(u || ""); },

@@ -78,11 +78,38 @@
     const idx = Math.max(0, Store.data.carreras.findIndex((c) => c.id === libro.carreraId)) % PORTADAS.length;
     const [a, b] = PORTADAS[idx];
     const c = Store.carrera(libro.carreraId);
-    return `<div class="cover" style="--c1:${a};--c2:${b}" aria-hidden="true">
+    // Si el libro tiene imagen de portada se muestra encima; si no carga, queda la portada generada.
+    const img = portadaValida(libro.portada) ? `<img class="cover-img" src="${esc(libro.portada)}" alt="" loading="lazy" onerror="this.remove()" />` : "";
+    return `<div class="cover ${img ? "has-img" : ""}" style="--c1:${a};--c2:${b}" aria-hidden="true">
       <span class="cover-icon">${ico(c ? c.icono : "libro")}</span>
       <span class="cover-title">${esc(libro.titulo)}</span>
       <span class="cover-author">${esc(libro.autor)}</span>
+      ${img}
     </div>`;
+  }
+  const portadaValida = (src) => typeof src === "string" && (/^data:image\/(jpeg|png|webp|gif);base64,/i.test(src) || /^https?:\/\//i.test(src));
+
+  // Reduce la imagen subida a un tamaño de portada (máx. 400×600) en JPEG para no llenar el almacenamiento.
+  function imagenAPortada(file) {
+    return new Promise((resolve, reject) => {
+      if (!file.type.startsWith("image/")) { reject(new Error("El archivo no es una imagen.")); return; }
+      const url = URL.createObjectURL(file);
+      const im = new Image();
+      im.onload = () => {
+        const k = Math.min(1, 400 / im.width, 600 / im.height);
+        const cv = document.createElement("canvas");
+        cv.width = Math.max(1, Math.round(im.width * k));
+        cv.height = Math.max(1, Math.round(im.height * k));
+        const ctx = cv.getContext("2d");
+        ctx.fillStyle = "#fff";
+        ctx.fillRect(0, 0, cv.width, cv.height);
+        ctx.drawImage(im, 0, 0, cv.width, cv.height);
+        URL.revokeObjectURL(url);
+        resolve(cv.toDataURL("image/jpeg", 0.8));
+      };
+      im.onerror = () => { URL.revokeObjectURL(url); reject(new Error("No se pudo leer la imagen.")); };
+      im.src = url;
+    });
   }
 
   // Insignia de formato: físico, virtual o ambos.
@@ -424,6 +451,18 @@
           </label>
           <label>Formato <select name="formato" id="f-formato">${Object.entries(Store.FORMATOS).map(([k, v]) => `<option value="${k}" ${l.formato === k ? "selected" : ""}>${v}</option>`).join("")}</select></label>
         </div>
+        <div class="cover-field">
+          <div id="cover-prev" class="cover-prev"></div>
+          <div class="cover-ctrl">
+            <span class="field-title">Portada del libro</span>
+            <p class="muted small-note">Suba una foto o imagen de la portada (JPG o PNG), o pegue el enlace de una imagen. Si no hay imagen se usa la portada institucional.</p>
+            <div class="cover-btns">
+              <label class="btn btn-light btn-sm">${ico("subir")} Subir imagen<input type="file" id="cover-file" accept="image/*" hidden /></label>
+              <button type="button" class="btn btn-ghost btn-sm" id="cover-del">${ico("eliminar")} Quitar</button>
+            </div>
+            <input type="url" id="cover-url" maxlength="600" placeholder="o pegue el enlace: https://…/portada.jpg" value="${esc(/^https?:/i.test(l.portada || "") ? l.portada : "")}" aria-label="Enlace de la imagen de portada" />
+          </div>
+        </div>
         <label>Título <input name="titulo" required maxlength="200" value="${esc(l.titulo)}" /></label>
         <label>Autor(es) <input name="autor" required maxlength="200" value="${esc(l.autor)}" /></label>
         <div class="grid2">
@@ -444,6 +483,30 @@
         </div>
       </form>`);
     const form = $("#book-form");
+    let portadaNueva = l.portada || "";
+    const pintarPortada = () => {
+      $("#cover-prev").innerHTML = portada({ ...l, titulo: form.titulo.value || "Título", autor: form.autor.value, carreraId: form.carreraId.value, portada: portadaNueva });
+    };
+    pintarPortada();
+    ["titulo", "autor"].forEach((n) => form[n].addEventListener("input", () => { if (!portadaNueva) pintarPortada(); }));
+    $("#cover-file").onchange = async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      try {
+        portadaNueva = await imagenAPortada(file);
+        $("#cover-url").value = "";
+        pintarPortada();
+      } catch (err) { $("#book-msg").textContent = err.message; }
+      e.target.value = "";
+    };
+    $("#cover-url").addEventListener("change", (e) => {
+      const v = e.target.value.trim();
+      if (v && !/^https?:\/\//i.test(v)) { $("#book-msg").textContent = "El enlace de la portada debe empezar con https://"; return; }
+      $("#book-msg").textContent = "";
+      portadaNueva = v;
+      pintarPortada();
+    });
+    $("#cover-del").onclick = () => { portadaNueva = ""; $("#cover-url").value = ""; pintarPortada(); };
     const syncFormato = () => {
       const fmt = $("#f-formato").value;
       $$("[data-fis]", form).forEach((el) => (el.hidden = fmt === "virtual"));
@@ -452,7 +515,7 @@
     $("#f-formato").addEventListener("change", syncFormato);
     syncFormato();
     // Al cambiar de carrera en un libro nuevo se propone el código de esa carrera.
-    form.carreraId.addEventListener("change", () => { if (!id) form.codigo.value = Store.siguienteCodigo(form.carreraId.value); });
+    form.carreraId.addEventListener("change", () => { if (!id) form.codigo.value = Store.siguienteCodigo(form.carreraId.value); pintarPortada(); });
     $("#gen-code").onclick = () => { form.codigo.value = Store.siguienteCodigo(form.carreraId.value); };
     form.onsubmit = (e) => {
       e.preventDefault();
@@ -460,10 +523,16 @@
       const codigo = f.codigo.trim().toUpperCase();
       if (Store.data.libros.some((x) => x.id !== id && (x.codigo || "").toUpperCase() === codigo)) { $("#book-msg").textContent = `El código ${codigo} ya está asignado a otro libro.`; return; }
       const fisico = f.formato !== "virtual";
-      const obj = { ...f, codigo, titulo: f.titulo.trim(), autor: f.autor.trim(), anio: f.anio ? Number(f.anio) : "", ejemplares: fisico ? Math.max(0, Number(f.ejemplares) || 0) : 0, ubicacion: fisico ? f.ubicacion : "", enlace: f.formato === "fisico" ? "" : f.enlace };
+      const obj = { ...f, codigo, titulo: f.titulo.trim(), autor: f.autor.trim(), anio: f.anio ? Number(f.anio) : "", ejemplares: fisico ? Math.max(0, Number(f.ejemplares) || 0) : 0, ubicacion: fisico ? f.ubicacion : "", enlace: f.formato === "fisico" ? "" : f.enlace, portada: portadaNueva };
+      const antes = id ? { ...l } : null;
       if (id) Object.assign(l, obj);
       else Store.data.libros.push({ id: Store.uid(), ...obj });
-      Store.save();
+      if (!Store.save()) {
+        // No hubo espacio: se deshace el cambio para no perder datos.
+        if (id) { Object.keys(l).forEach((k) => delete l[k]); Object.assign(l, antes); } else Store.data.libros.pop();
+        $("#book-msg").textContent = "No hay espacio para guardar más imágenes en este navegador. Use una imagen más pequeña, un enlace, o quite portadas de otros libros.";
+        return;
+      }
       closeModal();
       toast("Libro guardado.");
       route();
@@ -853,6 +922,7 @@
       <div class="card">
         <h2>Copia de respaldo</h2>
         <p class="muted">Los datos se guardan en este navegador. Descarga una copia para no perderlos o para pasarlos a otro equipo.</p>
+        <p class="muted">Espacio usado: <strong>${(Store.tamanoKB() / 1024).toFixed(2)} MB</strong> de aproximadamente 5 MB que permite el navegador. Las portadas subidas como imagen ocupan unos 30–60 KB cada una; las portadas por enlace casi no ocupan espacio.</p>
         <div class="modal-actions left">
           <button class="btn btn-primary" id="exp">${ico("descargar")} Descargar respaldo</button>
           <label class="btn btn-light">${ico("subir")} Restaurar respaldo<input type="file" id="imp" accept="application/json,.json" hidden /></label>

@@ -782,7 +782,9 @@
     body.innerHTML = `
       <div class="card">
         <h2>💾 Copia de respaldo</h2>
-        <p class="muted">Los datos se guardan en este navegador. Descarga una copia para no perderlos o para pasarlos a otro equipo.</p>
+        <p class="muted">${Store.conectado
+          ? "Los datos se guardan en la base de datos de Supabase y se comparten entre todos los equipos. Descarga una copia de vez en cuando por seguridad."
+          : "Los datos se guardan en este navegador. Descarga una copia para no perderlos o para pasarlos a otro equipo."}</p>
         <div class="modal-actions left">
           <button class="btn btn-primary" id="exp">⬇️ Descargar respaldo</button>
           <label class="btn btn-light">⬆️ Restaurar respaldo<input type="file" id="imp" accept="application/json,.json" hidden /></label>
@@ -861,6 +863,8 @@
     e.preventDefault();
     const msg = $("#login-msg");
     msg.textContent = "";
+    await Store.refresh(); // cuentas creadas o cambiadas desde otro equipo
+    if (Object.keys(Store.data.usuarios).length === 0) { showAuth(); return; }
     const u = Store.data.usuarios[$("#login-user").value.trim().toLowerCase()];
     try {
       if (!u || !(await Store.checkPassword(u, $("#login-pass").value))) { msg.textContent = "Usuario o contraseña incorrectos."; return; }
@@ -875,6 +879,8 @@
     const usuario = $("#setup-user").value.trim().toLowerCase();
     if (!Store.validUsername(usuario)) { msg.textContent = "Usuario no válido: usa minúsculas, números, punto o guion."; return; }
     const now = new Date().toISOString();
+    await Store.refresh();
+    if (Object.keys(Store.data.usuarios).length > 0) { showAuth(); msg.textContent = ""; return; } // ya se creó desde otro equipo
     try {
       const admin = { usuario, nombre: $("#setup-name").value.trim(), rol: "admin", carreraId: "", activo: true, creado: now, ...(await Store.hashPassword($("#setup-pass").value)) };
       Store.data.usuarios[usuario] = admin;
@@ -894,11 +900,21 @@
     i.type = i.type === "password" ? "text" : "password";
   }));
   $("#logout-btn").onclick = logout;
-  window.addEventListener("hashchange", route);
+  // Al cambiar de sección se traen los cambios hechos desde otros equipos (y los registros de actividad en Reportes).
+  window.addEventListener("hashchange", async () => {
+    await Store.refresh(location.hash.startsWith("#/admin/reportes"));
+    route();
+  });
+  document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") Store.refresh(); });
 
   // Inicio
-  Store.save(); // guarda los datos iniciales la primera vez
-  me = Store.sessionUser;
-  if (me) enter(me);
-  else showAuth();
+  Store.onError = toast;
+  Store.init().then(() => {
+    $("#boot").hidden = true;
+    if (!Store.remoto) Store.save(); // guarda los datos iniciales la primera vez
+    me = Store.sessionUser;
+    if (me) enter(me);
+    else showAuth();
+    if (Store.errorInicio) toast("No se pudo conectar con la base de datos; se muestran los datos guardados en este equipo. (" + Store.errorInicio + ")");
+  });
 })();

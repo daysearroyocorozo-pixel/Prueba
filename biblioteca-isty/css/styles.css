@@ -328,3 +328,4 @@ dialog::backdrop { background: rgba(10, 30, 12, .55); backdrop-filter: blur(2px)
   .table-scroll .table td { white-space: normal; }
 }
 .rep-sub { font-size: 1.05rem; margin: 18px 0 10px; }
+.boot { text-align: center; color: var(--muted); font-weight: 700; padding: 40vh 16px 0; margin: 0; }

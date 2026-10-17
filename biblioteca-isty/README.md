@@ -53,20 +53,45 @@ python3 -m http.server 8080
 
 - Las carreras y libros iniciales están en `js/data.js`. **Ajusta esa lista a la
   oferta académica vigente del instituto** (o edítala desde Administración).
-- Los datos se guardan en el navegador (`localStorage`) del equipo donde se usa la
-  biblioteca; usa «Respaldo» para copiarlos a otro equipo. Para compartir cuentas
-  entre varios dispositivos haría falta un servidor (por ejemplo Firebase o Supabase).
+- **Con Supabase** (recomendado): los datos se guardan en una base de datos en la nube y
+  se comparten entre todos los equipos (ver «Conectar con Supabase»).
+- **Sin Supabase**: los datos se guardan en el navegador (`localStorage`) del equipo donde
+  se usa la biblioteca; usa «Respaldo» para copiarlos a otro equipo.
 - Las contraseñas se guardan cifradas (PBKDF2-SHA256 con sal), nunca en texto plano.
   El cifrado requiere abrir la página por `https://` o `localhost`.
+
+## Conectar con Supabase
+
+1. Crea un proyecto en [supabase.com](https://supabase.com).
+2. En **SQL Editor → New query**, pega el contenido de `supabase/schema.sql` y pulsa **Run**.
+   Se crean las tablas `carreras`, `libros`, `usuarios`, `prestamos`, `accesos` y `consultas`.
+3. En **Project Settings → API** copia la **Project URL** y la clave pública **anon**
+   (o **publishable**) y pégalas en `js/config.js`. **Nunca** uses la clave `service_role` / secret.
+4. Abre la biblioteca. Si la base está vacía, se suben automáticamente los datos que ya
+   había en ese navegador (o las carreras y libros iniciales).
+
+Cómo funciona:
+- Al abrir la página se descargan todos los datos; cada cambio sube solo los registros
+  modificados. Al cambiar de sección o volver a la pestaña se traen los cambios hechos
+  desde otros equipos; los registros de ingresos y consultas se recargan al abrir Reportes.
+- Si no hay conexión al abrir, se trabaja con la copia guardada en ese navegador y se avisa.
+
+**Seguridad:** la biblioteca maneja sus propios usuarios y contraseñas, así que cualquiera
+que tenga la clave pública puede leer y modificar las tablas (incluidas las contraseñas
+cifradas). Es suficiente para uso interno del instituto; para un sistema expuesto en
+internet convendría migrar el inicio de sesión a **Supabase Auth** y restringir las
+políticas RLS por rol.
 
 ## Estructura
 
 ```
 index.html        Pantallas de acceso y estructura de la aplicación
 css/styles.css    Estilos con los colores institucionales (modo claro y oscuro)
+js/config.js      URL y clave pública de Supabase (vacío = solo en el navegador)
 js/data.js        Carreras y libros iniciales
-js/store.js       Almacenamiento, sesión, registro de actividad y cifrado de contraseñas
+js/store.js       Almacenamiento (Supabase + localStorage), sesión, registro de actividad y cifrado de contraseñas
 js/xlsx.js        Generador de archivos Excel para los reportes
 js/app.js         Catálogo, préstamos y portal de administración
+supabase/schema.sql  Script para crear las tablas en Supabase
 assets/           Logo institucional
 ```

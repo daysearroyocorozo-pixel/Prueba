@@ -5,6 +5,6 @@
    Si se dejan vacíos, la biblioteca guarda los datos solo en este navegador (localStorage). */
 
 window.SUPABASE_CONFIG = {
-  url: "",
-  anonKey: ""
+  url: "https://bsdwmlpgwfiibriniwdq.supabase.co",
+  anonKey: "sb_publishable__dIfAC08WiHcYJImVJhQng_M8mHn45U"
 };
